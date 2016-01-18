@@ -1,0 +1,55 @@
+body,html{
+	height: 100%;
+}
+
+body, button, input, label, select, td, textarea {
+	font-family: $fontPrimary;
+	font-size: 14px;
+}
+body{
+	background: $bgColorPrimary;
+	color: $textColorPrimary;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+/* Typography
+****************************************/
+strong{font-weight: bold;}
+em{font-style: italic;}
+
+/* Headers
+****************************************/
+h1,h2,h3,h4,h5,h6{
+	font-family: $fontSecondary;
+	font-weight: normal !important;
+	text-rendering: optimizelegibility;
+	color: $textColorPrimary;
+	-webkit-font-smoothing: antialiased;
+}
+h1{
+	font-size: 68px;
+	line-height: 72px;
+}
+h2{
+	font-size:44px;
+	line-height:52px
+}
+h3{
+	font-size: 40px;
+	line-height: 44px;
+}
+h4{
+	font-size:32px;
+	line-height:36px
+}
+h5{
+	font-size: 23px;
+	line-height:30px
+}
+h6{
+	font-size: 20px;
+	line-height:27px
+}

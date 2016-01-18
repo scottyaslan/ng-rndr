@@ -1,0 +1,56 @@
+<!-- /*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
+*    Copyright (C) 2016  Scott Aslan
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Affero General Public License as
+*    published by the Free Software Foundation, either version 3 of the
+*    License, or (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the GNU Affero General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
+*/ -->
+<md-dialog flex layout="column" tabIndex="-1" aria-label="Characteristic Configuration">
+    <form>
+        <md-toolbar class="md-accent">
+            <div class="md-toolbar-tools">
+                <h2>{{UiControls.dialogTitle}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="UiControls.hideDialog();" aria-label="Close Dialog">
+                    <md-tooltip>
+                        Close Dialog
+                    </md-tooltip>
+                    <md-icon aria-label="Close dialog">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content flex layout="column">
+            <md-content flex layout-padding layout-align="space-around center">
+                <md-content layout="column">
+                    <md-input-container flex>
+                        <label>Save Data Source As:</label>
+                        <input ng-model="ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].name">
+                    </md-input-container>
+                </md-content>
+            </md-content>
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <md-button class="md-primary" ng-click="UiControls.hideDialog();" aria-label="Close Dialog">
+                <md-tooltip>
+                    Cancel
+                </md-tooltip>
+                <md-icon aria-label="Close dialog">close</md-icon>
+            </md-button>
+            <md-button ng-click="ServiceProvider.AcquisitionController.save();" class="md-primary" aria-label="Ok">
+                <md-tooltip>
+                    Ok
+                </md-tooltip>
+                <md-icon aria-label="Close dialog">done</md-icon>
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

@@ -1,0 +1,89 @@
+<!-- /*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
+*    Copyright (C) 2016  Scott Aslan
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Affero General Public License as
+*    published by the Free Software Foundation, either version 3 of the
+*    License, or (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the GNU Affero General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
+*/ -->
+<!-- Outter Container -->
+<md-content id="explore" flex layout="column" tabIndex="-1" role="main" style="height: 100%;">
+    <!-- Main Container -->
+    <md-content layout="row" flex id="content" class="md-primary md-hue-1">
+        <!-- Main Content -->
+        <md-content id="mainContent" flex layout='column'>
+            <md-tabs md-dynamic-height="true" md-stretch-tabs="always" md-align-tabs="top" md-border-bottom="true" md-autoselect="true" md-no-disconnect="true" md-no-pagination="true">
+                    <md-tab ng-repeat="(RenderingEngineUUID, RenderingEngine) in ServiceProvider.RenderingEngineManager.renderingEngines" ng-disabled="RenderingEngine.disabled" md-active="RenderingEngine.active" md-on-select="ServiceProvider.RenderingEngineManager.activeRenderingEngine = RenderingEngine.id;RenderingEngine.active = true;" md-on-deselect="ServiceProvider.RenderingEngineManager.activeRenderingEngine = undefined;RenderingEngine.active = false;" label="{{RenderingEngine.title}}">
+                        <gridster-directive class="gridster" options=ExploreController.constants.dataExplorationGrid id="DataExploration">
+                            <ul>
+                                <li class="md-whiteframe-z5" data-row="1" data-col="1" data-sizex="1" data-sizey="2">
+                                    <header class='ui-dialog-titlebar ui-widget-header'>
+                                        <div class='box'>Attributes</div>
+                                    </header>
+                                    <div class="gridsterWidgetContainer dropzone" ui-sortable="dropzone" ng-model="RenderingEngine.attributesAvailableForRowsAndCols">
+                                        <ul ui-sortable="ExploreController.constants.sortableOptions" ng-model="RenderingEngine.attributesAvailableForRowsAndCols" class="list">
+                                            <li class="placeholder" ng-repeat="attribute in RenderingEngine.attributesAvailableForRowsAndCols">
+                                                <div class='box pvtAttr'>
+                                                    <span ng-bind="attribute"></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="md-whiteframe-z5" data-row="1" data-col="2" data-sizex="1" data-sizey="1">
+                                    <header class='ui-dialog-titlebar ui-widget-header'>
+                                        <div class='box'>Rows
+                                        </div>
+                                    </header>
+                                    <div class="gridsterWidgetContainer dropzone" ui-sortable="dropzone" ng-model="RenderingEngine.rows">
+                                        <ul ui-sortable="ExploreController.constants.sortableOptions" ng-model="RenderingEngine.rows" class="list">
+                                            <li class="placeholder" ng-repeat="attribute in RenderingEngine.rows">
+                                                <div class='box pvtAttr'>
+                                                    <span ng-bind="attribute"></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="md-whiteframe-z5" data-row="2" data-col="2" data-sizex="1" data-sizey="1">
+                                    <header class='ui-dialog-titlebar ui-widget-header'>
+                                        <div class='box'>Columns
+                                        </div>
+                                    </header>
+                                    <div class="gridsterWidgetContainer dropzone" ui-sortable="dropzone" ng-model="RenderingEngine.cols">
+                                        <ul ui-sortable="ExploreController.constants.sortableOptions" ng-model="RenderingEngine.cols" class="list">
+                                            <li class="placeholder" ng-repeat="attribute in RenderingEngine.cols">
+                                                <div class='box pvtAttr'>
+                                                    <span ng-bind="attribute"></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="md-whiteframe-z5" data-row="1" data-col="3" data-sizex="4" data-sizey="2">
+                                    <header class='ui-dialog-titlebar ui-widget-header'>
+                                        <div class='box'>Explore
+                                        </div>
+                                    </header>
+                                    <div class="gridsterWidgetContainer">
+                                        <md-content id="rendererProgress" flex layout="row" layout-fill layout-align="center center" style="display:none;">
+                                            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                                        </md-content>
+                                        <rendering-engine-directive id="renderer" engine="RenderingEngine" input="ServiceProvider.DataSourceManager.dataSources[RenderingEngine.dataSourceConfigId].formattedData"></rendering-engine-directive>
+                                    </div>
+                                </li>
+                            </ul>
+                        </gridster-directive>
+                    </md-tab>
+                </md-tabs>
+        </md-content>
+    </md-content>
+</md-content>

@@ -1,0 +1,171 @@
+@import "globalVars";
+@import "plugins/all";
+
+
+$navBgColor: #31353e;
+$navLinkColor: white;
+$offset: 150px;
+
+body,html{
+	height: 100%;
+}
+body{
+	background: $navBgColor;
+}
+
+
+nav{
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: $offset;
+	
+	ul{
+		li{
+			display: block;
+			position: relative;
+			cursor: pointer;
+			
+			border-bottom: 1px solid rgba(255,255,255,0.08);
+			
+			i{
+				position: absolute;
+				top:8px;
+				left: 7px;
+				
+			}
+			a{
+				text-decoration: none;
+				display: block;
+				color: $navLinkColor;
+				height: 30px;
+				line-height: 30px;
+				font-size:14px;
+				
+				&:hover{
+					color: $navLinkColor;				
+				}
+				
+				span{
+					display:block;
+					margin: 0 25px;
+				}
+				&:hover{
+					background: lighten($navBgColor,20%);
+				}
+				&.active{
+					background: lighten($navBgColor,20%);
+				
+				}
+				
+			}
+			
+			&.open{
+				ul{
+					display:block;
+				}
+			}
+
+			&.collapsible{ 
+				ul{
+				
+					li{
+						border: none;
+					}
+				
+					a{
+						font-size: 12px;
+					}
+					
+					
+				}
+			}
+			
+			
+		}
+		ul{
+			display:none;
+		}
+	}
+}
+main{
+	height: 100%;
+	margin-left: $offset;
+	.container{
+		background: $bgColorPrimary;
+		height: 100%;
+		overflow: auto;
+	}	
+	.inner{
+		margin: 0 20px;
+		&.large{
+			margin: 0 40px;
+		}
+	}
+	section{
+		padding: 50px 0;
+		display: none;
+		clear: both;
+		width: 100%;
+		
+		&.active{
+			display: block;
+		}
+	}
+}
+.columns{
+	&.columns1-2{
+		$offset: 200px;
+		.one,.two{
+			float: left;
+		}
+		.one{
+			width: $offset;
+		}
+		.two{
+			width: calc(100% - $offset + 1px);
+			border-left: 1px solid $borderColorPrimary;
+			&:after{
+				width: 100%;
+				clear: both;
+			}
+		}
+	}
+	
+	&.twoCol{
+		$offset: 50%;
+		.one,.two{
+			float: left;
+		}
+		.one{
+			width: $offset;
+		}
+		.two{
+			width: calc(50%);
+			&:after{
+				width: 100%;
+				clear: both;
+				content: "";
+				display:block;
+			}
+		}		
+	}
+}
+
+pre{
+	background: $bgColorSecondary;
+	white-space: pre-wrap;       /* css-3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word; 	
+	padding:0 20px;
+	margin-right: 10px;
+	.tag{
+		color: $textColorDark;
+	}
+	.comment{
+		color: green;
+	}
+}

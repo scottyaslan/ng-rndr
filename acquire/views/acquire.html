@@ -1,0 +1,364 @@
+<!-- /*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
+*    Copyright (C) 2016  Scott Aslan
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Affero General Public License as
+*    published by the Free Software Foundation, either version 3 of the
+*    License, or (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Affero General Public License for more details.
+*
+*    You should have received a copy of the GNU Affero General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
+*/ -->
+<!-- Outter Container -->
+<md-content id="acquire" flex layout="column" style="height: 100%;">
+    <!-- Header Toolbar -->
+    <md-toolbar layout="row" layout-align="space-between center">
+        <md-button ng-if="AcquisitionController.restClientContentView === 'HTTP Config'" ng-click="AcquisitionController.openDocumentation()" aria-label="Data Source Configuration Documentation">
+<!--             <md-tooltip>
+                Documentation
+            </md-tooltip> -->
+            <md-icon>help</md-icon>
+        </md-button>
+        <div ng-if="AcquisitionController.restClientContentView !== 'HTTP Config'"></div>
+        <div>Data Source Configuration Wizard</div>
+        <md-button ng-click="AcquisitionController.cancel()" aria-label="Exit Data Source Configuration Wizard">
+            <md-tooltip>
+                Exit
+            </md-tooltip>
+            <md-icon>close</md-icon>
+        </md-button>
+    </md-toolbar>
+    <!-- Main Container -->
+    <md-content layout="row" flex id="content" class="md-primary md-hue-1">
+        <!-- Left Side Panel -->
+        <md-sidenav class="md-whiteframe-z5" flex md-is-locked-open=UiControls.leftSideNavOpen layout="column" md-component-id="left">
+            <md-content layout-padding>
+                    <md-content ng-switch on="AcquisitionController.restClientContentView">
+                        <md-content layout-padding ng-switch-when="HTTP Config">
+                            <h6>Configure Request</h6>
+                            </br>
+                            <p>The Data Source Wizard leverages the Angular JS $http service. This service is a core Angular service that facilitates communication with a remote HTTP server via the browser's XMLHttpRequest object or via JSONP.</br></br>The <pre><code>$http</code></pre> service is a function which takes a single argument — a <a href="https://docs.angularjs.org/api/ng/service/$http#usage" target='_blank'>configuration object</a> — that is used to generate an HTTP request.</p>
+                        </md-content>
+                        <md-content layout-padding ng-switch-when="Acquire Data">
+                            <h6>Service Response Data</h6>
+                            </br>
+                            <p>Data from a service call can be returned in many formats. Displayed here is the data returned from the service call.</br></br> In order for the Data Explorer to be able to render the data returned from this service it must be manipulated into one of the supported formats.</br></br>Click next to provide Javascript instructions for translating the data returned from this service into a supported format.</p>
+                        </md-content>
+                        <md-content layout-padding ng-switch-when="Formatting">
+                            <h6>Formatting Instructions</h6>
+                            </br>
+                            <p>The required format for Data Exploration input data is a set of <strong>records</strong> with <strong>attributes</strong> rather than rows with columns, as the pivot table output has rows and columns and having separate nomenclature keeps things from getting confusing.</br></br>The data returned from the service is contained in the </br></br><pre><code>var data;</code></pre></br> object. Please provide instruction to manipulate the data variable into a supported format.</p>
+                        </md-content>
+                        <md-content layout-padding ng-switch-when="Formatted">
+                            <h6>Complete!</h6>
+                            </br>
+                            <p>Save this Data Source Configuration to start exploring your data!</p>
+                        </md-content>
+                    </md-content>
+                </md-content>
+        </md-sidenav>
+        <!-- Main Content -->
+        <md-content id="mainContent" flex layout='column'>
+            <md-content ng-switch on="AcquisitionController.restClientContentView">
+                <md-content style="height: 100%;" layout='row' ng-switch-when="Loading" layout-align="center center">
+                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                </md-content>
+                <md-content layout-padding ng-switch-when="HTTP Config">
+                    <div ng-model="ServiceProvider.DataSourceConfigurationManager.dataSourceConfigurations[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].httpConfig"
+                         ui-ace="{ useWrapMode : true,
+                                 theme:'eclipse',
+                                 mode: 'javascript'}" >
+                    </div>
+                </md-content>
+                <md-content layout-padding ng-switch-when="Acquire Data">
+                    {{ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].data}}
+                </md-content>
+                <md-content layout-padding ng-switch-when="Formatting">
+                    <div ng-model="ServiceProvider.DataSourceConfigurationManager.dataSourceConfigurations[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].flattenDataFunctionString"
+                         ui-ace="{ useWrapMode : true,
+                                 theme:'eclipse',
+                                 mode: 'javascript'}" >
+                    </div>
+                </md-content>
+                <md-content layout-padding ng-switch-when="Formatted">
+                    {{ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].formattedData}}
+                </md-content>
+            </md-content>
+        </md-content>
+        <!-- Right Side Panel -->
+        <md-sidenav class="md-whiteframe-z5" flex layout="column" md-is-locked-open=UiControls.rightSideNavOpen md-component-id="right">
+            <md-content layout-padding>
+                    <md-content ng-switch on="AcquisitionController.restClientContentView">
+                        <md-content layout-padding ng-switch-when="HTTP Config">
+                            <h6>Properties:</h6>
+                            </br>
+                            <ul>
+                                <li><strong>method</strong> –
+                                </br>
+                                    <code>{string}</code> – HTTP method (e.g. 'GET', 'POST', etc)</li>
+                                </br>
+                                <li><strong>url</strong> –
+                                </br>
+                                    <code>{string}</code> – Absolute or relative URL of the resource that is being requested.</li>
+                                </br>
+                                <li><strong>params</strong> –
+                                </br>
+                                    <code>{Object.&lt;string|Object&gt;}</code> – Map of strings or objects which will be serialized
+                                    with the <code>paramSerializer</code> and appended as GET parameters.</li>
+                                </br>
+                                <li><strong>data</strong> –
+                                </br>
+                                    <code>{string} || {Object}</code> – Data to be sent as the request message data.</li>
+                                </br>
+                                <li><strong>headers</strong> –
+                                </br>
+                                    <code>{Object}</code> – Map of strings or functions which return strings representing
+                                    HTTP headers to send to the server. If the return value of a function is null, the
+                                    header will not be sent. Functions accept a config object as an argument.</li>
+                                </br>
+                                <li><strong>xsrfHeaderName</strong> –
+                                </br>
+                                    <code>{string}</code> – Name of HTTP header to populate with the XSRF token.</li>
+                                </br>
+                                <li><strong>xsrfCookieName</strong> –
+                                </br>
+                                    <code>{string}</code> – Name of cookie containing the XSRF token.</li>
+                                </br>
+                                <li><strong>transformRequest</strong> –
+                                </br>
+                                    <code>{function(data, headersGetter)} ||
+                                        {Array.&lt;function(data, headersGetter)&gt;}</code> –
+                                        transform function or an array of such functions. The transform function takes the http
+                                        request body and headers and returns its transformed (typically serialized) version.
+                                        See <a href="https://docs.angularjs.org/api/ng/service/$http#overriding-the-default-transformations-per-request" target='_blank'>Overriding the Default Transformations</a></li>
+                                </br>
+                                <li><strong>transformResponse</strong> –
+                                </br>
+                                    <code>{function(data, headersGetter, status)} ||
+                                        {Array.&lt;function(data, headersGetter, status)&gt;}</code> –
+                                        transform function or an array of such functions. The transform function takes the http
+                                        response body, headers and status and returns its transformed (typically deserialized) version.
+                                        See <a href="https://docs.angularjs.org/api/ng/service/$http#overriding-the-default-transformations-per-request" target='_blank'>Overriding the Default TransformationjqLiks</a></li>
+                                </br>
+                                <li><strong>paramSerializer</strong> - 
+                                </br>
+                                    <code>{string} ||
+                                        {function(Object&lt;string,string&gt;):string}</code> - A function used to
+                                        prepare the string representation of request parameters (specified as an object).
+                                        If specified as string, it is interpreted as function registered with the
+                                        <a href="https://docs.angularjs.org/api/auto/service/$injector" target='_blank'>$injector</a>, which means you can create your own serializer
+                                        by registering it as a <a href="https://docs.angularjs.org/api/auto/service/$provide#service" target='_blank'>service</a>.
+                                        The default serializer is the <a href="https://docs.angularjs.org/api/ng/service/$httpParamSerializer" target='_blank'>$httpParamSerializer</a>;
+                                        alternatively, you can use the <a href="https://docs.angularjs.org/api/ng/service/$httpParamSerializerJQLike" target='_blank'>$httpParamSerializerJQLike</a></li>
+                                </br>
+                                <li><strong>cache</strong> – 
+                                </br>
+                                    <code>{boolean} || {Cache}</code> – If true, a default $http cache will be used to cache the
+                                    GET request, otherwise if a cache instance built with
+                                    <a href="https://docs.angularjs.org/api/ng/service/$cacheFactory" target='_blank'>$cacheFactory</a>, this cache will be used for
+                                    caching.</li>
+                                </br>
+                                <li><strong>timeout</strong> –
+                                </br>
+                                    <code>{number} || {Promise}</code> – timeout in milliseconds, or <a href="https://docs.angularjs.org/api/ng/service/$q" target='_blank'>promise</a>
+                                    that should abort the request when resolved.</li>
+                                </br>
+                                <li><strong>withCredentials</strong> -
+                                </br>
+                                    <code>{boolean}</code> - whether to set the <code>withCredentials</code> flag on the
+                                    XHR object. See <a href="https://developer.mozilla.org/docs/Web/HTTP/Access_control_CORS#Requests_with_credentials" target='_blank'>requests with credentials</a>
+                                    for more information.</li>
+                                </br>
+                                <li><strong>responseType</strong> -
+                                </br>
+                                    <code>{string}</code> - see
+                                    <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#xmlhttprequest-responsetype" target='_blank'>XMLHttpRequest.responseType</a>.</li>
+                            </ul>
+                        </md-content>
+                        <md-content layout-padding ng-switch-when="Formatting">
+                            <h6>Supported Formats:</h6>
+                            </br>
+                            <h6>CSV Files</h6>
+
+                            <p>The output of a <a href="https://code.google.com/p/jquery-csv/">jquery-csv</a> CSV file can be used as input</p>
+
+                            <pre flex><code>
+&lt;script&gt;
+    var input = $.csv.toArrays(csvString);
+&lt;/script&gt;
+                            </code></pre>
+
+                            <p>Two demos of this can be found here: <a href="http://nicolas.kruchten.com/pivottable/examples/mps_csv.html">loading a CSV file from a server</a> and <a href="http://nicolas.kruchten.com/pivottable/examples/local.html">loading a CSV file from your local machine without uploading to a server</a></p>
+                            </br>
+                            <h6>Arrays of objects</h6>
+
+                            <p>One object per record, the object's keys are the attribute names. See <a href="http://nicolas.kruchten.com/pivottable/examples/simple.html">example</a>.</p>
+
+                            <pre flex><code>
+&lt;script&gt;
+    var input = [
+        {
+            "attr1": "value1_attr1",
+            "attr2": "value1_attr2",
+            //...
+        },
+        {
+            "attr1": "value2_attr1",
+            "attr2": "value2_attr2",
+            //...
+        },
+        //...
+    ];
+&lt;/script&gt;
+                            </code></pre>
+
+                            <h6>Arrays of arrays</h6>
+
+                            <p>One sub-array per record, the first sub-array contains the attribute names.</p>
+
+                            <pre><code>
+&lt;script&gt;
+    var input = [
+        ["attr1", "attr2"],
+        ["value1_attr1", "value1_attr2"],
+        ["value2_attr1", "value2_attr2"],
+        //...
+    ];
+&lt;/script&gt;
+                            </code></pre>
+
+                            <h6>Functions that call back</h6>
+
+                            <p>The function will be called with a callback that takes an object as a parameter. See <a href="http://nicolas.kruchten.com/pivottable/examples/simple_function.html">example</a>.</p>
+
+                            <pre><code>
+&lt;script&gt;
+    var input = function(callback) {
+        callback({
+            "attr1": "value1_attr1",
+            "attr2": "value1_attr2",
+            //...
+        });
+        callback({
+            "attr1": "value2_attr1",
+            "attr2": "value2_attr2",
+            //...
+        };
+        //...
+    };
+&lt;/script&gt;
+                            </code></pre>
+
+                            <h6>jQuery Ref to Simple Tables</h6>
+
+                            <p>If there exists in the DOM a table with a <code>thead</code> and <code>tbody</code> then a jQuery reference to that table will be accepted as input. Attribute names are assumed to be in <code>th</code> elements in <code>thead</code> and values are assumed to be in <code>td</code> elements in <code>tbody</code>. See <a href="http://nicolas.kruchten.com/pivottable/examples/simple_ui_from_table.html">example</a>.</p>
+
+                            <pre><code>
+&lt;script&gt;
+    var input = $("#input");
+&lt;/script&gt;
+
+&lt;table id="input"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;attr1&lt;/th&gt;
+            &lt;th&gt;attr2&lt;/th&gt;
+            &lt;!-- etc... --&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;value1_attr1&lt;/td&gt;
+            &lt;td&gt;value1_attr2&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;value2_attr1&lt;/td&gt;
+            &lt;td&gt;value2_attr2&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;!-- etc... --&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+                            </code></pre>
+                        </md-content>
+                    </md-content>
+                </md-content>
+        </md-sidenav>
+    </md-content>
+    <md-toolbar layout="row" layout-align="space-between center" md-swipe-left="UiControls.openRightSideNav()" md-swipe-right="UiControls.openLeftSideNav()">
+        <md-content style="background-color: transparent;">
+            <md-content ng-switch on="AcquisitionController.restClientContentView" style="background-color: transparent;">
+                <md-content layout-padding ng-switch-when="Acquire Data" style="background-color: transparent;">
+                    <md-content layout='row' style="background-color: transparent;">
+                        <md-button class="md-raised md-warn" ng-click="UiControls.openRightSideNav();AcquisitionController.restClientContentView = 'HTTP Config';">
+<!--                             <md-tooltip>
+                                Configure Service Call
+                            </md-tooltip> -->
+                            Reset
+                        </md-button>
+                    </md-content>
+                </md-content>
+                <md-content layout-padding ng-switch-when="Formatting" style="background-color: transparent;">
+                    <md-content layout='row' style="background-color: transparent;">
+                        <md-button class="md-raised md-warn" ng-click="UiControls.closeRightSideNav();AcquisitionController.restClientContentView = 'Acquire Data';">
+<!--                             <md-tooltip>
+                                Service Response Data
+                            </md-tooltip> -->
+                            View Data
+                        </md-button>
+                    </md-content>
+                </md-content>
+                <md-content layout-padding ng-switch-when="Formatted" style="background-color: transparent;">
+                    <md-content layout='row' style="background-color: transparent;">
+                        <md-button class="md-raised md-warn" ng-click="UiControls.openRightSideNav();AcquisitionController.restClientContentView = 'Formatting';">
+<!--                             <md-tooltip>
+                                Formatting Instructions
+                            </md-tooltip> -->
+                            Back
+                        </md-button>
+                    </md-content>
+                </md-content>
+            </md-content>
+        </md-content>
+        <md-content layout='row' style="background-color: transparent;">
+            <md-content ng-switch on="AcquisitionController.restClientContentView" style="background-color: transparent;">
+                <md-content layout-padding ng-switch-when="HTTP Config" style="background-color: transparent;">
+                    <md-button class="md-raised md-warn" ng-disabled="AcquisitionController.dataAcquisitionInProgress" ng-click="UiControls.closeLeftSideNav();UiControls.closeRightSideNav();AcquisitionController.dataAcquisitionInProgress = true;ServiceProvider.DataSourceUtils.acquire(ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration]);AcquisitionController.restClientContentView = 'Loading';">
+<!--                         <md-tooltip>
+                            Acquire Data
+                        </md-tooltip> -->
+                        Acquire Data
+                    </md-button>
+                </md-content>
+                <md-content layout-padding ng-switch-when="Acquire Data" style="background-color: transparent;">
+                    <md-button class="md-raised md-warn" ng-disabled="AcquisitionController.dataAcquisitionInProgress" ng-click="UiControls.openRightSideNav();AcquisitionController.restClientContentView = 'Formatting';">
+<!--                         <md-tooltip>
+                            Formatting Instructions
+                        </md-tooltip> -->
+                        Next
+                    </md-button>
+                </md-content>
+                <md-content layout-padding ng-switch-when="Formatting" style="background-color: transparent;">
+                    <md-button class="md-raised md-warn" ng-click="UiControls.closeRightSideNav();ServiceProvider.DataSourceUtils.format(ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration]);AcquisitionController.restClientContentView = 'Formatted';">
+<!--                         <md-tooltip>
+                            View Formatted Data
+                        </md-tooltip> -->
+                        Format
+                    </md-button>
+                </md-content>
+                <md-content layout-padding ng-switch-when="Formatted" style="background-color: transparent;">
+                    <md-button class="md-raised md-warn" ng-click="UiControls.openDialog('Data Source Configuration Wizard');" aria-label="Apply">
+<!--                         <md-tooltip>
+                            Explore Data
+                        </md-tooltip> -->
+                        Save
+                    </md-button>
+                </md-content>
+            </md-content>
+        </md-content>
+    </md-toolbar>
+</md-content>

@@ -1,0 +1,54 @@
+/* Begin Global Variables *******************************************/
+
+/* Heights
+ *******************************/
+$headerHeight: 40px;
+
+
+/* Backgrounds
+ *******************************/
+$bgColorPrimary: #021B2C;
+$bgColorSecondary: #e9eaed;
+$bgColorLight: #fff;
+
+/* Text
+ *******************************/
+$fontPrimary: 'Open Sans','lucida grande',tahoma,verdana,arial,sans-serif;
+$fontSecondary: 'Freight Sans Bold', 'lucida grande',tahoma,verdana,arial,sans-serif !important;
+$textColorPrimary: #888;
+$textColorSecondary: lighten($textColorPrimary,5%);
+$textColorLight: #1a1c29;
+$textColorDark: #151724;
+
+/* Borders
+ *******************************/
+$borderColorPrimary: #dcdedd;
+$borderColorSecondary: #cccccc;
+$borderWidthPrimary: 1px;
+$roundedBorderRadius: 4px;
+$roundedBorderRadiusSmall: 2px;
+
+/* Links
+ *******************************/
+$linkColorPrimary: #3b5998;
+
+/* Buttons
+ *******************************/
+$buttonDefaultBgColorTop: #fff;
+$buttonDefaultBgColorBottom: #f7f7f9;
+$buttonDefaultBorderColorTop: #d9d9d9;
+$buttonDefaultBorderColorLeft: #cecece;
+$buttonDefaultBorderColorRight: #cecece;
+$buttonDefaultBorderColorBottom: #b7b7b9;
+
+$buttonGroupBgColor: #fafbfb;
+$buttonGroupBgColorHover: #fff;
+
+/* Forms
+*********************************/
+$controlColorFocus: #999999;
+
+
+/*End Global Variables *********************************************/
+
+
