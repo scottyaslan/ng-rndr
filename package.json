@@ -1,0 +1,30 @@
+{
+    "name": "DAT",
+    "version": "1.0.0",
+    "description": "Data Analytics Toolkit",
+    "author": {
+        "name": "Scott Aslan",
+        "email": "saslan@pentaho.com"
+    },
+    "homepage": "http://localhost:3000/demo",
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "engines": {
+        "node": ">= 0.6.0",
+        "npm": ">= 1.0.0"
+    },
+    "dependencies": {
+        "express": "~3.4.4",
+        "ejs": "latest",
+        "bower": "latest"
+    },
+    "devDependencies": {},
+    "bundleDependencies": [],
+    "private": true,
+    "main": "server.js",
+    "scripts": {
+        "postinstall": "cd ./data_analytics_toolkit/app && node ../../node_modules/bower/bin/bower install && compass compile && cd ../../render/plugins && npm install && node node_modules/gulp/bin/gulp.js makeJs && node node_modules/gulp/bin/gulp.js makeCss"
+    }
+}
