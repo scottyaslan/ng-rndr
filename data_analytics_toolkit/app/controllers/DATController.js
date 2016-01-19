@@ -46,7 +46,7 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                         }
                     });
                     $rootScope.$on('data source configuration wizard save', function() {
-                        datController.mainContentView = '';
+                        datController.initiateDataExploration(true);
                     });
                     $rootScope.$on('data source wizard configuration cancel', function() {
                         datController.mainContentView = '';
@@ -55,9 +55,15 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                         datController.initiateDataSourceConfigurationWizard();
                     });
                     $rootScope.$on('DATController Explore View', function() {
-                        datController.initiateDataExploration(false);
+                        datController.initiateDataExploration(true);
                         $scope.$apply();
                     });
+                },
+                deleteRenderingEngine: function(id){
+                    RenderingEngineManager.delete(id);
+                    if(Object.keys(RenderingEngineManager.renderingEngines).length === 0){
+                        datController.mainContentView = '';
+                    }
                 },
                 initiateDataExploration: function(createNew){
                     if(datController.mainContentView !== "Explore"){

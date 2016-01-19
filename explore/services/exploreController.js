@@ -116,6 +116,12 @@ define(['app', '../../common/services/serviceProvider', '../../common/services/u
                     exploreController.dialogContentView = '';
                     UiControls.hideDialog();
                     $rootScope.$emit('initiate data source configuration wizard');
+                },
+                closeDialog: function(){
+                    UiControls.hideDialog();
+                    if(Object.keys(RenderingEngineManager.renderingEngines).length === 0){
+                        $rootScope.$emit('data source wizard configuration cancel');  
+                    }
                 }
             };
             var exploreController = new ExploreController();

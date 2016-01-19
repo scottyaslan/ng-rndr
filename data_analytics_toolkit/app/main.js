@@ -61,6 +61,8 @@ require.config({
         "ace-directive": "bower_components/angular-ui-ace/ui-ace"
     },
     shim: {
+        "font": ["goog", "propertyParser"],
+        "goog": ["async", "propertyParser"],
         //3rd party JS libs
         "jquery-ui": ["jquery"],
         "jquery-csv": ["jquery"],
@@ -87,7 +89,7 @@ require.config({
         },
         "jquery.contextMenu": ["jquery", "jquery-ui"],
         //Angular and any 3rd party angular modules
-        "angular": ["jquery"],
+        "angular": ["jquery", "jquery-csv"],
         "angular-resource": ["angular"],
         "angular-route": ["angular"],
         "angular-material": ["angular", "angular-animate", "angular-aria"],

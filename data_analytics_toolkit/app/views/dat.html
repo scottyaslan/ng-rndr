@@ -15,7 +15,7 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */ -->
 <md-content flex id="data_analytics_toolkit" ng-switch on="DATController.mainContentView" flex layout-fill layout="column" tabIndex="-1" role="main" style="overflow: hidden;">
-    <md-menu-bar ng-if="DATController.mainContentView !== 'Data Source Configuration Wizard' && DATController.mainContentView !== 'Dashboard Designer'" class="md-whiteframe-z5" style="z-index:3;">
+    <md-menu-bar ng-if="DATController.mainContentView !== 'Data Source Configuration Wizard' && DATController.mainContentView !== 'Dashboard Designer' && DATController.mainContentView !== '' && DATController.mainContentView !== undefined" class="md-whiteframe-z5" style="z-index:3;">
         <md-menu>
             <button ng-click="$mdOpenMenu()">
                 File
@@ -35,20 +35,20 @@
                     </md-menu>
                 </md-menu-item>
                 <md-menu-item ng-if="DATController.mainContentView !== 'Dashboard Designer' && RenderingEngineManager.activeRenderingEngine">
-                    <md-button ng-click="RenderingEngineManager.delete(RenderingEngineManager.activeRenderingEngine);">Delete</md-button>
+                    <md-button ng-click="DATController.deleteRenderingEngine(RenderingEngineManager.activeRenderingEngine);">Delete</md-button>
                 </md-menu-item>
             </md-menu-content>
         </md-menu>
         <md-menu>
             <!--  move $mdOpenMenu() into UiControls -->
-            <button ng-click="$mdOpenMenu()">
+            <button ng-disabled="DATController.sandboxMenusEnabled()" ng-click="$mdOpenMenu()">
                 Perspective
             </button>
             <md-menu-content style="z-index:3;">
                 <md-menu-item>
                     <md-button ng-click="DATController.initiateDataExploration(false);">Explore</md-button>
                 </md-menu-item>
-                <md-menu-item>
+                <md-menu-item ng-if="!DATController.sandboxMenusEnabled()">
                     <md-button ng-click="DATController.mainContentView = 'Dashboard Designer'">Dashboard Designer</md-button>
                 </md-menu-item>
             </md-menu-content>
@@ -93,5 +93,23 @@
     </md-content>
     <md-content style="height: 100%; overflow-x: hidden;" layout='column' ng-switch-when="Dashboard Designer">
         <dashboard-directive rendering-engine-manager="RenderingEngineManager"></dashboard-directive>
+    </md-content>
+    <md-content style="height: 100%; background-color: lightgrey" layout='row' layout-align="center center" ng-switch-default>
+      <md-card flex="50" class="md-whiteframe-z5">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Data Analytics Toolkit</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+          <p>
+            Acquire data over http from any REST service...Explore and visualize your data with pivot tables, google charts, D3, and C3 charting libraries...Create your own visualization plugin...Syndicate your data with the metro style tiles...
+          </p>
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="end center">
+          <md-button class="md-raised md-primary" ng-click="DATController.initiateDataExploration(true);">Explore</md-button>
+          <md-button class="md-raised md-primary" ng-click="DATController.initiateDataSourceConfigurationWizard();">Data Source Configuration</md-button>
+        </md-card-actions>
+      </md-card>
     </md-content>
 </md-content>
