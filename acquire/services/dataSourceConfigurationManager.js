@@ -28,8 +28,8 @@ define(['app', '../../common/services/serviceProvider', '../../acquire/services/
                         ServiceProvider.add('DataSourceConfigurationManager', dataSourceConfigurationManager);
                     }
                 },
-                create: function() {
-                    var dataSourceConfiguration = new DataSourceConfigurationFactory();
+                create: function(name) {
+                    var dataSourceConfiguration = new DataSourceConfigurationFactory(name);
                     dataSourceConfiguration.init();
                     dataSourceConfigurationManager.add(dataSourceConfiguration);
                     dataSourceConfigurationManager.activeDataSourceConfiguration = dataSourceConfiguration.id;

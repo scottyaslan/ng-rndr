@@ -38,10 +38,7 @@ define(['app', '../../common/services/serviceProvider', '../../acquire/services/
                 },
                 delete: function(dataSourceConfigId){
                     delete dataSourceManager.dataSources[dataSourceConfigId];
-                },
-                dataSourcesDefined: function(){
-                    return Object.keys(dataSourceManager.dataSources).length !== 0;
-                },
+                }
             };
             var dataSourceManager = new DataSourceManager();
             dataSourceManager.init();

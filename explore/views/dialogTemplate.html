@@ -112,12 +112,17 @@
                 </md-content>
                 <md-content flex layout="row" layout-sm="column" ng-switch-when='Data Sources'>
                     <md-content flex layout="column" layout-align="start start">
-                        <md-content ng-if="ServiceProvider.DataSourceManager.dataSourcesDefined()">
-                            <md-radio-group ng-model="ServiceProvider.ExploreController.selectedDataSourceConfigId">
-                                <md-radio-button ng-value="dataSource.dataSourceConfigId" class="md-accent" ng-repeat="dataSource in ServiceProvider.DataSourceManager.dataSources">{{dataSource.name}}</md-radio-button>
-                            </md-radio-group>
+                        <md-content ng-if="ServiceProvider.DataSourceConfigurationManager.dataSourceConfigurationsDefined()">
+                            <md-input-container class="md-block" flex-gt-sm>
+                                <label>Data Source</label>
+                                <md-select ng-model="ServiceProvider.ExploreController.selectedDataSourceConfigId">
+                                    <md-option ng-repeat="dataSourceConfiguration in ServiceProvider.DataSourceConfigurationManager.dataSourceConfigurations" value="{{dataSourceConfiguration.id}}">
+                                        {{dataSourceConfiguration.name}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
                         </md-content>
-                        <md-content ng-if="!ServiceProvider.DataSourceManager.dataSourcesDefined()">
+                        <md-content ng-if="!ServiceProvider.DataSourceConfigurationManager.dataSourceConfigurationsDefined()">
                             <p>Please Create a <md-button class="label md-accent" ng-click="ServiceProvider.ExploreController.initiateDataSourceWizard();">Data Source</md-button> to Explore.</p>
                         </md-content>
                     </md-content>
@@ -144,7 +149,7 @@
                 </md-content>
                 <md-content ng-switch-when='Data Sources'>
                     <md-content ng-if="(ServiceProvider.ExploreController.selectedDataSourceConfigId !== undefined)">
-                        <md-button class="md-accent" ng-click="UiControls.hideDialog(); ServiceProvider.RenderingEngineManager.create(ServiceProvider.ExploreController.selectedDataSourceConfigId);" aria-label="Create New Data Source">
+                        <md-button class="md-accent" ng-click="ServiceProvider.RenderingEngineManager.create(ServiceProvider.ExploreController.selectedDataSourceConfigId);" aria-label="Create New Data Source">
                             Explore
                         </md-button>
                     </md-content>

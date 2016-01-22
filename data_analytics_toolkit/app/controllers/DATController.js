@@ -15,8 +15,8 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
 define(['app', '../../../common/services/uiControls', '../../../acquire/services/dataSourceConfigurationManager', '../../../render/services/renderingEngineManager', '../../../render/services/renderers', '../../../render/services/renderingEngineUtils', '../../../acquire/directives/acquisitionDirective', '../../../explore/directives/explorationDirective', '../../../syndicate/directives/dashboardDirective'], function(app) {
-    app.controller('DATController', ['ServiceProvider', 'RenderingEngineManager', 'UiControls', 'DataSourceConfigurationManager', 'Renderers', '$window', '$rootScope', '$timeout', '$scope',
-        function(ServiceProvider, RenderingEngineManager, UiControls, DataSourceConfigurationManager, Renderers, $window, $rootScope, $timeout, $scope) {
+    app.controller('DATController', ['ServiceProvider', 'RenderingEngineManager', 'UiControls', 'DataSourceConfigurationManager', 'Renderers', '$window', '$rootScope', '$timeout', '$http', '$scope',
+        function(ServiceProvider, RenderingEngineManager, UiControls, DataSourceConfigurationManager, Renderers, $window, $rootScope, $timeout, $http, $scope) {
             function DATController() {
                 this.mainContentView;
             };
@@ -57,6 +57,19 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                     $rootScope.$on('DATController Explore View', function() {
                         datController.initiateDataExploration(true);
                         $scope.$apply();
+                    });
+                    //GET sample data
+                    $http({method: 'GET', url: 'http://nicolas.kruchten.com/Rdatasets/datasets.csv'}).then(function successCallback(csvlist) {
+                        // this callback will be called asynchronously
+                        // when the response is available
+                        var csvlist_arr =$.csv.toObjects(csvlist.data);
+                        angular.forEach(csvlist_arr, function(dataset) {
+                            var dataSourceConfigurationId = DataSourceConfigurationManager.create(dataset.Title);
+                            var url = "http://nicolas.kruchten.com/Rdatasets/csv/" + dataset.Package + "/" + dataset.Item + ".csv";
+                            DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].httpConfig = angular.toJson({method: 'GET', url: url });
+                        });
+                    }, function errorCallback(csvlist) {
+                        // Do Nothing.
                     });
                 },
                 deleteRenderingEngine: function(id){

@@ -14,9 +14,9 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', '../../common/services/serviceProvider', '../../render/services/renderingEngineFactory'], function(app) {
-    app.factory('RenderingEngineManager', ['ServiceProvider', 'RenderingEngineFactory',
-        function(ServiceProvider, RenderingEngineFactory) {
+define(['app', '../../common/services/uiControls', '../../common/services/serviceProvider', '../../render/services/renderingEngineFactory', '../../../acquire/services/dataSourceConfigurationManager', '../../../acquire/services/dataSourceManager', '../../../acquire/services/dataSourceUtils'], function(app) {
+    app.factory('RenderingEngineManager', ['UiControls', 'ServiceProvider', 'RenderingEngineFactory', 'DataSourceConfigurationManager', 'DataSourceManager', 'DataSourceUtils', '$http',
+        function(UiControls, ServiceProvider, RenderingEngineFactory, DataSourceConfigurationManager, DataSourceManager, DataSourceUtils, $http) {
             function RenderingEngineManager() {
                 this.renderingEngines = {};
                 this.activeRenderingEngine;
@@ -28,11 +28,30 @@ define(['app', '../../common/services/serviceProvider', '../../render/services/r
                         ServiceProvider.add('RenderingEngineManager', renderingEngineManager);
                     }
                 },
-                create: function(dataSourceConfigId) {
-                    var renderingEngine = new RenderingEngineFactory();
-                    renderingEngine.init(dataSourceConfigId);
-                    renderingEngineManager.add(renderingEngine);
-                    renderingEngineManager.activeRenderingEngine = renderingEngine.id;
+                create: function(dataSourceConfigurationId) {
+                    if(DataSourceManager.dataSources[dataSourceConfigurationId] === undefined){
+                        DataSourceManager.create(dataSourceConfigurationId, DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].name);
+                        $http(angular.fromJson(DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].httpConfig)).then(function successCallback(response) {
+                            // this callback will be called asynchronously
+                            // when the response is available
+                            DataSourceManager.dataSources[dataSourceConfigurationId].data = $.csv.toArrays(response.data);
+                            DataSourceUtils.format(DataSourceManager.dataSources[dataSourceConfigurationId]);
+                            UiControls.hideDialog();
+                            var renderingEngine = new RenderingEngineFactory();
+                            renderingEngine.init(dataSourceConfigurationId);
+                            renderingEngineManager.add(renderingEngine);
+                            renderingEngineManager.activeRenderingEngine = renderingEngine.id;
+                        }, function errorCallback(response) {
+                            var tmp;
+                            DataSourceManager.delete(dataSourceConfigurationId);
+                        });
+                    } else{
+                        UiControls.hideDialog();
+                        var renderingEngine = new RenderingEngineFactory();
+                        renderingEngine.init(dataSourceConfigurationId);
+                        renderingEngineManager.add(renderingEngine);
+                        renderingEngineManager.activeRenderingEngine = renderingEngine.id;
+                    }
                 },
                 add: function(renderingEngine){
                     renderingEngineManager.renderingEngines[renderingEngine.id] = renderingEngine;

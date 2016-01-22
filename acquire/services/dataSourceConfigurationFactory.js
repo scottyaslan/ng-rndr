@@ -17,10 +17,11 @@
 define(['app'], function(app) {
     app.factory('DataSourceConfigurationFactory', [
         function() {
-            function DataSourceConfigurationFactory() {
+            function DataSourceConfigurationFactory(name) {
                 this.id;
                 this.flattenDataFunctionString;
                 this.httpConfig;
+                this.name = name;
             }
             DataSourceConfigurationFactory.prototype = {
                 constructor: DataSourceConfigurationFactory,
@@ -35,7 +36,6 @@ define(['app'], function(app) {
                         url: 'http://nicolas.kruchten.com/pivottable/examples/montreal_2014.csv'
                     });
                     self.flattenDataFunctionString = 'return data;';
-                    self.title = "Untitiled";
                 }
             };
             return DataSourceConfigurationFactory;

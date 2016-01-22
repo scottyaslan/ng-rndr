@@ -23,7 +23,7 @@ define(['app', '../../common/services/serviceProvider', '../../common/services/u
             AcquisitionController.prototype = {
                 constructor: AcquisitionController,
                 init: function() {
-                    DataSourceManager.create(DataSourceConfigurationManager.create(), "Untitled");
+                    DataSourceManager.create(DataSourceConfigurationManager.create("Untitled"), "Untitled");
                     UiControls.init('acquire/views/bottomSheetGridTemplate.html', 'acquire/views/dialogTemplate.html');
                     UiControls.openLeftSideNav();
                     UiControls.openRightSideNav();
