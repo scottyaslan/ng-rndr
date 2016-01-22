@@ -46,7 +46,7 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                         }
                     });
                     $rootScope.$on('data source configuration wizard save', function() {
-                        datController.initiateDataExploration(true);
+                        datController.initiateDataExploration(false);
                     });
                     $rootScope.$on('data source wizard configuration cancel', function() {
                         datController.mainContentView = '';
@@ -55,7 +55,7 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                         datController.initiateDataSourceConfigurationWizard();
                     });
                     $rootScope.$on('DATController Explore View', function() {
-                        datController.initiateDataExploration(true);
+                        datController.initiateDataExploration();
                         $scope.$apply();
                     });
                     //GET sample data
@@ -81,12 +81,6 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                 initiateDataExploration: function(createNew){
                     if(datController.mainContentView !== "Explore"){
                        datController.mainContentView = "Explore"; 
-                    }
-                    if(createNew){
-                        //Have to get on the call stack after the exploration-directive link function is executed
-                        $timeout(function() {
-                            ServiceProvider.ExploreController.new();
-                        }, 0);   
                     }
                 },
                 initiateDataSourceConfigurationWizard: function(){

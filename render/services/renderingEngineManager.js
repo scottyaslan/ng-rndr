@@ -39,6 +39,7 @@ define(['app', '../../common/services/uiControls', '../../common/services/servic
                             UiControls.hideDialog();
                             var renderingEngine = new RenderingEngineFactory();
                             renderingEngine.init(dataSourceConfigurationId);
+                            renderingEngine.active = true;  
                             renderingEngineManager.add(renderingEngine);
                             renderingEngineManager.activeRenderingEngine = renderingEngine.id;
                         }, function errorCallback(response) {

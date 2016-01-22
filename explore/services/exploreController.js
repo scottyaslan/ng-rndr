@@ -85,6 +85,13 @@ define(['app', '../../common/services/serviceProvider', '../../common/services/u
                             }
                         }
                     };
+                    var requireDataSourceConfigSelection = false;
+                    angular.forEach(RenderingEngineManager.renderingEngines, function(RenderingEngine, uuid) {
+                         requireDataSourceConfigSelection = true;
+                    });
+                    if(!requireDataSourceConfigSelection){
+                        exploreController.new();
+                    }
                     if(ServiceProvider.ExploreController === undefined){
                         ServiceProvider.add('ExploreController', exploreController);
                     }

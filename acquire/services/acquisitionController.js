@@ -14,9 +14,9 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', '../../common/services/serviceProvider', '../../common/services/uiControls', '../../acquire/services/dataSourceUtils', '../../acquire/services/dataSourceManager', '../../acquire/services/dataSourceConfigurationManager'], function(app) {
-    app.factory('AcquisitionController', ['ServiceProvider', 'UiControls', 'DataSourceUtils', 'DataSourceManager', 'DataSourceConfigurationManager', '$rootScope', '$window',
-        function(ServiceProvider, UiControls, DataSourceUtils, DataSourceManager, DataSourceConfigurationManager, $rootScope, $window) {
+define(['app', '../../common/services/serviceProvider', '../../common/services/uiControls', '../../render/services/renderingEngineFactory', '../../render/services/renderingEngineManager', '../../acquire/services/dataSourceUtils', '../../acquire/services/dataSourceManager', '../../acquire/services/dataSourceConfigurationManager'], function(app) {
+    app.factory('AcquisitionController', ['ServiceProvider', 'UiControls', 'RenderingEngineFactory', 'RenderingEngineManager', 'DataSourceUtils', 'DataSourceManager', 'DataSourceConfigurationManager', '$rootScope', '$window',
+        function(ServiceProvider, UiControls, RenderingEngineFactory, RenderingEngineManager, DataSourceUtils, DataSourceManager, DataSourceConfigurationManager, $rootScope, $window) {
             function AcquisitionController() {
                 this.restClientContentView;
             }
@@ -41,6 +41,12 @@ define(['app', '../../common/services/serviceProvider', '../../common/services/u
                     });
                 },
                 save: function() {
+                    var renderingEngine = new RenderingEngineFactory();
+                    renderingEngine.init(DataSourceConfigurationManager.activeDataSourceConfiguration);
+                    renderingEngine.active = true;
+                    RenderingEngineManager.add(renderingEngine);
+                    RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].active = false;
+                    RenderingEngineManager.activeRenderingEngine = renderingEngine.id;
                     DataSourceConfigurationManager.activeDataSourceConfiguration = "";
                     UiControls.hideDialog(); 
                     UiControls.closeLeftSideNav();
