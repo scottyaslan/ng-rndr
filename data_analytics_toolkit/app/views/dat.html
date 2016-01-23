@@ -26,7 +26,7 @@
                         <md-button ng-click="$mdOpenMenu()">New</md-button>
                         <md-menu-content>
                             <md-menu-item>
-                                <md-button ng-click="DATController.initiateDataExploration();">Data Exploration</md-button>
+                                <md-button ng-click="DATController.initiateDataExploration(true);">Data Exploration</md-button>
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="DATController.initiateDataSourceConfigurationWizard();">Data Source Configuration</md-button>
@@ -85,6 +85,11 @@
             </md-menu-content>
         </md-menu>
     </md-menu-bar>
+    <md-content style="height: 100%;" layout='column' ng-switch-when="Loading">
+        <md-content flex layout="row" layout-fill layout-align="center center">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </md-content>
+    </md-content>
     <md-content style="height: 100%;" layout='column' ng-switch-when="Explore">
         <exploration-directive></exploration-directive>
     </md-content>

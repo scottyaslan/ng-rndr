@@ -40,7 +40,7 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                         //this will cause it to start over at step 1... 
                         if (datController.mainContentView !== "Data Source Configuration Wizard") {
                             var view = datController.mainContentView;
-                            datController.mainContentView = "";
+                            datController.mainContentView = "Loading";
                             $('body').scope().$apply();
                             datController.mainContentView = view;
                         }
@@ -75,12 +75,20 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                 deleteRenderingEngine: function(id){
                     RenderingEngineManager.delete(id);
                     if(Object.keys(RenderingEngineManager.renderingEngines).length === 0){
-                        datController.mainContentView = '';
+                        $timeout(function() {
+                            ServiceProvider.ExploreController.new();
+                        }, 0);
                     }
                 },
                 initiateDataExploration: function(createNew){
                     if(datController.mainContentView !== "Explore"){
                        datController.mainContentView = "Explore"; 
+                    }
+                    if(createNew){
+                        //Have to get on the call stack after the exploration-directive link function is executed
+                        $timeout(function() {
+                            ServiceProvider.ExploreController.new();
+                        }, 0);   
                     }
                 },
                 initiateDataSourceConfigurationWizard: function(){
