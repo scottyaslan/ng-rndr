@@ -15,8 +15,8 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
 define(['app', 'jquery-csv', '../../render/services/aggregators', '../../render/services/renderingEngineUtils', '../../render/services/renderers', '../../render/services/pivotDataFactory'], function(app) {
-    app.factory('RenderingEngineFactory', ['Aggregators', 'RenderingEngineUtils', 'Renderers', 'PivotDataFactory', '$q', '$timeout', '$window',
-        function(Aggregators, RenderingEngineUtils, Renderers, PivotDataFactory, $q, $timeout, $window) {
+    app.factory('RenderingEngineFactory', ['Aggregators', 'RenderingEngineUtils', 'Renderers', 'PivotDataFactory', '$q', '$timeout', '$window', '$rootScope',
+        function(Aggregators, RenderingEngineUtils, Renderers, PivotDataFactory, $q, $timeout, $window, $rootScope) {
             function RenderingEngineFactory() {
                 this.id;
                 this.element;
@@ -164,6 +164,7 @@ define(['app', 'jquery-csv', '../../render/services/aggregators', '../../render/
                 draw: function(data) {
                     var self = this;
                     var deferred = $q.defer();
+                    $rootScope.$emit('draw initiated');
                     $timeout(function(data) {
                         //Set the RenderingEngine id, # rows, and #cols for access in renderer
                         Renderers.availableRendererOptions['renderingEngineId'] = self.id;
@@ -298,6 +299,7 @@ define(['app', 'jquery-csv', '../../render/services/aggregators', '../../render/
                                 self.element.empty();
                                 //append the new viz
                                 self.element.append(result.html);
+                                $rootScope.$emit('draw complete');
                                 //run any post render functions defined by visual
                                 if(result.postRenderFunction){
                                     result.postRenderFunction(result.html, result.postRenderOpts);
@@ -309,7 +311,7 @@ define(['app', 'jquery-csv', '../../render/services/aggregators', '../../render/
                             }
                         }
                         deferred.resolve();
-                    }, 500, true, data);
+                    }, 1500, true, data);
                     return deferred.promise;
                 }
             };

@@ -58,6 +58,12 @@ define(['app', '../../../common/services/uiControls', '../../../acquire/services
                         datController.initiateDataExploration();
                         $scope.$apply();
                     });
+                    $rootScope.$on('draw initiated', function() {
+                        UiControls.showRenderingEngineProgress();
+                    });
+                    $rootScope.$on('draw complete', function() {
+                        UiControls.hideRenderingEngineProgress();
+                    });
                     //GET sample data
                     $http({method: 'GET', url: 'http://nicolas.kruchten.com/Rdatasets/datasets.csv'}).then(function successCallback(csvlist) {
                         // this callback will be called asynchronously
