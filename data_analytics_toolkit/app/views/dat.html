@@ -35,7 +35,10 @@
                     </md-menu>
                 </md-menu-item>
                 <md-menu-item ng-if="DATController.mainContentView !== 'Dashboard Designer' && RenderingEngineManager.activeRenderingEngine">
-                    <md-button ng-click="DATController.deleteRenderingEngine(RenderingEngineManager.activeRenderingEngine);">Delete</md-button>
+                    <md-button ng-click="ServiceProvider.ExploreController.dialogContentView = 'Rename';UiControls.openDialog('Name')">Rename</md-button>
+                </md-menu-item>
+                <md-menu-item ng-if="DATController.mainContentView !== 'Dashboard Designer' && RenderingEngineManager.activeRenderingEngine">
+                    <md-button ng-click="DATController.renameRenderingEngine(RenderingEngineManager.activeRenderingEngine);">Delete</md-button>
                 </md-menu-item>
             </md-menu-content>
         </md-menu>

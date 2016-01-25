@@ -30,6 +30,16 @@
         </md-toolbar>
         <md-dialog-content flex layout="column">
             <md-content layout-padding layout-align="space-around center" ng-switch on="ServiceProvider.ExploreController.dialogContentView">
+                <md-content layout="column" ng-switch-when='Rename'>
+                    <md-content flex layout-padding layout-align="space-around center">
+                        <md-content layout="column">
+                            <md-input-container flex>
+                                <label>Save As:</label>
+                                <input ng-model="ServiceProvider.RenderingEngineManager.renderingEngines[ServiceProvider.RenderingEngineManager.activeRenderingEngine].title">
+                            </md-input-container>
+                        </md-content>
+                    </md-content>
+                </md-content>
                 <md-content layout="column" ng-switch-when='Aggregate'>
                     <md-content layout="row">
                         <md-content flex=30 layout="column" layout-align="start start">
@@ -131,6 +141,11 @@
         </md-dialog-content>
         <md-content class="md-actions" layout="row">
             <md-content ng-switch on="ServiceProvider.ExploreController.dialogContentView">
+                <md-content ng-switch-when='Rename'>
+                    <md-button ng-click="UiControls.hideDialog();" class="md-primary" aria-label="Ok">
+                        Ok
+                    </md-button>
+                </md-content>
                 <md-content ng-switch-when='Aggregate'>
                     <md-button class="md-primary" ng-click="UiControls.hideDialog();" aria-label="Close Dialog">
                         Cancel
