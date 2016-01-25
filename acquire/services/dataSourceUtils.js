@@ -54,6 +54,15 @@ define(['app', '../../common/services/serviceProvider', '../../acquire/services/
                             //Do nothing
                         }
                     }
+                    try{
+                      dataSource.formattedData = angular.fromJson(dataSource.formattedData);
+                    } catch(e){
+                      try{
+                        dataSource.formattedData = $.csv.toArrays(dataSource.formattedData);
+                      } catch(e){
+                        //Do nothing
+                      }
+                    }
                 }
             };
             var dataSourceUtils = new DataSourceUtils();

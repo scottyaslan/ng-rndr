@@ -194,15 +194,6 @@ define(['app', 'jquery-csv', '../../render/services/aggregators', '../../render/
                             }
                                     
                         });
-                        try{
-                          data = angular.fromJson(data);
-                        } catch(e){
-                          try{
-                            data = $.csv.toArrays(data);
-                          } catch(e){
-                            //Do nothing
-                          }
-                        }
                         data = RenderingEngineUtils.convertToArray(data);
                         if(data !== undefined){
                             if(data.length > 0){

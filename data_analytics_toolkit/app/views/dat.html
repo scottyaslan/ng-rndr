@@ -15,7 +15,7 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */ -->
 <md-content flex id="data_analytics_toolkit" ng-switch on="DATController.mainContentView" flex layout-fill layout="column" tabIndex="-1" role="main" style="overflow: hidden;">
-    <md-menu-bar ng-if="DATController.mainContentView !== 'Data Source Configuration Wizard' && DATController.mainContentView !== 'Dashboard Designer' && DATController.mainContentView !== '' && DATController.mainContentView !== undefined" class="md-whiteframe-z5" style="z-index:3;">
+    <md-menu-bar ng-if="DATController.mainContentView !== 'Data Source Configuration Wizard' && DATController.mainContentView !== 'Dashboard Designer' && DATController.mainContentView !== '' && DATController.mainContentView !== undefined && DATController.embedded !== true" class="md-whiteframe-z5" style="z-index:3;">
         <md-menu>
             <button ng-click="$mdOpenMenu()">
                 File
