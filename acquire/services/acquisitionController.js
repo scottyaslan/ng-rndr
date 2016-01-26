@@ -45,7 +45,11 @@ define(['app', '../../common/services/serviceProvider', '../../common/services/u
                     renderingEngine.init(DataSourceConfigurationManager.activeDataSourceConfiguration);
                     renderingEngine.active = true;
                     RenderingEngineManager.add(renderingEngine);
-                    RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].active = false;
+                    //There may be an active rendering engine, if so deactivate
+                    if(RenderingEngineManager.activeRenderingEngine){
+                        RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].active = false;
+                    }
+                    //Set the active rendering engine to this one
                     RenderingEngineManager.activeRenderingEngine = renderingEngine.id;
                     DataSourceConfigurationManager.activeDataSourceConfiguration = "";
                     UiControls.hideDialog(); 
