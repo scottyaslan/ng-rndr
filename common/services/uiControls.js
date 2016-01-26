@@ -51,6 +51,7 @@ define(['app', '../../common/controllers/controllerWrapper', '../../common/servi
                         templateUrl: uiControls.dialogTemplateUrl,
                         parent: angular.element(document.body),
                         targetEvent: ev,
+                        escapeToClose: false
                     }).then(function(answer) {}, function() {});
                 },
                 showRenderingEngineProgress: function(){
