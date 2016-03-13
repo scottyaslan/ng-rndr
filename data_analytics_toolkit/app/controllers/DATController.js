@@ -14,7 +14,7 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', '../../../common/services/uiControls', '../../../acquire/services/dataSourceConfigurationManager', '../../../render/services/renderingEngineManager', '../../../render/services/renderers', '../../../render/services/renderingEngineUtils', '../../../acquire/directives/acquisitionDirective', '../../../explore/directives/explorationDirective', '../../../syndicate/directives/dashboardDirective'], function(app) {
+define(['app', '../../../common/services/uiControls', '../../../acquire/services/dataSourceConfigurationManager', '../../../render/services/renderingEngineManager', '../../../render/services/renderers', '../../../render/services/renderingEngineUtils', '../../../acquire/directives/acquisitionDirective', '../../../explore/directives/explorationDirective', '../../../syndicate/directives/dashboardDirective', '../directives/datDirective'], function(app) {
     app.controller('DATController', ['ServiceProvider', 'RenderingEngineManager', 'UiControls', 'DataSourceConfigurationManager', 'Renderers', '$window', '$rootScope', '$timeout', '$http', '$location', '$scope',
         function(ServiceProvider, RenderingEngineManager, UiControls, DataSourceConfigurationManager, Renderers, $window, $rootScope, $timeout, $http, $location, $scope) {
             function DATController() {
