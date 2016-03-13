@@ -37,7 +37,7 @@ function(angularAMD, fastclick) {
         $locationProvider.html5Mode(true);
         //Define routes, views, and controllers
         $routeProvider.when("/", angularAMD.route({
-            templateUrl: "data_analytics_toolkit/app/views/dat.html",
+            templateUrl: "data_analytics_toolkit/app/views/index.html",
             controller: "DATController",
             controllerUrl: 'controllers/DATController'
         })).when("/404", angularAMD.route({
