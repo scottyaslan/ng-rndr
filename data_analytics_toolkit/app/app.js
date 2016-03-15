@@ -20,7 +20,8 @@ define(["angularAMD",
         "angular-resource",
         "angular-local-storage",
         "angular-route",
-        "angular-material"], 
+        "angular-material",
+        "DATController"], 
 function(angularAMD, fastclick) {
     // FastClick (for touch screens) doesn"t attach any listeners on desktop browsers.
     // Chrome 32+ on Android with width=device-width in the viewport meta tag doesn"t have a 300ms delay, therefore listeners aren"t attached.
