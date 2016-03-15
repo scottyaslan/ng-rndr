@@ -19,7 +19,7 @@ define(['app', '../../../config'], function(app, config) {
         function() {
             return {
                 restrict: 'E',
-                templateUrl: config.BOWER_HOME + 'data_analytics_toolkit/app/views/dat.html',
+                templateUrl: 'data_analytics_toolkit/app/views/dat.html',
                 link: function(scope, element, attrs) {
 //                     ExploreController.init();
 //                     scope.ExploreController = ExploreController;
