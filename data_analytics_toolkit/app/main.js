@@ -58,9 +58,7 @@ require.config({
         "angular-ui-sortable": "bower_components/angular-ui-sortable/sortable",
         "angular-local-storage": "bower_components/angular-local-storage/dist/angular-local-storage",
         "angularContextMenu": "bower_components/angularContextMenu/src/angular-contextMenu",
-        "ace-directive": "bower_components/angular-ui-ace/ui-ace",
-        //Controllers
-        "DATController": "controllers/DATController"
+        "ace-directive": "bower_components/angular-ui-ace/ui-ace"
     },
     shim: {
         "font": ["goog", "propertyParser"],
