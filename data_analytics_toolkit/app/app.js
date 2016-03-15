@@ -73,5 +73,5 @@ function(angularAMD, fastclick) {
         });
     });
     //Boostrap explorerApp
-    return angularAMD.bootstrap(app);
+    return angularAMD.bootstrap(app, true, document.getElementById('exploreApp'));
 });
