@@ -37,6 +37,8 @@
         <link rel='stylesheet' href='data_analytics_toolkit/app/bower_components/jquery-ui/themes/base/jquery-ui.min.css' />
         <link rel='stylesheet' href='data_analytics_toolkit/app/bower_components/jQuery-contextMenu/src/jquery.contextMenu.css' />
     </head>
-    <body id="exploreApp" ng-view layout="column"></body>
+    <body id="exploreApp" ng-controller="DATController" ng-view layout="column">
+        <dat-directive style="height: 100%;"></dat-directive>
+    </body>
     <script data-main="data_analytics_toolkit/app/main" src="data_analytics_toolkit/app/bower_components/requirejs/require.js"></script>
 </html>

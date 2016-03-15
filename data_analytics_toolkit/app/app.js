@@ -36,15 +36,15 @@ function(angularAMD, fastclick) {
         //For pretty URLs
         $locationProvider.html5Mode(true);
         //Define routes, views, and controllers
-        $routeProvider.when("/", angularAMD.route({
-            templateUrl: "data_analytics_toolkit/app/views/index.html",
-            controller: "DATController",
-            controllerUrl: 'controllers/DATController'
-        })).when("/404", angularAMD.route({
-            templateUrl: "data_analytics_toolkit/app/views/404.html"
-        })).otherwise(angularAMD.route({
-            redirectTo: "/404"
-        }));
+//         $routeProvider.when("/", angularAMD.route({
+//             templateUrl: "data_analytics_toolkit/app/views/index.html",
+//             controller: "DATController",
+//             controllerUrl: 'controllers/DATController'
+//         })).when("/404", angularAMD.route({
+//             templateUrl: "data_analytics_toolkit/app/views/404.html"
+//         })).otherwise(angularAMD.route({
+//             redirectTo: "/404"
+//         }));
         //Define app palettes
         var customBluePaletteMap = $mdThemingProvider.extendPalette("grey", {
             "contrastDefaultColor": "light",
