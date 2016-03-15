@@ -16,13 +16,12 @@
 */
 define(["angularAMD",
         "fastclick",
-        "./controllers/DATController",
         "jquery-ui-touch-punch",
         "angular-resource",
         "angular-local-storage",
         "angular-route",
         "angular-material"], 
-function(angularAMD, fastclick, dat) {
+function(angularAMD, fastclick) {
     // FastClick (for touch screens) doesn"t attach any listeners on desktop browsers.
     // Chrome 32+ on Android with width=device-width in the viewport meta tag doesn"t have a 300ms delay, therefore listeners aren"t attached.
     // <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -37,15 +36,11 @@ function(angularAMD, fastclick, dat) {
         //For pretty URLs
         $locationProvider.html5Mode(true);
         //Define routes, views, and controllers
-//         $routeProvider.when("/", angularAMD.route({
-//             templateUrl: "data_analytics_toolkit/app/views/index.html",
-//             controller: "DATController",
-//             controllerUrl: 'controllers/DATController'
-//         })).when("/404", angularAMD.route({
-//             templateUrl: "data_analytics_toolkit/app/views/404.html"
-//         })).otherwise(angularAMD.route({
-//             redirectTo: "/404"
-//         }));
+        $routeProvider.otherwise(angularAMD.route({
+            templateUrl: "data_analytics_toolkit/app/views/index.html",
+            controller: "DATController",
+            controllerUrl: 'controllers/DATController'
+        }));
         //Define app palettes
         var customBluePaletteMap = $mdThemingProvider.extendPalette("grey", {
             "contrastDefaultColor": "light",
