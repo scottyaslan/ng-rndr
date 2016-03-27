@@ -14,18 +14,19 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', '../../../config'], function(app, config) {
-    app.directive('datDirective', [
-        function() {
-            return {
-                restrict: 'E',
-                templateUrl: 'data_analytics_toolkit/app/views/dat.html',
-                link: function(scope, element, attrs) {
-//                     ExploreController.init();
-//                     scope.ExploreController = ExploreController;
-//                     scope.ServiceProvider = ServiceProvider;
-                }
-            };
-        }
-    ]);
+define([], function() {
+    'use strict';
+
+    function datDirective() {
+        return {
+            restrict: 'E',
+            templateUrl: 'data_analytics_toolkit/app/views/dat.html',
+            link: function(scope, element, attrs) {
+            }
+        };
+    }
+
+    datDirective.$inject=[];
+
+    return datDirective;
 });

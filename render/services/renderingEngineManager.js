@@ -14,70 +14,74 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', '../../common/services/uiControls', '../../common/services/serviceProvider', '../../render/services/renderingEngineFactory', '../../../acquire/services/dataSourceConfigurationManager', '../../../acquire/services/dataSourceManager', '../../../acquire/services/dataSourceUtils'], function(app) {
-    app.factory('RenderingEngineManager', ['UiControls', 'ServiceProvider', 'RenderingEngineFactory', 'DataSourceConfigurationManager', 'DataSourceManager', 'DataSourceUtils', '$http',
-        function(UiControls, ServiceProvider, RenderingEngineFactory, DataSourceConfigurationManager, DataSourceManager, DataSourceUtils, $http) {
-            function RenderingEngineManager() {
-                this.renderingEngines = {};
-                this.activeRenderingEngine;
-            }
-            RenderingEngineManager.prototype = {
-                constructor: RenderingEngineManager,
-                init: function(){
-                    if(ServiceProvider.RenderingEngineManager === undefined){
-                        ServiceProvider.add('RenderingEngineManager', renderingEngineManager);
-                    }
-                },
-                create: function(dataSourceConfigurationId) {
-                    if(DataSourceManager.dataSources[dataSourceConfigurationId] === undefined){
-                        DataSourceManager.create(dataSourceConfigurationId, DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].name);
-                        $http(angular.fromJson(DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].httpConfig)).then(function successCallback(response) {
-                            // this callback will be called asynchronously
-                            // when the response is available
-                            DataSourceManager.dataSources[dataSourceConfigurationId].data = $.csv.toArrays(response.data);
-                            DataSourceUtils.format(DataSourceManager.dataSources[dataSourceConfigurationId]);
-                            UiControls.hideDialog();
-                            var renderingEngine = new RenderingEngineFactory();
-                            renderingEngine.init(dataSourceConfigurationId);
-                            renderingEngine.active = true;  
-                            renderingEngineManager.add(renderingEngine);
-                            renderingEngineManager.activeRenderingEngine = renderingEngine.id;
-                        }, function errorCallback(response) {
-                            var tmp;
-                            DataSourceManager.delete(dataSourceConfigurationId);
-                        });
-                    } else{
+define([], function() {
+    'use strict';
+
+    function RenderingEngineManager(UiControls, ServiceProvider, RenderingEngineFactory, DataSourceConfigurationManager, DataSourceManager, DataSourceUtils, $http) {
+        function RenderingEngineManager() {
+            this.renderingEngines = {};
+            this.activeRenderingEngine;
+        }
+        RenderingEngineManager.prototype = {
+            constructor: RenderingEngineManager,
+            init: function(){
+                if(ServiceProvider.RenderingEngineManager === undefined){
+                    ServiceProvider.add('RenderingEngineManager', renderingEngineManager);
+                }
+            },
+            create: function(dataSourceConfigurationId) {
+                if(DataSourceManager.dataSources[dataSourceConfigurationId] === undefined){
+                    DataSourceManager.create(dataSourceConfigurationId, DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].name);
+                    $http(angular.fromJson(DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].httpConfig)).then(function successCallback(response) {
+                        // this callback will be called asynchronously
+                        // when the response is available
+                        DataSourceManager.dataSources[dataSourceConfigurationId].data = $.csv.toArrays(response.data);
+                        DataSourceUtils.format(DataSourceManager.dataSources[dataSourceConfigurationId]);
                         UiControls.hideDialog();
                         var renderingEngine = new RenderingEngineFactory();
                         renderingEngine.init(dataSourceConfigurationId);
+                        renderingEngine.active = true;  
                         renderingEngineManager.add(renderingEngine);
                         renderingEngineManager.activeRenderingEngine = renderingEngine.id;
-                    }
-                },
-                add: function(renderingEngine){
-                    renderingEngineManager.renderingEngines[renderingEngine.id] = renderingEngine;
-                },
-                delete: function(id){
-                    delete renderingEngineManager.renderingEngines[id];
-                },
-                setActiveRenderingEngine: function(id){
-                    renderingEngineManager.activeRenderingEngine = id;
-                    angular.forEach(renderingEngineManager.renderingEngines, function(RenderingEngine) {
-                        RenderingEngine.active = false;
-                        if(RenderingEngine.id === id){
-                            RenderingEngine.active = true;
-                        }
+                    }, function errorCallback(response) {
+                        var tmp;
+                        DataSourceManager.delete(dataSourceConfigurationId);
                     });
-                },
-                updateAllRenderingEngineTileSizeAndPosition: function($widgets){
-                    angular.forEach($widgets, function($widget){
-                        renderingEngineManager.renderingEngines[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'))
-                    });
+                } else{
+                    UiControls.hideDialog();
+                    var renderingEngine = new RenderingEngineFactory();
+                    renderingEngine.init(dataSourceConfigurationId);
+                    renderingEngineManager.add(renderingEngine);
+                    renderingEngineManager.activeRenderingEngine = renderingEngine.id;
                 }
-            };
-            var renderingEngineManager = new RenderingEngineManager();
-            renderingEngineManager.init();
-            return renderingEngineManager;
-        }
-    ]);
+            },
+            add: function(renderingEngine){
+                renderingEngineManager.renderingEngines[renderingEngine.id] = renderingEngine;
+            },
+            delete: function(id){
+                delete renderingEngineManager.renderingEngines[id];
+            },
+            setActiveRenderingEngine: function(id){
+                renderingEngineManager.activeRenderingEngine = id;
+                angular.forEach(renderingEngineManager.renderingEngines, function(RenderingEngine) {
+                    RenderingEngine.active = false;
+                    if(RenderingEngine.id === id){
+                        RenderingEngine.active = true;
+                    }
+                });
+            },
+            updateAllRenderingEngineTileSizeAndPosition: function($widgets){
+                angular.forEach($widgets, function($widget){
+                    renderingEngineManager.renderingEngines[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'))
+                });
+            }
+        };
+        var renderingEngineManager = new RenderingEngineManager();
+        renderingEngineManager.init();
+        return renderingEngineManager;
+    }
+
+    RenderingEngineManager.$inject=['UiControls', 'ServiceProvider', 'RenderingEngineFactory', 'DataSourceConfigurationManager', 'DataSourceManager', 'DataSourceUtils', '$http'];
+
+    return RenderingEngineManager;
 });

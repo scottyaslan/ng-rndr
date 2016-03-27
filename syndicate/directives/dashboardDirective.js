@@ -14,23 +14,27 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', "../../common/directives/gridsterDirective", "../../render/directives/renderingEngineDirective", '../../syndicate/services/dashboardFactory', '../../common/services/serviceProvider'], function(app) {
-    app.directive('dashboardDirective', ['DashboardFactory', 'ServiceProvider', '$window',
-        function(DashboardFactory, ServiceProvider, $window) {
-            return {
-                restrict: 'E',
-                scope: {
-                    "renderingEngineManager": "="
-                },
-                link: {
-                    pre: function(scope, element, attrs) {
-                    //Clean up any existing context menus before we create more    
-                    $('.context-menu-list').remove();
-                    scope.DashboardFactory = new DashboardFactory($(element));
-                    scope.DashboardFactory.draw(scope);
-                    }
+define(['bower_components/angularContextMenu/src/angular-contextMenu'], function(contextMenu) {
+    'use strict';
+
+    function dashboardDirective(DashboardFactory, ServiceProvider, $window) {
+        return {
+            restrict: 'E',
+            scope: {
+                'renderingEngineManager': '='
+            },
+            link: {
+                pre: function(scope, element, attrs) {
+                //Clean up any existing context menus before we create more    
+                $('.context-menu-list').remove();
+                scope.DashboardFactory = new DashboardFactory($(element));
+                scope.DashboardFactory.draw(scope);
                 }
-            };
-        }
-    ]);
+            }
+        };
+    }
+
+    dashboardDirective.$inject=['DashboardFactory', 'ServiceProvider', '$window'];
+
+    return dashboardDirective;
 });

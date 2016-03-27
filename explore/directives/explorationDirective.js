@@ -14,18 +14,21 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', "gridster", "../../render/directives/renderingEngineDirective", '../../common/services/serviceProvider', '../../explore/services/exploreController'], function(app) {
-    app.directive('explorationDirective', ['ServiceProvider', 'ExploreController',
-        function(ServiceProvider, ExploreController) {
-            return {
-                restrict: 'E',
-                templateUrl:'explore/views/explore.html',
-                link: function(scope, element, attrs) {
-                    ExploreController.init();
-                    scope.ExploreController = ExploreController;
-                    scope.ServiceProvider = ServiceProvider;
-                }
-            };
-        }
-    ]);
+define([], function() {
+
+    function explorationDirective(ServiceProvider, ExploreController) {
+        return {
+            restrict: 'E',
+            templateUrl:'explore/views/explore.html',
+            link: function(scope, element, attrs) {
+                ExploreController.init();
+                scope.ExploreController = ExploreController;
+                scope.ServiceProvider = ServiceProvider;
+            }
+        };
+    }
+
+    explorationDirective.$inject=['ServiceProvider', 'ExploreController'];
+
+    return explorationDirective;
 });

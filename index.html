@@ -37,8 +37,13 @@
         <link rel='stylesheet' href='data_analytics_toolkit/app/bower_components/jquery-ui/themes/base/jquery-ui.min.css' />
         <link rel='stylesheet' href='data_analytics_toolkit/app/bower_components/jQuery-contextMenu/src/jquery.contextMenu.css' />
     </head>
-    <body id="exploreApp" ng-view layout="column">
-        <dat-directive style="height: 100%;"></dat-directive>
+    <body>
+        <div id="exploreAppById" ng-view layout="column" style="height: 50%;">
+            <dat-directive style="height: 100%;"></dat-directive>
+        </div>
+        <div class="exploreAppByClass" ng-view layout="column" style="height: 50%;">
+            <dat-directive style="height: 100%;"></dat-directive>
+        </div>
     </body>
-    <script data-main="data_analytics_toolkit/app/main" src="data_analytics_toolkit/app/bower_components/requirejs/require.js"></script>
+    <script data-main="data_analytics_toolkit/app/requirejs-sample-main.js" src="data_analytics_toolkit/app/bower_components/requirejs/require.js"></script>
 </html>

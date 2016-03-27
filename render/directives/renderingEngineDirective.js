@@ -14,22 +14,26 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', "angular-ui-sortable"], function(app) {
-    app.directive('renderingEngineDirective', [
-        function() {
-            return {
-                restrict: 'E',
-                scope: {
-                    "engine": "=",
-                    "input": "="
-                },
-                link: {
-                    pre: function(scope, element, attr) {
-                        scope.engine.element = $(element);
-                        scope.engine.draw(scope.input);
-                    }
+define([], function() {
+    'use strict';
+
+    function renderingEngineDirective() {
+        return {
+            restrict: 'E',
+            scope: {
+                'engine': '=',
+                'input': '='
+            },
+            link: {
+                pre: function(scope, element, attr) {
+                    scope.engine.element = $(element);
+                    scope.engine.draw(scope.input);
                 }
-            };
-        }
-    ]);
+            }
+        };
+    }
+
+    renderingEngineDirective.$inject=[];
+
+    return renderingEngineDirective;
 });

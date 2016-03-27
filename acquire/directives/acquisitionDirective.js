@@ -14,17 +14,21 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', "ace-directive", '../../acquire/services/acquisitionController'], function(app) {
-    app.directive('acquisitionDirective', ['AcquisitionController',
-        function(AcquisitionController) {
-            return {
-                restrict: 'E',
-                templateUrl:'acquire/views/acquire.html',
-                link: function(scope, element, attrs) {
-                    AcquisitionController.init();
-                    scope.AcquisitionController = AcquisitionController;
-                }
-            };
-        }
-    ]);
+define([], function() {
+    'use strict';
+
+    function acquisitionDirective(AcquisitionController) {
+        return {
+            restrict: 'E',
+            templateUrl:'acquire/views/acquire.html',
+            link: function(scope, element, attrs) {
+                AcquisitionController.init();
+                scope.AcquisitionController = AcquisitionController;
+            }
+        };
+    }
+
+    acquisitionDirective.$inject=['AcquisitionController'];
+
+    return acquisitionDirective;
 });

@@ -14,11 +14,15 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app', '../../common/services/serviceProvider', '../../common/services/uiControls'], function(app) {
-    app.controller('ControllerWrapper', ['$scope', 'UiControls', 'ServiceProvider',
-        function($scope, UiControls, ServiceProvider) {
-            $scope.UiControls = UiControls;
-            $scope.ServiceProvider = ServiceProvider;
-        }
-    ])
+define([], function() {
+    'use strict';
+
+    function ControllerWrapper($scope, UiControls, ServiceProvider) {
+        $scope.UiControls = UiControls;
+        $scope.ServiceProvider = ServiceProvider;
+    }
+
+    ControllerWrapper.$inject=['$scope', 'UiControls', 'ServiceProvider'];
+
+    return ControllerWrapper;
 });

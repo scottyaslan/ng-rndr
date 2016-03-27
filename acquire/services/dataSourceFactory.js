@@ -14,19 +14,23 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define(['app'], function(app) {
-    app.factory('DataSourceFactory', [
-        function() {
-            function DataSourceFactory(dataSourceConfigId, name) {
-                this.dataSourceConfigId = dataSourceConfigId;
-                this.data;
-                this.name = name;
-                this.formattedData;
-            }
-            DataSourceFactory.prototype = {
-                constructor: DataSourceFactory
-            };
-            return DataSourceFactory;
+define([], function() {
+    'use strict';
+
+    function DataSourceFactory() {
+        function DataSourceFactory(dataSourceConfigId, name) {
+            this.dataSourceConfigId = dataSourceConfigId;
+            this.data;
+            this.name = name;
+            this.formattedData;
         }
-    ]);
+        DataSourceFactory.prototype = {
+            constructor: DataSourceFactory
+        };
+        return DataSourceFactory;
+    }
+
+    DataSourceFactory.$inject=[];
+
+    return DataSourceFactory;
 });
