@@ -2276,55 +2276,6 @@ define('../../render/services/renderingEngineUtils',[], function() {
 
     return RenderingEngineUtils;
 });
-
-
-angular.module('angular-contextMenu', [])
-    .service('contextMenuService',function(){
-        var i = 0,
-            str = 'contextMenu-';
-
-        this.getId = function(){
-            return str+(++i);
-        }
-        this.getlastId = function(){
-            return str+i;
-        }
-    })
-    .directive('contextMenu', [ "$timeout","contextMenuService", function ($timeout,contextMenuService) {
-        return {
-            restrict: 'A',
-            compile:function(element, attrs){
-
-                var hasSelector = attrs.contextMenuSelector,
-                    selector;
-
-
-                if(!hasSelector && !selector){
-                    element.wrapInner('<div id="'+contextMenuService.getId()+'"></div>');
-                    selector = contextMenuService.getlastId();
-                }
-
-                return function(scope, element, attrs){
-                    var option = scope.$eval(attrs.contextMenu);
-
-                    if(!hasSelector){
-                        option.selector = '#'+selector;
-                    }else{
-                        option.selector = scope.$eval(attrs.contextMenuSelector);
-                    }
-
-                    if (angular.isObject(option)) {
-                        $timeout(function () {
-                            element.contextMenu(option);
-                        });
-                    }
-                }
-            }
-        };
-    }]);
-
-define("bower_components/angularContextMenu/src/angular-contextMenu", function(){});
-
 /*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
 *    Copyright (C) 2016  Scott Aslan
 *
@@ -2341,7 +2292,7 @@ define("bower_components/angularContextMenu/src/angular-contextMenu", function()
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define('../../syndicate/directives/dashboardDirective',['bower_components/angularContextMenu/src/angular-contextMenu'], function(contextMenu) {
+define('../../syndicate/directives/dashboardDirective',[], function() {
     'use strict';
 
     function dashboardDirective(DashboardFactory, ServiceProvider, $window) {
@@ -2589,7 +2540,17 @@ function(config,
     RenderingEngineManager,
     RenderingEngineUtils,
     dashboardDirective,
-    DashboardFactory) {                
+    DashboardFactory) {
+
+    function createUUID(){
+        var uuid =  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+
+        return uuid;
+    }
+
     //Create exploreApp
     var app = angular.module('exploreApp', ['ngResource', 'ngRoute', 'ngMaterial', 'LocalStorageModule', 'ui.sortable', 'angular-contextMenu', 'ui.ace']);
     //Configure exploreApp 
@@ -2619,6 +2580,23 @@ function(config,
     app.factory('RenderingEngineFactory', RenderingEngineFactory);
     app.factory('RenderingEngineManager', RenderingEngineManager);
     app.factory('RenderingEngineUtils', RenderingEngineUtils);
+
+    //Manual Boostrap App
+    if(document.getElementById('exploreAppById')){
+        $('#exploreAppById').attr('data-uuid', createUUID());
+        $('#exploreAppById').attr('data-ng-view', '');
+        $('#exploreAppById').attr('data-layout', 'column');
+        angular.bootstrap($('#exploreAppById'), ['exploreApp']);
+    }
+
+    if($('.exploreAppByClass')){
+        $('.exploreAppByClass').each(function() {
+            $(this).attr('data-uuid', createUUID());
+            $(this).attr('data-ng-view', '');
+            $(this).attr('data-layout', 'column');
+            angular.bootstrap(this, ['exploreApp']);
+        });
+    }
 
     return app;
 });

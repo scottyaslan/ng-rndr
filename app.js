@@ -14,27 +14,6 @@
 *    You should have received a copy of the GNU Affero General Public License
 *    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
 */
-define([], function() {
-    'use strict';
-
-    function dashboardDirective(DashboardFactory, ServiceProvider, $window) {
-        return {
-            restrict: 'E',
-            scope: {
-                'renderingEngineManager': '='
-            },
-            link: {
-                pre: function(scope, element, attrs) {
-                //Clean up any existing context menus before we create more    
-                $('.context-menu-list').remove();
-                scope.DashboardFactory = new DashboardFactory($(element));
-                scope.DashboardFactory.draw(scope);
-                }
-            }
-        };
-    }
-
-    dashboardDirective.$inject=['DashboardFactory', 'ServiceProvider', '$window'];
-
-    return dashboardDirective;
+define(['data-analytics-toolkit-angular-module'], 
+function(app) {
 });

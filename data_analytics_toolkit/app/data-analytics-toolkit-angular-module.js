@@ -65,7 +65,17 @@ function(config,
     RenderingEngineManager,
     RenderingEngineUtils,
     dashboardDirective,
-    DashboardFactory) {                
+    DashboardFactory) {
+
+    function createUUID(){
+        var uuid =  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+
+        return uuid;
+    }
+
     //Create exploreApp
     var app = angular.module('exploreApp', ['ngResource', 'ngRoute', 'ngMaterial', 'LocalStorageModule', 'ui.sortable', 'angular-contextMenu', 'ui.ace']);
     //Configure exploreApp 
@@ -95,6 +105,23 @@ function(config,
     app.factory('RenderingEngineFactory', RenderingEngineFactory);
     app.factory('RenderingEngineManager', RenderingEngineManager);
     app.factory('RenderingEngineUtils', RenderingEngineUtils);
+
+    //Manual Boostrap App
+    if(document.getElementById('exploreAppById')){
+        $('#exploreAppById').attr('data-uuid', createUUID());
+        $('#exploreAppById').attr('data-ng-view', '');
+        $('#exploreAppById').attr('data-layout', 'column');
+        angular.bootstrap($('#exploreAppById'), ['exploreApp']);
+    }
+
+    if($('.exploreAppByClass')){
+        $('.exploreAppByClass').each(function() {
+            $(this).attr('data-uuid', createUUID());
+            $(this).attr('data-ng-view', '');
+            $(this).attr('data-layout', 'column');
+            angular.bootstrap(this, ['exploreApp']);
+        });
+    }
 
     return app;
 });

@@ -91,7 +91,7 @@ var DAT = function() {
         // Handle 404
         app.use(function(req, res) {
             res.status(400);
-            res.render('data_analytics_toolkit/app/views/index.html');
+            res.render('data_analytics_toolkit/app/views/400.html');
         });
         // Handle 500
         app.use(function(error, req, res, next) {
@@ -106,6 +106,9 @@ var DAT = function() {
     self.routes = function() {
         self.app.get('/demo', function(req, res) {
             res.render('index.html');
+        });
+        self.app.get('/samples/requirejs/html', function(req, res) {
+            res.render('./samples/requirejs/html/index.html');
         });
     };
     /*
