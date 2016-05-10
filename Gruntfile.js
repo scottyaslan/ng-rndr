@@ -2,19 +2,16 @@ module.exports = function(grunt) {
     grunt.initConfig({
         requirejs: {
             options: {
-                baseUrl: "./data_analytics_toolkit/app",
+                baseUrl: "./src",
                 paths: {
                     'jquery': 'empty:',
-                    // 'bower_components/angular-ui-ace/ui-ace': 'empty:',
-                    // 'bower_components/angularContextMenu/src/angular-contextMenu': 'empty:',
-                    // 'bower_components/angular-ui-sortable/sortable': 'empty:',
                     'c3': 'empty:',
                     'd3': 'empty:',
                 },
                 removeCombined: true,
-                out: './data_analytics_toolkit/app/data-analytics-toolkit.js',
+                out: './dist/rndr.js',
                 optimize: 'none',
-                name: 'data-analytics-toolkit-angular-module'
+                name: 'rndr-angular-module'
             },
             dev:{
                 options:{

@@ -1,45 +1,24 @@
-// Express and Authentication
-// var flash = require('connect-flash');
 var express = require('express');
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
-var DAT = function() {
+var RNDR = function() {
     //scope
     var self = this;
     self.app = express();
     /**
-     *  //Set up server IP address and port # using env variables/defaults.
+     *  Set up server IP address and port # using env variables/defaults.
      */
     self.setEnvironmentVariables = function() {
         //  Set the environment variables we need
-        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP || '';
-        self.port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
+        self.ipaddress = '';
+        self.port = 3000;
         if(typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
             console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
             self.ipaddress = "127.0.0.1";
         }
-    };
-    /**
-     *  Populate the cache.
-     */
-    self.populateCache = function() {
-        if(typeof self.zcache === "undefined") {
-            self.zcache = {
-                'index.html': ''
-            };
-        }
-        //  Local cache for static content.
-        // self.zcache['index.html'] = fs.readFileSync('./index.html');
-    };
-    /**
-     *  Retrieve entry (content) from cache.
-     *  @param {string} key  Key identifying content to retrieve from cache.
-     */
-    self.cache_get = function(key) {
-        return self.zcache[key];
     };
     /**
      *  terminator === the termination handler
@@ -84,19 +63,19 @@ var DAT = function() {
         app.use(express.json());
         app.use(express.urlencoded());
         app.use(express.methodOverride());
-        app.use(express.cookieParser('sixhourdays'));
-        app.use(express.session({secret: 'sixhourdays'})); 
+        app.use(express.cookieParser('rndr'));
+        app.use(express.session({secret: 'rndr'})); 
         app.use(app.router);
         app.use(express.static(path.join(__dirname, './')));
         // Handle 404
         app.use(function(req, res) {
             res.status(400);
-            res.render('data_analytics_toolkit/app/views/400.html');
+            res.render('400.html');
         });
         // Handle 500
         app.use(function(error, req, res, next) {
             res.status(500);
-            res.render('data_analytics_toolkit/app/views/500.html');
+            res.render('500.html');
         });
         // development only
         if('development' == app.get('env')) {
@@ -107,9 +86,6 @@ var DAT = function() {
         self.app.get('/demo', function(req, res) {
             res.render('index.html');
         });
-        self.app.get('/samples/requirejs/html', function(req, res) {
-            res.render('./samples/requirejs/html/index.html');
-        });
     };
     /*
      *   Initialize Server
@@ -117,7 +93,6 @@ var DAT = function() {
     self.initialize = function() {
         self.setEnvironmentVariables();
         self.middleware();
-        self.populateCache();
         self.setupTerminationHandlers();
         self.routes();
     };
@@ -134,6 +109,6 @@ var DAT = function() {
 /**
  *  main():  Main code.
  */
-var app = new DAT();
+var app = new RNDR();
 app.initialize();
 app.start();

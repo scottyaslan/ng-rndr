@@ -17,7 +17,7 @@
 1. Bring up the apps and extensions management page by clicking the settings icon  and choosing Tools > Extensions
 2. Make sure the Developer mode checkbox has been selected
 3. Click the Load unpacked extension button
-4. Navigate to DataAnalyticsToolkit/DAT and click OK
+4. Navigate to RNDR and click OK
 
 ## Launch Chrome App
 
