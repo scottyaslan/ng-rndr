@@ -25,7 +25,7 @@ define([], function() {
             constructor: AcquisitionController,
             init: function() {
                 DataSourceManager.create(DataSourceConfigurationManager.create("Untitled"), "Untitled");
-                UiControls.init('src/acquire/views/bottomSheetGridTemplate.html', 'src/acquire/views/dialogTemplate.html');
+                UiControls.init('acquire/views/bottomSheetGridTemplate.html', 'acquire/views/dialogTemplate.html');
                 UiControls.openLeftSideNav();
                 UiControls.openRightSideNav();
                 acquisitionController.restClientContentView = 'HTTP Config';

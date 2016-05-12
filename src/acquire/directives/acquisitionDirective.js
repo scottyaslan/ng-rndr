@@ -21,7 +21,7 @@ define([], function() {
     function acquisitionDirective(AcquisitionController) {
         return {
             restrict: 'E',
-            templateUrl:'src/acquire/views/acquire.html',
+            templateUrl:'acquire/views/acquire.html',
             link: function(scope, element, attrs) {
                 AcquisitionController.init();
                 scope.AcquisitionController = AcquisitionController;

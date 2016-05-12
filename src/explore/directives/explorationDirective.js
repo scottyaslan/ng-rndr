@@ -19,7 +19,7 @@ define([], function() {
     function explorationDirective(ServiceProvider, ExploreController) {
         return {
             restrict: 'E',
-            templateUrl:'src/explore/views/explore.html',
+            templateUrl:'explore/views/explore.html',
             link: function(scope, element, attrs) {
                 ExploreController.init();
                 scope.ExploreController = ExploreController;

@@ -16,8 +16,9 @@
 */
 define(['rndr-angular-module'], 
 function() {
-	var app = angular.module('sampleApp', ['ngResource', 'ngRoute', 'ngMaterial', 'LocalStorageModule', 'ui.sortable', 'angular-contextMenu', 'ui.ace', 'ngRndr'])
-	.config(function($mdThemingProvider) {
+	var app = angular.module('sampleApp', ['ngResource', 'ngRoute', 'ngMaterial', 'ui.sortable', 'angular-contextMenu', 'ui.ace', 'ngRndr', 'ngRndr.templates'])
+	.config(function($locationProvider, $mdThemingProvider) {
+        $locationProvider.html5Mode(true);
         //Define app palettes
         var customBluePaletteMap = $mdThemingProvider.extendPalette("grey", {
             "contrastDefaultColor": "light",

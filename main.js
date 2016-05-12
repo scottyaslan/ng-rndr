@@ -42,6 +42,7 @@ require.config({
         'jquery.contextMenu': 'bower_components/jQuery-contextMenu/src/jquery.contextMenu',
         'gridster': 'bower_components/gridster/dist/jquery.gridster',
         'rndr-angular-module': 'dist/rndr',
+        'rndr-templates-angular-module': 'dist/rndr-templates',
         'c3': 'bower_components/c3/c3.min',
         'd3': 'bower_components/d3/d3.min',
         //Angular and any 3rd party angular modules
@@ -51,8 +52,7 @@ require.config({
         'angular-aria': 'bower_components/angular-aria/angular-aria',
         'angular-resource': 'bower_components/angular-resource/angular-resource.min',
         'angular-route': 'bower_components/angular-route/angular-route.min',
-        'angular-ui-sortable': 'bower_components/angular-ui-sortable/sortable',
-        'angular-local-storage': 'bower_components/angular-local-storage/dist/angular-local-storage'
+        'angular-ui-sortable': 'bower_components/angular-ui-sortable/sortable'
     },
     shim: {
         'font': ['goog', 'propertyParser'],
@@ -91,10 +91,9 @@ require.config({
         'angular-aria': ['angular'],
         'bower_components/angular-ui-sortable/sortable': ['angular', 'jquery-ui'],
         'bower_components/angularContextMenu/src/angular-contextMenu': ['angular', 'jquery.contextMenu'],
-        'angular-local-storage': ['angular'],
+        'rndr-templates-angular-module': ['angular'],
         'bower_components/angular-ui-ace/ui-ace': ['angular', 'ace'],
-        // 'TheApp': ['data-analytics-toolkit'],
-        'rndr-angular-module': ['angular', 'angular-route', 'angular-material', 'angular-resource', 'angular-local-storage', 'parallax', 'bower_components/angularContextMenu/src/angular-contextMenu', 'src/render/plugins/dist/gchart_renderers.min', 'datatables.net', 'gridster', 'bower_components/angular-ui-sortable/sortable', 'bower_components/angular-ui-ace/ui-ace']
+        'rndr-angular-module': ['angular', 'angular-route', 'angular-material', 'angular-resource', 'parallax', 'bower_components/angularContextMenu/src/angular-contextMenu', 'src/render/plugins/dist/gchart_renderers.min', 'datatables.net', 'gridster', 'bower_components/angular-ui-sortable/sortable', 'bower_components/angular-ui-ace/ui-ace', 'rndr-templates-angular-module']
     },
     deps: ['app']
 });

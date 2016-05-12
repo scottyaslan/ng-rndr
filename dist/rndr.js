@@ -1,4 +1,5 @@
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
+/*   RNDR:
+* 
 *    Copyright (C) 2016  Scott Aslan
 *
 *    This program is free software: you can redistribute it and/or modify
@@ -20,7 +21,7 @@ define('acquire/directives/acquisitionDirective',[], function() {
     function acquisitionDirective(AcquisitionController) {
         return {
             restrict: 'E',
-            templateUrl:'src/acquire/views/acquire.html',
+            templateUrl:'acquire/views/acquire.html',
             link: function(scope, element, attrs) {
                 AcquisitionController.init();
                 scope.AcquisitionController = AcquisitionController;
@@ -59,7 +60,7 @@ define('acquire/services/acquisitionController',[], function() {
             constructor: AcquisitionController,
             init: function() {
                 DataSourceManager.create(DataSourceConfigurationManager.create("Untitled"), "Untitled");
-                UiControls.init('src/acquire/views/bottomSheetGridTemplate.html', 'src/acquire/views/dialogTemplate.html');
+                UiControls.init('acquire/views/bottomSheetGridTemplate.html', 'acquire/views/dialogTemplate.html');
                 UiControls.openLeftSideNav();
                 UiControls.openRightSideNav();
                 acquisitionController.restClientContentView = 'HTTP Config';
@@ -623,7 +624,7 @@ define('explore/directives/explorationDirective',[], function() {
     function explorationDirective(ServiceProvider, ExploreController) {
         return {
             restrict: 'E',
-            templateUrl:'src/explore/views/explore.html',
+            templateUrl:'explore/views/explore.html',
             link: function(scope, element, attrs) {
                 ExploreController.init();
                 scope.ExploreController = ExploreController;
@@ -664,7 +665,7 @@ define('explore/services/exploreController',[], function() {
         ExploreController.prototype = {
             constructor: ExploreController,
             init: function() {
-                UiControls.init('src/explore/views/bottomSheetGridTemplate.html', 'src/explore/views/dialogTemplate.html');
+                UiControls.init('explore/views/bottomSheetGridTemplate.html', 'explore/views/dialogTemplate.html');
                 exploreController.constants = {
                     sortableOptions: {
                         placeholder: "placeholder",

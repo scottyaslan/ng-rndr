@@ -26,7 +26,7 @@ define([], function() {
         ExploreController.prototype = {
             constructor: ExploreController,
             init: function() {
-                UiControls.init('src/explore/views/bottomSheetGridTemplate.html', 'src/explore/views/dialogTemplate.html');
+                UiControls.init('explore/views/bottomSheetGridTemplate.html', 'explore/views/dialogTemplate.html');
                 exploreController.constants = {
                     sortableOptions: {
                         placeholder: "placeholder",
