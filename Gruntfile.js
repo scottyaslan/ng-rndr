@@ -53,5 +53,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-html2js');
 
     grunt.registerTask('dev',['requirejs:dev', 'html2js:main']);
-    grunt.registerTask('release',['requirejs:release']);
+    grunt.registerTask('release',['requirejs:release', 'html2js:main']);
 };
