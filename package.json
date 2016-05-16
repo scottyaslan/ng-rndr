@@ -29,6 +29,6 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "postinstall": "grunt dev && node ./node_modules/bower/bin/bower install && compass compile && cd src/render/plugins && npm install && node node_modules/gulp/bin/gulp.js makeJs && node node_modules/gulp/bin/gulp.js makeCss"
+    "postinstall": "grunt dev && node ./node_modules/bower/bin/bower install && cd src/ && compass compile && cd render/plugins && npm install && node node_modules/gulp/bin/gulp.js makeJs && node node_modules/gulp/bin/gulp.js makeCss"
   }
 }
