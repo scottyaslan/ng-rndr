@@ -1,20 +1,3 @@
-/*   RNDR:
-* 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('acquire/directives/acquisitionDirective',[], function() {
     'use strict';
 
@@ -33,22 +16,6 @@ define('acquire/directives/acquisitionDirective',[], function() {
 
     return acquisitionDirective;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('acquire/services/acquisitionController',[], function() {
     'use strict';
 
@@ -121,22 +88,6 @@ define('acquire/services/acquisitionController',[], function() {
 
     return AcquisitionController;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('acquire/services/dataSourceConfigurationFactory',[], function() {
     'use strict';
 
@@ -169,22 +120,6 @@ define('acquire/services/dataSourceConfigurationFactory',[], function() {
 
     return DataSourceConfigurationFactory;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('acquire/services/dataSourceConfigurationManager',[], function() {
     'use strict';
 
@@ -226,22 +161,6 @@ define('acquire/services/dataSourceConfigurationManager',[], function() {
 
     return DataSourceConfigurationManager;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('acquire/services/dataSourceFactory',[], function() {
     'use strict';
 
@@ -262,22 +181,6 @@ define('acquire/services/dataSourceFactory',[], function() {
 
     return DataSourceFactory;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('acquire/services/dataSourceManager',[], function() {
     'use strict';
 
@@ -314,22 +217,6 @@ define('acquire/services/dataSourceManager',[], function() {
 
     return DataSourceManager;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('acquire/services/dataSourceUtils',[], function() {
     'use strict';
 
@@ -391,22 +278,6 @@ define('acquire/services/dataSourceUtils',[], function() {
 
     return DataSourceUtils;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('common/controllers/controllerWrapper',[], function() {
     'use strict';
 
@@ -419,22 +290,6 @@ define('common/controllers/controllerWrapper',[], function() {
 
     return ControllerWrapper;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('common/directives/gridsterDirective',[], function() {
     'use strict';
 
@@ -468,22 +323,6 @@ define('common/directives/gridsterDirective',[], function() {
 
     return gridsterDirective;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('common/services/serviceProvider',[], function() {
     'use strict';
 
@@ -507,22 +346,6 @@ define('common/services/serviceProvider',[], function() {
 
     return ServiceProvider;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('common/services/uiControls',[], function() {
     'use strict';
 
@@ -603,22 +426,6 @@ define('common/services/uiControls',[], function() {
 
     return UiControls;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('explore/directives/explorationDirective',[], function() {
 
     function explorationDirective(ServiceProvider, ExploreController) {
@@ -637,22 +444,6 @@ define('explore/directives/explorationDirective',[], function() {
 
     return explorationDirective;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('explore/services/exploreController',[], function() {
     'use strict';
 
@@ -779,22 +570,6 @@ define('explore/services/exploreController',[], function() {
 
     return ExploreController;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('render/directives/renderingEngineDirective',[], function() {
     'use strict';
 
@@ -818,22 +593,6 @@ define('render/directives/renderingEngineDirective',[], function() {
 
     return renderingEngineDirective;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('render/services/aggregators',[], function() {
     'use strict';
 
@@ -887,22 +646,6 @@ define('render/services/aggregators',[], function() {
 
     return Aggregators;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('render/services/aggregatorTemplates',[], function() {
     'use strict';
 
@@ -1188,22 +931,6 @@ define('render/services/aggregatorTemplates',[], function() {
 
     return AggregatorTemplates;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('render/services/pivotDataFactory',[], function() {
     'use strict';
 
@@ -1367,22 +1094,6 @@ define('render/services/pivotDataFactory',[], function() {
 (function(){var e;(e=function(e){return"object"==typeof exports&&"object"==typeof module?e(require("jquery"),require("d3")):"function"==typeof define&&define.amd?define('render/plugins/dist/d3_renderers.min',["jquery","d3"],e):e(jQuery,d3)})(function(e,t){var n;return n={Treemap:function(n,i){var r,u,l,d,o,a,h,c,f,s,g,y,p,v;for(l={localeStrings:{},d3:{width:function(){return e(window).width()/1.4},height:function(){return e(window).height()/1.4}}},i=e.extend(l,i),c=e("<div>").css({width:i.d3.width(),height:i.d3.height()}),g={name:"All",children:[]},r=function(e,t,n){var i,u,l,d,o,a;if(0===t.length)return void(e.value=n);for(null==e.children&&(e.children=[]),a=t.shift(),o=e.children,u=0,l=o.length;l>u;u++)if(i=o[u],i.name===a)return void r(i,t,n);return d={name:a},r(d,t,n),e.children.push(d)},h=n.getRowKeys(),o=0,a=h.length;a>o;o++)s=h[o],p=n.getAggregator(s,[]).value(),null!=p&&r(g,s,p);return u=t.scale.category10(),v=i.d3.width(),d=i.d3.height(),y=t.layout.treemap().size([v,d]).sticky(!0).value(function(e){return e.size}),t.select(c[0]).append("div").style("position","relative").style("width",v+"px").style("height",d+"px").datum(g).selectAll(".node").data(y.padding([15,0,0,0]).value(function(e){return e.value}).nodes).enter().append("div").attr("class","node").style("background",function(e){return null!=e.children?"lightgrey":u(e.name)}).text(function(e){return e.name}).call(function(){this.style("left",function(e){return e.x+"px"}).style("top",function(e){return e.y+"px"}).style("width",function(e){return Math.max(0,e.dx-1)+"px"}).style("height",function(e){return Math.max(0,e.dy-1)+"px"})}),f={html:c}}}})}).call(this);
 //# sourceMappingURL=d3_renderers.min.js.map
 ;
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('render/services/renderers',['../../render/plugins/dist/datatables_renderers.min',
     '../../render/plugins/dist/gchart_renderers.min',
     '../../render/plugins/dist/c3_renderers.min',
@@ -1438,22 +1149,6 @@ define('render/services/renderers',['../../render/plugins/dist/datatables_render
 
     return Renderers;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('render/services/renderingEngineFactory',[], function() {
     'use strict';
 
@@ -1754,22 +1449,6 @@ define('render/services/renderingEngineFactory',[], function() {
 
     return RenderingEngineFactory;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('render/services/renderingEngineManager',[], function() {
     'use strict';
 
@@ -1841,22 +1520,6 @@ define('render/services/renderingEngineManager',[], function() {
 
     return RenderingEngineManager;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('render/services/renderingEngineUtils',[], function() {
     'use strict';
 
@@ -2067,22 +1730,6 @@ define('render/services/renderingEngineUtils',[], function() {
 
     return RenderingEngineUtils;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('syndicate/directives/dashboardDirective',[], function() {
     'use strict';
 
@@ -2107,22 +1754,6 @@ define('syndicate/directives/dashboardDirective',[], function() {
 
     return dashboardDirective;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('syndicate/services/dashboardFactory',[], function() {
     'use strict';
 
@@ -2264,22 +1895,6 @@ define('syndicate/services/dashboardFactory',[], function() {
 
     return DashboardFactory;
 });
-/*   Data Analytics Toolkit: Explore any data avaialable through a REST service 
-*    Copyright (C) 2016  Scott Aslan
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU Affero General Public License as
-*    published by the Free Software Foundation, either version 3 of the
-*    License, or (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU Affero General Public License for more details.
-*
-*    You should have received a copy of the GNU Affero General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/agpl.html>.
-*/
 define('rndr-angular-module',['acquire/directives/acquisitionDirective',
     'acquire/services/acquisitionController',
     'acquire/services/dataSourceConfigurationFactory',

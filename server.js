@@ -70,12 +70,12 @@ var RNDR = function() {
         // Handle 404
         app.use(function(req, res) {
             res.status(400);
-            res.render('400.html');
+            res.render('examples/400.html');
         });
         // Handle 500
         app.use(function(error, req, res, next) {
             res.status(500);
-            res.render('500.html');
+            res.render('examples/500.html');
         });
         // development only
         if('development' == app.get('env')) {
@@ -83,8 +83,8 @@ var RNDR = function() {
         }
     };
     self.routes = function() {
-        self.app.get('/demo', function(req, res) {
-            res.render('index.html');
+        self.app.get('/examples/requirejs', function(req, res) {
+            res.render('examples/index.html');
         });
     };
     /*

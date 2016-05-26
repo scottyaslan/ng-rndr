@@ -1,13 +1,13 @@
 {
-  "name": "rndr",
+  "name": "ngRNDR",
   "main": "app.js",
-  "version": "0.0.1rc",
+  "version": "0.0.1",
   "authors": [
     "Scott Aslan <scottyaslan@gmail.com>"
   ],
   "license": "AGPL",
   "ignore": [
-    "bower_components",
+    "examples",
     "dist",
     "node_modules",
     "RNDR",
@@ -22,11 +22,6 @@
     "package.json",
     "README.md",
     "server.js",
-    "app.js",
-    "index.html",
-    "main.js",
-    "400.html",
-    "500.html",
     "LICENSE"
   ],
   "dependencies": {

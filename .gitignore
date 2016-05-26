@@ -1,3 +1,4 @@
 node_modules
-.sass-cache
-/public/render/plugins/node_modules
+src/.sass-cache
+examples/bower_components
+'.
