@@ -8,7 +8,6 @@
   "license": "AGPL",
   "ignore": [
     "examples",
-    "dist",
     "node_modules",
     "RNDR",
     "src",
@@ -52,7 +51,8 @@
     "pdfmake": "*",
     "requirejs-plugins": "~1.0.3",
     "textAngular": "~1.4.6",
-    "require-css": "^0.1.8"
+    "require-css": "^0.1.8",
+    "ngRNDR": "^0.0.1"
   },
   "resolutions": {
     "angular": ">=1.4.3"

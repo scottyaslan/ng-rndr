@@ -26,8 +26,8 @@ require.config({
         'parallax': 'bower_components/parallax/deploy/jquery.parallax.min',
         'jquery.contextMenu': 'bower_components/jQuery-contextMenu/src/jquery.contextMenu',
         'gridster': 'bower_components/gridster/dist/jquery.gridster',
-        'rndr-angular-module': 'bower_components/ngRNDR/rndr',
-        'rndr-templates-angular-module': 'bower_components/ngRNDR/rndr-templates',
+        'rndr-angular-module': 'bower_components/ngRNDR/dist/rndr',
+        'rndr-templates-angular-module': 'bower_components/ngRNDR/dist/rndr-templates',
         'c3': 'bower_components/c3/c3.min',
         'd3': 'bower_components/d3/d3.min',
         //Angular and any 3rd party angular modules
