@@ -11,7 +11,7 @@ firesass = false
 # firesass = true
 
 # Location of the your project's resources.
-css_dir         = "css"
+css_dir         = "../dist/css"
 sass_dir        = "sass"
 extensions_dir  = "sass-extensions"
 images_dir      = "images"

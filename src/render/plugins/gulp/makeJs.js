@@ -23,6 +23,6 @@ gulp.task('makeJs', function() {
         .pipe(sourcemaps.init({loadMaps: true}))//load the source maps generated in the first step
         .pipe(uglify())
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest('../../../dist/plugins'));
 });
 

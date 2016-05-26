@@ -1,6 +1,6 @@
 {
   "name": "ngRNDR",
-  "main": "app.js",
+  "main": "dist/rndr.js",
   "version": "0.0.1",
   "authors": [
     "Scott Aslan <scottyaslan@gmail.com>"
