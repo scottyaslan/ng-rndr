@@ -1,10 +1,10 @@
 {
   "name": "ngRNDR",
   "version": "0.0.1",
-  "description": "Angular module for rendering data.",
+  "description": "ngRNDR: an anglar module for visualizing data.",
   "author": {
     "name": "Scott Aslan",
-    "email": "scottyaslan@gmail.com"
+    "email": "astechdev@gmail.com"
   },
   "repository": {
     "type": "git",
@@ -15,9 +15,6 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
-    "bower": "latest",
-    "ejs": "latest",
-    "express": "~3.4.4",
     "grunt": "^0.4.5",
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-uglify": "^0.6.0",
@@ -28,6 +25,6 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "postinstall": "grunt dev && node ./node_modules/bower/bin/bower install --config.directory=./examples/bower_components && cd src/ && compass compile && cd render/plugins && npm install && node node_modules/gulp/bin/gulp.js makeJs && node node_modules/gulp/bin/gulp.js makeCss"
+    "postinstall": "grunt release && cd src/render/plugins && npm install && node node_modules/gulp/bin/gulp.js makeJs && node node_modules/gulp/bin/gulp.js makeCss"
   }
 }
