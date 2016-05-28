@@ -18,7 +18,7 @@
     "tag": "0.1.8",
     "commit": "3b1d86858259762e5bb9db72c3df6ea808cd9d6d"
   },
-  "_source": "git://github.com/guybedford/require-css.git",
+  "_source": "https://github.com/guybedford/require-css.git",
   "_target": "^0.1.8",
   "_originalSource": "require-css"
 }

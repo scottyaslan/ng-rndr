@@ -1,5 +1,6 @@
 {
   "name": "jquery-csv",
+  "version": "0.8.1",
   "homepage": "https://github.com/evanplaice/jquery-csv",
   "authors": [
     "Evan Plaice <evanplaice@gmail.com>"
@@ -18,14 +19,13 @@
     "synchronise"
   ],
   "license": "MIT",
-  "ignore": "",
-  "_release": "398ff8cd5a",
+  "_release": "0.8.1",
   "_resolution": {
-    "type": "branch",
-    "branch": "master",
-    "commit": "398ff8cd5a81b1b87105c371965e4983942a5ce2"
+    "type": "version",
+    "tag": "0.8.1",
+    "commit": "6d392e47cd47e18fe9ddb38bbde351bfa15ba950"
   },
-  "_source": "git://github.com/mirlord/jquery-csv.git",
+  "_source": "https://github.com/evanplaice/jquery-csv.git",
   "_target": "*",
   "_originalSource": "jquery-csv"
 }

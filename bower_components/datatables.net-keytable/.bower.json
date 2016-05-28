@@ -35,14 +35,14 @@
   ],
   "homepage": "https://datatables.net",
   "license": "MIT",
-  "version": "2.1.0",
-  "_release": "2.1.0",
+  "version": "2.1.2",
+  "_release": "2.1.2",
   "_resolution": {
     "type": "version",
-    "tag": "2.1.0",
-    "commit": "037be2d333754b4fb89a04bc68d8b630f4f0ecf9"
+    "tag": "2.1.2",
+    "commit": "2debcfe4f7e4b0e73d5f5c9daec429e8788d2921"
   },
-  "_source": "git://github.com/DataTables/Dist-DataTables-KeyTable.git",
+  "_source": "https://github.com/DataTables/Dist-DataTables-KeyTable.git",
   "_target": ">=2.0.0",
   "_originalSource": "datatables.net-keytable"
 }

@@ -26,7 +26,7 @@
     "tag": "v0.2.1",
     "commit": "fb426d3ef7f5b761f46865039a989ffae7f393f1"
   },
-  "_source": "git://github.com/marcoslin/bower-angularAMD.git",
+  "_source": "https://github.com/marcoslin/bower-angularAMD.git",
   "_target": "*",
   "_originalSource": "angularAMD"
 }

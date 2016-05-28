@@ -83,7 +83,7 @@ var RNDR = function() {
         }
     };
     self.routes = function() {
-        self.app.get('/demo', function(req, res) {
+        self.app.get('/rndr', function(req, res) {
             res.render('index.html');
         });
     };
