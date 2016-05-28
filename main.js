@@ -1,6 +1,6 @@
 require.config({
     waitSeconds: 200,
-    baseUrl: 'bower_components',
+    baseUrl: 'ngRNDR/bower_components',
     paths: {
         //RequireJS plugins
         'async': 'requirejs-plugins/src/async',
