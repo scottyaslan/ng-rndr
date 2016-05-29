@@ -16,7 +16,6 @@ var RNDR = function() {
         if(typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
-            console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
             self.ipaddress = "127.0.0.1";
         }
     };
@@ -66,7 +65,7 @@ var RNDR = function() {
         app.use(express.cookieParser('rndr'));
         app.use(express.session({secret: 'rndr'})); 
         app.use(app.router);
-        app.use(express.static(path.join(__dirname, './')));
+        app.use('/ngRNDR', express.static(path.join(__dirname, './')));
         // Handle 404
         app.use(function(req, res) {
             res.status(400);
@@ -83,7 +82,7 @@ var RNDR = function() {
         }
     };
     self.routes = function() {
-        self.app.get('/rndr', function(req, res) {
+        self.app.get('/ngRNDR', function(req, res) {
             res.render('index.html');
         });
     };

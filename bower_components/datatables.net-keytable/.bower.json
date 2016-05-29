@@ -43,6 +43,6 @@
     "commit": "2debcfe4f7e4b0e73d5f5c9daec429e8788d2921"
   },
   "_source": "https://github.com/DataTables/Dist-DataTables-KeyTable.git",
-  "_target": ">=2.0.0",
+  "_target": "~2.1.0",
   "_originalSource": "datatables.net-keytable"
 }

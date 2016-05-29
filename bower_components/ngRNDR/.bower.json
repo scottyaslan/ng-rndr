@@ -3,13 +3,12 @@
   "main": "dist/rndr.js",
   "version": "0.0.1",
   "authors": [
-    "Scott Aslan <scottyaslan@gmail.com>"
+    "Scott Aslan <astechdev@gmail.com>"
   ],
-  "license": "AGPL",
+  "license": "MIT",
   "ignore": [
     "examples",
     "node_modules",
-    "RNDR",
     "src",
     "test-src",
     ".bowerrc",
@@ -20,7 +19,6 @@
     "Gruntfile.js",
     "package.json",
     "README.md",
-    "server.js",
     "LICENSE"
   ],
   "dependencies": {
@@ -62,7 +60,7 @@
   "_resolution": {
     "type": "version",
     "tag": "v0.0.1",
-    "commit": "ee4e503aefea26b589049f59868df74277b17001"
+    "commit": "2cd75fc49ee66dcfe32dc103e9a460f319b91878"
   },
   "_source": "https://github.com/scottyaslan/ngRNDR.git",
   "_target": "^0.0.1",

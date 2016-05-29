@@ -3,13 +3,12 @@
   "main": "dist/rndr.js",
   "version": "0.0.1",
   "authors": [
-    "Scott Aslan <scottyaslan@gmail.com>"
+    "Scott Aslan <astechdev@gmail.com>"
   ],
-  "license": "AGPL",
+  "license": "MIT",
   "ignore": [
     "examples",
     "node_modules",
-    "RNDR",
     "src",
     "test-src",
     ".bowerrc",
@@ -20,7 +19,6 @@
     "Gruntfile.js",
     "package.json",
     "README.md",
-    "server.js",
     "LICENSE"
   ],
   "dependencies": {
