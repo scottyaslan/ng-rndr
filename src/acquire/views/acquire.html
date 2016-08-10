@@ -53,24 +53,24 @@
                     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                 </md-content>
                 <md-content layout-padding ng-switch-when="HTTP Config">
-                    <div ng-model="ServiceProvider.DataSourceConfigurationManager.dataSourceConfigurations[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].httpConfig"
+                    <div ng-model="DataSourceConfigurationManager.dataSourceConfigurations[DataSourceConfigurationManager.activeDataSourceConfiguration].httpConfig"
                          ui-ace="{ useWrapMode : true,
                                  theme:'eclipse',
                                  mode: 'javascript'}" >
                     </div>
                 </md-content>
                 <md-content layout-padding ng-switch-when="Acquire Data">
-                    {{ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].data}}
+                    {{DataSourceManager.dataSources[DataSourceConfigurationManager.activeDataSourceConfiguration].data}}
                 </md-content>
                 <md-content layout-padding ng-switch-when="Formatting">
-                    <div ng-model="ServiceProvider.DataSourceConfigurationManager.dataSourceConfigurations[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].flattenDataFunctionString"
+                    <div ng-model="DataSourceConfigurationManager.dataSourceConfigurations[DataSourceConfigurationManager.activeDataSourceConfiguration].flattenDataFunctionString"
                          ui-ace="{ useWrapMode : true,
                                  theme:'eclipse',
                                  mode: 'javascript'}" >
                     </div>
                 </md-content>
                 <md-content layout-padding ng-switch-when="Formatted">
-                    {{ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration].formattedData}}
+                    {{DataSourceManager.dataSources[DataSourceConfigurationManager.activeDataSourceConfiguration].formattedData}}
                 </md-content>
             </md-content>
         </md-content>
@@ -311,7 +311,7 @@
         <md-content layout='row' style="background-color: transparent;">
             <md-content ng-switch on="AcquisitionController.restClientContentView" style="background-color: transparent;">
                 <md-content layout-padding ng-switch-when="HTTP Config" style="background-color: transparent;">
-                    <md-button class="md-raised md-warn" ng-disabled="AcquisitionController.dataAcquisitionInProgress" ng-click="UiControls.closeLeftSideNav();UiControls.closeRightSideNav();AcquisitionController.dataAcquisitionInProgress = true;ServiceProvider.DataSourceUtils.acquire(ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration]);AcquisitionController.restClientContentView = 'Loading';">
+                    <md-button class="md-raised md-warn" ng-disabled="AcquisitionController.dataAcquisitionInProgress" ng-click="UiControls.closeLeftSideNav();UiControls.closeRightSideNav();AcquisitionController.dataAcquisitionInProgress = true;DataSourceUtils.acquire(DataSourceManager.dataSources[DataSourceConfigurationManager.activeDataSourceConfiguration]);AcquisitionController.restClientContentView = 'Loading';">
 <!--                         <md-tooltip>
                             Acquire Data
                         </md-tooltip> -->
@@ -327,7 +327,7 @@
                     </md-button>
                 </md-content>
                 <md-content layout-padding ng-switch-when="Formatting" style="background-color: transparent;">
-                    <md-button class="md-raised md-warn" ng-click="UiControls.closeRightSideNav();ServiceProvider.DataSourceUtils.format(ServiceProvider.DataSourceManager.dataSources[ServiceProvider.DataSourceConfigurationManager.activeDataSourceConfiguration]);AcquisitionController.restClientContentView = 'Formatted';">
+                    <md-button class="md-raised md-warn" ng-click="UiControls.closeRightSideNav();DataSourceUtils.format(DataSourceManager.dataSources[DataSourceConfigurationManager.activeDataSourceConfiguration]);AcquisitionController.restClientContentView = 'Formatted';">
 <!--                         <md-tooltip>
                             View Formatted Data
                         </md-tooltip> -->

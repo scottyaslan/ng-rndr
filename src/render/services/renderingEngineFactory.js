@@ -280,10 +280,6 @@ define([], function() {
                             if(result.postRenderFunction){
                                 result.postRenderFunction(result.html, result.postRenderOpts);
                             }
-                            //clean up
-                            // delete DataView;
-                            // delete data;
-                            // delete result;
                         }
                     }
                     deferred.resolve();
@@ -293,8 +289,6 @@ define([], function() {
         };
         return RenderingEngineFactory;
     }
-
-    RenderingEngineFactory.$inject=['Aggregators', 'RenderingEngineUtils', 'Renderers', 'PivotDataFactory', '$q', '$timeout', '$window', '$rootScope'];
 
     return RenderingEngineFactory;
 });

@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    function ExploreController(ServiceProvider, UiControls, RenderingEngineManager, DataSourceManager, $window, $timeout, $rootScope) {
+    function ExploreController(RenderingEngineManager, DataSourceManager, $window, $timeout, $rootScope) {
         function ExploreController() {
             this.selectedDataSourceConfigId;
             this.dialogContentView;
@@ -10,7 +10,6 @@ define([], function() {
         ExploreController.prototype = {
             constructor: ExploreController,
             init: function() {
-                UiControls.init('explore/views/bottomSheetGridTemplate.html', 'explore/views/dialogTemplate.html');
                 exploreController.constants = {
                     sortableOptions: {
                         placeholder: "placeholder",
@@ -77,9 +76,6 @@ define([], function() {
                 if(!requireDataSourceConfigSelection){
                     exploreController.new();
                 }
-                if(ServiceProvider.ExploreController === undefined){
-                    ServiceProvider.add('ExploreController', exploreController);
-                }
                 angular.element($window).on( "rowLabelDrillDownEvent", function(e) {
                     var RenderingEngine = RenderingEngineManager.renderingEngines[e.renderingEngineId];
                     var filterByAttributeValue = $(e.event.currentTarget).html();
@@ -98,29 +94,16 @@ define([], function() {
                         RenderingEngine.draw(DataSourceManager.dataSources[RenderingEngine.dataSourceConfigId].formattedData);
                     }, 0);
                 });
+                $rootScope.$emit('explore:init');
             },
             new: function(){
-                exploreController.dialogContentView = "Data Sources";
                 exploreController.selectedDataSourceConfigId = undefined;
-                UiControls.openDialog('Data Source');
-            },
-            initiateDataSourceWizard: function(){
-                exploreController.dialogContentView = '';
-                UiControls.hideDialog();
-                $rootScope.$emit('initiate data source configuration wizard');
-            },
-            closeDialog: function(){
-                UiControls.hideDialog();
-                if(Object.keys(RenderingEngineManager.renderingEngines).length === 0){
-                    $rootScope.$emit('data source wizard configuration cancel');  
-                }
+                $rootScope.$emit('explore:new');
             }
         };
         var exploreController = new ExploreController();
         return exploreController;
     }
-
-    ExploreController.$inject=['ServiceProvider', 'UiControls', 'RenderingEngineManager', 'DataSourceManager', '$window', '$timeout', '$rootScope'];
 
     return ExploreController;
 });

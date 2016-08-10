@@ -25,6 +25,6 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "postinstall": "grunt release && cd src/render/plugins && npm install && node node_modules/gulp/bin/gulp.js makeJs && node node_modules/gulp/bin/gulp.js makeCss"
+    "postinstall": "grunt dev && cd src/render/plugins && npm install && node node_modules/gulp/bin/gulp.js makeJs && node node_modules/gulp/bin/gulp.js makeCss"
   }
 }

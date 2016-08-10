@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    function Aggregators(ServiceProvider, AggregatorTemplates, RenderingEngineUtils) {
+    function Aggregators(AggregatorTemplates, RenderingEngineUtils) {
         function Aggregators() {
             this.availableAggregators;
             this.availableAggregatorNames;
@@ -32,9 +32,6 @@ define([], function() {
                 self.addAggregator('Count as Fraction of Total', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'total', RenderingEngineUtils.usFmtPct()));
                 self.addAggregator('Count as Fraction of Rows', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'row', RenderingEngineUtils.usFmtPct()));
                 self.addAggregator('Count as Fraction of Columns', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'col', RenderingEngineUtils.usFmtPct()));
-                if(ServiceProvider.Aggregators === undefined){
-                    ServiceProvider.add('Aggregators', aggregators);
-                }
             },
             addAggregator: function(AggregatorName, Aggregator){
                 var self = this;
@@ -46,8 +43,6 @@ define([], function() {
         aggregators.init();
         return aggregators;
     }
-
-    Aggregators.$inject=['ServiceProvider', 'AggregatorTemplates', 'RenderingEngineUtils'];
 
     return Aggregators;
 });

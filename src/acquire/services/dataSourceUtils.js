@@ -1,16 +1,12 @@
 define([], function() {
     'use strict';
 
-    function DataSourceUtils(ServiceProvider, DataSourceConfigurationManager, $http, $rootScope) {
+    function DataSourceUtils(DataSourceConfigurationManager, $http, $rootScope) {
         function DataSourceUtils() {
         }
         DataSourceUtils.prototype = {
             constructor: DataSourceUtils,
-            init: function(){
-                if(ServiceProvider.DataSourceUtils === undefined){
-                    ServiceProvider.add('DataSourceUtils', dataSourceUtils);
-                }
-            },
+            init: function(){},
             acquire: function(dataSource) {
                 $rootScope.$emit('acquiring data');
                 $http(angular.fromJson(DataSourceConfigurationManager.dataSourceConfigurations[dataSource.dataSourceConfigId].httpConfig)).then(function successCallback(response) {
@@ -54,8 +50,6 @@ define([], function() {
         dataSourceUtils.init();
         return dataSourceUtils;
     }
-
-    DataSourceUtils.$inject=['ServiceProvider', 'DataSourceConfigurationManager', '$http', '$rootScope'];
 
     return DataSourceUtils;
 });

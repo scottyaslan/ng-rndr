@@ -14,7 +14,5 @@ define([], function() {
         return DataSourceFactory;
     }
 
-    DataSourceFactory.$inject=[];
-
     return DataSourceFactory;
 });

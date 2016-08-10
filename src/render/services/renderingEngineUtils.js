@@ -1,16 +1,12 @@
 define([], function() {
     'use strict';
 
-    function RenderingEngineUtils(ServiceProvider) {
+    function RenderingEngineUtils() {
         function RenderingEngineUtils() {
         }
         RenderingEngineUtils.prototype = {
             constructor: RenderingEngineUtils,
-            init: function(){
-                if(ServiceProvider.RenderingEngineUtils === undefined){
-                    ServiceProvider.add('RenderingEngineUtils', renderingEngineUtils);
-                }
-            },
+            init: function(){},
             hasProp: {}.hasOwnProperty,
             indexOf: [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
             convertToArray: function(input) {
@@ -203,8 +199,6 @@ define([], function() {
         renderingEngineUtils.init();
         return renderingEngineUtils;
     }
-
-    RenderingEngineUtils.$inject=['ServiceProvider'];
 
     return RenderingEngineUtils;
 });

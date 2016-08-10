@@ -27,7 +27,5 @@ define([], function() {
         };
     }
 
-    gridsterDirective.$inject=[];
-
     return gridsterDirective;
 });

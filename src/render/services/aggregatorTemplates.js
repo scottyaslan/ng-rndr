@@ -1,17 +1,13 @@
 define([], function() {
     'use strict';
 
-    function AggregatorTemplates(ServiceProvider, RenderingEngineUtils) {
+    function AggregatorTemplates(RenderingEngineUtils) {
         function AggregatorTemplates() {
             this.aggregatorTemplates;
         }
         AggregatorTemplates.prototype = {
             constructor: AggregatorTemplates,
-            init: function(){
-                if(ServiceProvider.AggregatorTemplates === undefined){
-                    ServiceProvider.add('AggregatorTemplates', agregatorTemplates);
-                }
-            },
+            init: function(){},
             count: function(formatter) {
                 if (formatter == null) {
                     formatter = RenderingEngineUtils.usFmtInt;
@@ -278,8 +274,6 @@ define([], function() {
         agregatorTemplates.init();
         return agregatorTemplates;
     }
-
-    AggregatorTemplates.$inject=['ServiceProvider', 'RenderingEngineUtils'];
 
     return AggregatorTemplates;
 });

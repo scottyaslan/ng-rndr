@@ -145,7 +145,5 @@ define([], function() {
         return PivotDataFactory;
     }
 
-    PivotDataFactory.$inject=['RenderingEngineUtils'];
-
     return PivotDataFactory;
 });

@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    function dashboardDirective(DashboardFactory, ServiceProvider, $window) {
+    function dashboardDirective(DashboardFactory, $window) {
         return {
             restrict: 'E',
             scope: {
@@ -17,8 +17,6 @@ define([], function() {
             }
         };
     }
-
-    dashboardDirective.$inject=['DashboardFactory', 'ServiceProvider', '$window'];
 
     return dashboardDirective;
 });

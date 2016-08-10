@@ -17,7 +17,5 @@ define([], function() {
         };
     }
 
-    renderingEngineDirective.$inject=[];
-
     return renderingEngineDirective;
 });

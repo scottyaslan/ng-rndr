@@ -1,18 +1,14 @@
 define([], function() {
     'use strict';
 
-    function RenderingEngineManager(UiControls, ServiceProvider, RenderingEngineFactory, DataSourceConfigurationManager, DataSourceManager, DataSourceUtils, $http) {
+    function RenderingEngineManager(RenderingEngineFactory, DataSourceConfigurationManager, DataSourceManager, DataSourceUtils, $http) {
         function RenderingEngineManager() {
             this.renderingEngines = {};
             this.activeRenderingEngine;
         }
         RenderingEngineManager.prototype = {
             constructor: RenderingEngineManager,
-            init: function(){
-                if(ServiceProvider.RenderingEngineManager === undefined){
-                    ServiceProvider.add('RenderingEngineManager', renderingEngineManager);
-                }
-            },
+            init: function(){},
             create: function(dataSourceConfigurationId) {
                 if(DataSourceManager.dataSources[dataSourceConfigurationId] === undefined){
                     DataSourceManager.create(dataSourceConfigurationId, DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].name);
@@ -21,7 +17,6 @@ define([], function() {
                         // when the response is available
                         DataSourceManager.dataSources[dataSourceConfigurationId].data = $.csv.toArrays(response.data);
                         DataSourceUtils.format(DataSourceManager.dataSources[dataSourceConfigurationId]);
-                        UiControls.hideDialog();
                         var renderingEngine = new RenderingEngineFactory();
                         renderingEngine.init(dataSourceConfigurationId);
                         renderingEngine.active = true;  
@@ -32,7 +27,6 @@ define([], function() {
                         DataSourceManager.delete(dataSourceConfigurationId);
                     });
                 } else{
-                    UiControls.hideDialog();
                     var renderingEngine = new RenderingEngineFactory();
                     renderingEngine.init(dataSourceConfigurationId);
                     renderingEngineManager.add(renderingEngine);
@@ -64,8 +58,6 @@ define([], function() {
         renderingEngineManager.init();
         return renderingEngineManager;
     }
-
-    RenderingEngineManager.$inject=['UiControls', 'ServiceProvider', 'RenderingEngineFactory', 'DataSourceConfigurationManager', 'DataSourceManager', 'DataSourceUtils', '$http'];
 
     return RenderingEngineManager;
 });

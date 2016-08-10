@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    function DashboardFactory($rootScope, $compile, $window, ServiceProvider, UiControls, $q, $timeout) {
+    function DashboardFactory($rootScope, $compile, $window, $q, $timeout, DataSourceManager) {
         function DashboardFactory(element) {
             this.id;
             this.element = element;
@@ -19,7 +19,7 @@ define([], function() {
                 var self = this;
                 var deferred = $q.defer();
                 $timeout(function(scope) {
-                    scope.ServiceProvider = ServiceProvider;
+                    scope.DataSourceManager = DataSourceManager;
                     scope.options = {
                         enableDragging: true,
                         //                                 autogrow_cols: true,
@@ -38,7 +38,7 @@ define([], function() {
                             resize: function(e, ui, $widget) {
                             },
                             stop: function(e, ui, $widget) {
-                                scope.renderingEngineManager.renderingEngines[$widget[0].id].draw(ServiceProvider.DataSourceManager.dataSources[scope.renderingEngineManager.renderingEngines[$widget[0].id].dataSourceConfigId].formattedData);
+                                scope.renderingEngineManager.renderingEngines[$widget[0].id].draw(DataSourceManager.dataSources[scope.renderingEngineManager.renderingEngines[$widget[0].id].dataSourceConfigId].formattedData);
                                 scope.renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().parent().data('gridster').$widgets);
                             }
                         },
@@ -108,7 +108,7 @@ define([], function() {
                         $(li).append($compile("<header style='cursor:move' class='ui-dialog-titlebar ui-widget-header' context-menu='" + contextMenu + "' context-menu-selector=\"'.context-menu'\"><div class='context-menu box' ><span class='handle ui-icon ui-icon-gear' style='display:inline-block'></span>" + RenderingEngine.title + "</div></header>")(scope));
                         var div = document.createElement('div');
                         div.setAttribute('class','gridsterWidgetContainer');
-                        var renderer = $compile("<rendering-engine-directive input='ServiceProvider.DataSourceManager.dataSources[renderingEngineManager.renderingEngines[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEngineManager.renderingEngines[\"" + uuid + "\"]'></rendering-engine-directive>")(scope);
+                        var renderer = $compile("<rendering-engine-directive input='DataSourceManager.dataSources[renderingEngineManager.renderingEngines[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEngineManager.renderingEngines[\"" + uuid + "\"]'></rendering-engine-directive>")(scope);
                         $(div).append(renderer[0]);
                         $(li).append(div);
                         i++;
@@ -134,8 +134,6 @@ define([], function() {
         };
         return DashboardFactory;
     }
-
-    DashboardFactory.$inject=['$rootScope', '$compile', '$window', 'ServiceProvider', 'UiControls', '$q', '$timeout'];
 
     return DashboardFactory;
 });

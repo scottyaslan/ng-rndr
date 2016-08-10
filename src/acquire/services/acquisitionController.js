@@ -1,29 +1,20 @@
 define([], function() {
     'use strict';
 
-    function AcquisitionController(ServiceProvider, UiControls, RenderingEngineFactory, RenderingEngineManager, DataSourceUtils, DataSourceManager, DataSourceConfigurationManager, $rootScope, $window) {
+    function AcquisitionController(RenderingEngineFactory, RenderingEngineManager, DataSourceUtils, DataSourceManager, DataSourceConfigurationManager, $rootScope, $window) {
         function AcquisitionController() {
-            this.restClientContentView;
         }
         AcquisitionController.prototype = {
             constructor: AcquisitionController,
             init: function() {
                 DataSourceManager.create(DataSourceConfigurationManager.create("Untitled"), "Untitled");
-                UiControls.init('acquire/views/bottomSheetGridTemplate.html', 'acquire/views/dialogTemplate.html');
-                UiControls.openLeftSideNav();
-                UiControls.openRightSideNav();
-                acquisitionController.restClientContentView = 'HTTP Config';
-                if(ServiceProvider.AcquisitionController === undefined){
-                    ServiceProvider.add('AcquisitionController', acquisitionController);
-                }
                 $rootScope.$on('acquiring data', function(){
                     acquisitionController.dataAcquisitionInProgress = true;
                 });
                 $rootScope.$on('data acquired', function(){
                     acquisitionController.dataAcquisitionInProgress = false;
-                    acquisitionController.restClientContentView = 'Acquire Data';
-                    UiControls.openLeftSideNav();
                 });
+                $rootScope.$emit('data source configuration wizard init');
             },
             save: function() {
                 var renderingEngine = new RenderingEngineFactory();
@@ -37,17 +28,12 @@ define([], function() {
                 //Set the active rendering engine to this one
                 RenderingEngineManager.activeRenderingEngine = renderingEngine.id;
                 DataSourceConfigurationManager.activeDataSourceConfiguration = "";
-                UiControls.hideDialog(); 
-                UiControls.closeLeftSideNav();
-                UiControls.closeRightSideNav();
                 $rootScope.$emit('data source configuration wizard save');
             },
             cancel: function() {
                 DataSourceManager.delete(DataSourceManager.dataSources[DataSourceConfigurationManager.activeDataSourceConfiguration].dataSourceConfigId);
                 DataSourceConfigurationManager.delete(DataSourceConfigurationManager.activeDataSourceConfiguration);
                 DataSourceConfigurationManager.activeDataSourceConfiguration = "";
-                UiControls.closeLeftSideNav();
-                UiControls.closeRightSideNav();
                 $rootScope.$emit('data source wizard configuration cancel');
             },
             openDocumentation: function(view) {
@@ -65,8 +51,6 @@ define([], function() {
         var acquisitionController = new AcquisitionController();
         return acquisitionController;
     }
-
-    AcquisitionController.$inject=['ServiceProvider', 'UiControls', 'RenderingEngineFactory', 'RenderingEngineManager', 'DataSourceUtils', 'DataSourceManager', 'DataSourceConfigurationManager', '$rootScope', '$window'];
 
     return AcquisitionController;
 });

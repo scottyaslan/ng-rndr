@@ -1,18 +1,14 @@
 define([], function() {
     'use strict';
 
-    function DataSourceConfigurationManager(ServiceProvider, DataSourceConfigurationFactory) {
+    function DataSourceConfigurationManager(DataSourceConfigurationFactory) {
         function DataSourceConfigurationManager() {
             this.dataSourceConfigurations = {};
             this.activeDataSourceConfiguration;
         }
         DataSourceConfigurationManager.prototype = {
             constructor: DataSourceConfigurationManager,
-            init: function() {
-                if(ServiceProvider.DataSourceConfigurationManager === undefined){
-                    ServiceProvider.add('DataSourceConfigurationManager', dataSourceConfigurationManager);
-                }
-            },
+            init: function() {},
             create: function(name) {
                 var dataSourceConfiguration = new DataSourceConfigurationFactory(name);
                 dataSourceConfiguration.init();
@@ -34,8 +30,6 @@ define([], function() {
         dataSourceConfigurationManager.init();
         return dataSourceConfigurationManager;
     }
-
-    DataSourceConfigurationManager.$inject=['ServiceProvider', 'DataSourceConfigurationFactory'];
 
     return DataSourceConfigurationManager;
 });
