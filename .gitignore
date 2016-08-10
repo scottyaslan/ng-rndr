@@ -1,3 +1,4 @@
 src/.sass-cache
 examples
 node_modules
+.idea
