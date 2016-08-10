@@ -1,6 +1,19 @@
-define(['rndr-angular-module'], 
-function() {
-	var app = angular.module('sampleApp', ['ngResource', 'ngRoute', 'ngMaterial', 'ui.sortable', 'angular-contextMenu', 'ui.ace', 'ngRndr', 'ngRndr.templates'])
+define(['datatables_renderers',
+    'c3_renderers',
+    'd3_renderers',
+    '../ngRNDR/common/controllers/controllerWrapper',
+    '../ngRNDR/common/services/uiControls',
+    'rndr-angular-module'], 
+function(datatables_renderers,
+        c3_renderers,
+        d3_renderers,
+        ControllerWrapper,
+        UiControls) {
+
+    UiControls.$inject=['$window', '$mdSidenav', '$mdUtil', '$mdBottomSheet', '$mdDialog'];
+    ControllerWrapper.$inject=['$scope', 'UiControls', 'DataSourceManager', 'DataSourceConfigurationManager', 'AcquisitionController', 'ExploreController', 'RenderingEngineManager', 'Aggregators'];
+
+	var app = angular.module('sampleApp', ['ngResource', 'ngRoute', 'ngMaterial', 'ui.sortable', 'angular-contextMenu', 'ui.ace', 'ngRndr', 'ngRndr-templates'])
 	.config(function($locationProvider, $mdThemingProvider) {
         $locationProvider.html5Mode(true);
         //Define app palettes
@@ -29,7 +42,7 @@ function() {
             "hue-2": "300", // use for the <code>md-hue-2</code> class
             "hue-3": "600" // use for the <code>md-hue-3</code> class
         });
-	}).controller('Controller', ['ServiceProvider', 'RenderingEngineManager', 'UiControls', 'DataSourceConfigurationManager', 'Renderers', '$window', '$rootScope', '$timeout', '$http', '$location', '$scope', function (ServiceProvider, RenderingEngineManager, UiControls, DataSourceConfigurationManager, Renderers, $window, $rootScope, $timeout, $http, $location, $scope) {
+	}).controller('Controller', ['DataSourceManager', 'AcquisitionController', 'ExploreController', 'RenderingEngineManager', 'UiControls', 'DataSourceConfigurationManager', 'Renderers', '$window', '$rootScope', '$timeout', '$http', '$location', '$scope', function (DataSourceManager, AcquisitionController, ExploreController, RenderingEngineManager, UiControls, DataSourceConfigurationManager, Renderers, $window, $rootScope, $timeout, $http, $location, $scope) {
       function Controller() {
             this.mainContentView;
         };
@@ -77,6 +90,29 @@ function() {
                 $rootScope.$on('draw complete', function() {
                     UiControls.hideRenderingEngineProgress();
                 });
+                $rootScope.$on('explore:new', function() {
+                    ExploreController.dialogContentView = "Data Sources";
+                    UiControls.openDialog('Data Source');
+                });
+                $rootScope.$on('explore:init', function() {
+                    UiControls.init('ngRNDR/explore/views/bottomSheetGridTemplate.html', 'ngRNDR/explore/views/dialogTemplate.html');
+                });
+                $rootScope.$on('data acquired', function(){
+                    UiControls.openLeftSideNav();
+                    AcquisitionController.restClientContentView = 'Acquire Data';
+                });
+                $rootScope.$on('data source configuration wizard init', function(){
+                    AcquisitionController.restClientContentView = 'HTTP Config';
+                });
+                $rootScope.$on('data source configuration wizard save', function(){
+                    UiControls.hideDialog(); 
+                    UiControls.closeLeftSideNav();
+                    UiControls.closeRightSideNav();
+                });
+                $rootScope.$on('data source configuration wizard cancel', function(){
+                    UiControls.closeLeftSideNav();
+                    UiControls.closeRightSideNav();
+                });
                 if($location.search().embedded === "true"){
                     controller.embedded = true;
                     controller.mainContentView = "Loading";
@@ -101,24 +137,28 @@ function() {
                 RenderingEngineManager.delete(id);
                 if(Object.keys(RenderingEngineManager.renderingEngines).length === 0){
                     $timeout(function() {
-                        ServiceProvider.ExploreController.new();
+                        ExploreController.new();
                     }, 0);
                 }
             },
             initiateDataExploration: function(createNew){
                 if(controller.mainContentView !== "Explore"){
                    controller.mainContentView = "Explore"; 
+                   UiControls.init('ngRNDR/explore/views/bottomSheetGridTemplate.html', 'ngRNDR/explore/views/dialogTemplate.html');
                 }
                 if(createNew){
                     //Have to get on the call stack after the exploration-directive link function is executed
                     $timeout(function() {
-                        ServiceProvider.ExploreController.new();
+                        ExploreController.new();
                     }, 0);   
                 }
             },
             initiateDataSourceConfigurationWizard: function(){
                 if(controller.mainContentView !== "Data Source Configuration Wizard"){
                     controller.mainContentView = "Data Source Configuration Wizard";
+                    UiControls.init('ngRNDR/acquire/views/bottomSheetGridTemplate.html', 'ngRNDR/acquire/views/dialogTemplate.html');
+                    UiControls.openLeftSideNav();
+                    UiControls.openRightSideNav();
                 }
             },
             initiateDashboard: function(){
@@ -130,14 +170,48 @@ function() {
                 return Object.keys(RenderingEngineManager.renderingEngines).length === 0;
             }
         };
+        Renderers.addRenderers(datatables_renderers);
+        Renderers.setRendererOptions('datatables', {
+                        class: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
+                    });
+        Renderers.addRenderers(c3_renderers);
+        Renderers.setRendererOptions('c3', {
+                        size: {}
+                    });
+        Renderers.addRenderers(d3_renderers);
+        Renderers.setRendererOptions('d3', {});
         $scope.Renderers = Renderers;
         $scope.RenderingEngineManager = RenderingEngineManager;
         $scope.UiControls = UiControls;
         var controller = new Controller();
         controller.init();
         $scope.Controller = controller;
-        $scope.ServiceProvider = ServiceProvider;
+
+        //Extend Explore Controller Functionality
+        var initiateDataSourceWizard = function(){
+            ExploreController.dialogContentView = '';
+            UiControls.hideDialog();
+            $rootScope.$emit('initiate data source configuration wizard');
+        };
+
+        var closeDialog = function(){
+            UiControls.hideDialog();
+            if(Object.keys(RenderingEngineManager.renderingEngines).length === 0){
+                $rootScope.$emit('data source wizard configuration cancel');  
+            }
+        };
+        ExploreController.closeDialog = closeDialog;
+        ExploreController.initiateDataSourceWizard = initiateDataSourceWizard;
+
+        $scope.ExploreController = ExploreController;
+        $scope.DataSourceManager = DataSourceManager;
     }]);
+
+    // Module controller
+    app.controller('ControllerWrapper', ControllerWrapper);
+
+    // Module services
+    app.service('UiControls', UiControls);
 
     angular.bootstrap($('body'), ['sampleApp']);
     $('body').show();

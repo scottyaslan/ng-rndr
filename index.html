@@ -43,7 +43,7 @@
                         </md-menu>
                     </md-menu-item>
                     <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && RenderingEngineManager.activeRenderingEngine">
-                        <md-button ng-click="ServiceProvider.ExploreController.dialogContentView = 'Rename';UiControls.openDialog('Name')">Rename</md-button>
+                        <md-button ng-click="ExploreController.dialogContentView = 'Rename';UiControls.openDialog('Name')">Rename</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && RenderingEngineManager.activeRenderingEngine">
                         <md-button ng-click="Controller.deleteRenderingEngine(RenderingEngineManager.activeRenderingEngine);">Delete</md-button>
@@ -71,7 +71,7 @@
                 </button>
                 <md-menu-content style="z-index:3;">
                     <md-menu-item ng-repeat="rendererName in Renderers.availableRendererNames">
-                        <md-button ng-click="RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].setRendererName(rendererName, ServiceProvider.DataSourceManager.dataSources[RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].dataSourceConfigId].formattedData)">
+                        <md-button ng-click="RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].setRendererName(rendererName, DataSourceManager.dataSources[RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].dataSourceConfigId].formattedData)">
                             {{rendererName}}
                         </md-button>
                     </md-menu-item>
@@ -84,12 +84,12 @@
                 </button>
                 <md-menu-content>
                     <md-menu-item>
-                        <md-button ng-click="ServiceProvider.ExploreController.dialogContentView = 'Aggregate';UiControls.openDialog('Aggregate')">
+                        <md-button ng-click="ExploreController.dialogContentView = 'Aggregate';UiControls.openDialog('Aggregate')">
                             Aggregate
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="ServiceProvider.ExploreController.dialogContentView = 'Filters';UiControls.openDialog('Filters')">
+                        <md-button ng-click="ExploreController.dialogContentView = 'Filters';UiControls.openDialog('Filters')">
                             Filter
                         </md-button>
                     </md-menu-item>
@@ -114,7 +114,7 @@
           <md-card flex="50" class="md-whiteframe-z5">
             <md-card-title>
               <md-card-title-text>
-                <span class="md-headline">Data Analytics Toolkit</span>
+                <span class="md-headline">RNDR</span>
               </md-card-title-text>
             </md-card-title>
             <md-card-content>

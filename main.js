@@ -39,7 +39,11 @@ require.config({
         'angular-route': 'angular-route/angular-route.min',
         'angular-ui-sortable': 'angular-ui-sortable/sortable',
         'angular-contextMenu': 'angularContextMenu/src/angular-contextMenu',
-        'ui-ace': 'angular-ui-ace/ui-ace'
+        'ui-ace': 'angular-ui-ace/ui-ace',
+        //ngRNDR plugins
+        'c3_renderers': 'ngRNDR/dist/plugins/c3_renderers.min',
+        'd3_renderers': 'ngRNDR/dist/plugins/d3_renderers.min',
+        'datatables_renderers': 'ngRNDR/dist/plugins/datatables_renderers.min'
     },
     shim: {
         'font': ['goog', 'propertyParser'],
@@ -51,10 +55,9 @@ require.config({
         'parallax': ['jquery'],
         'gridster': ['jquery'],
         'c3': ['d3'],
-        'src/render/plugins/dist/gchart_renderers.min': ['goog!visualization,1,packages:[charteditor]'],
-        'src/render/plugins/dist/c3_renderers.min': ['c3'],
-        'src/render/plugins/dist/d3_renderers.min': ['d3'],
-        'src/render/plugins/dist/datatables_renderers.min': ['datatables.net', 'datatables.net-keytable', 'datatables.net-fixedcolumns', 'datatables.net-buttons-html5', 'datatables.net-buttons-print'], 
+        'c3_renderers': ['c3'],
+        'd3_renderers': ['d3'],
+        'datatables_renderers': ['datatables.net', 'datatables.net-keytable', 'datatables.net-fixedcolumns', 'datatables.net-buttons-html5', 'datatables.net-buttons-print'], 
         'datatables.net': ['jquery'],
         'datatables.net-fixedcolumns': ['datatables.net'],
         'datatables.net-keytable': ['datatables.net'],

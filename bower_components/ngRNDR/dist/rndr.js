@@ -1,1 +1,1744 @@
-define("acquire/directives/acquisitionDirective",[],function(){"use strict";function e(e){return{restrict:"E",templateUrl:"acquire/views/acquire.html",link:function(t,n,r){e.init(),t.AcquisitionController=e}}}return e.$inject=["AcquisitionController"],e}),define("acquire/services/acquisitionController",[],function(){"use strict";function e(e,t,n,r,i,s,o,u,a){function f(){this.restClientContentView}f.prototype={constructor:f,init:function(){s.create(o.create("Untitled"),"Untitled"),t.init("acquire/views/bottomSheetGridTemplate.html","acquire/views/dialogTemplate.html"),t.openLeftSideNav(),t.openRightSideNav(),l.restClientContentView="HTTP Config",e.AcquisitionController===undefined&&e.add("AcquisitionController",l),u.$on("acquiring data",function(){l.dataAcquisitionInProgress=!0}),u.$on("data acquired",function(){l.dataAcquisitionInProgress=!1,l.restClientContentView="Acquire Data",t.openLeftSideNav()})},save:function(){var e=new n;e.init(o.activeDataSourceConfiguration),e.active=!0,r.add(e),r.activeRenderingEngine&&(r.renderingEngines[r.activeRenderingEngine].active=!1),r.activeRenderingEngine=e.id,o.activeDataSourceConfiguration="",t.hideDialog(),t.closeLeftSideNav(),t.closeRightSideNav(),u.$emit("data source configuration wizard save")},cancel:function(){s.delete(s.dataSources[o.activeDataSourceConfiguration].dataSourceConfigId),o.delete(o.activeDataSourceConfiguration),o.activeDataSourceConfiguration="",t.closeLeftSideNav(),t.closeRightSideNav(),u.$emit("data source wizard configuration cancel")},openDocumentation:function(e){a.open("https://docs.angularjs.org/api/ng/service/$http#usage","_blank")},aceLoaded:function(e){$(e.container).height($("#mainContent").height()-16),$(e.container).width($("#mainContent").width()-16)},aceChanged:function(e){var t}};var l=new f;return l}return e.$inject=["ServiceProvider","UiControls","RenderingEngineFactory","RenderingEngineManager","DataSourceUtils","DataSourceManager","DataSourceConfigurationManager","$rootScope","$window"],e}),define("acquire/services/dataSourceConfigurationFactory",[],function(){"use strict";function e(){function e(e){this.id,this.flattenDataFunctionString,this.httpConfig,this.name=e}return e.prototype={constructor:e,init:function(){var e=this;e.id="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(e){var t=Math.random()*16|0,n=e=="x"?t:t&3|8;return n.toString(16)}),e.httpConfig=angular.toJson({method:"GET",url:"http://nicolas.kruchten.com/pivottable/examples/montreal_2014.csv"}),e.flattenDataFunctionString="return data;"}},e}return e.$inject=[],e}),define("acquire/services/dataSourceConfigurationManager",[],function(){"use strict";function e(e,t){function n(){this.dataSourceConfigurations={},this.activeDataSourceConfiguration}n.prototype={constructor:n,init:function(){e.DataSourceConfigurationManager===undefined&&e.add("DataSourceConfigurationManager",r)},create:function(e){var n=new t(e);return n.init(),r.add(n),r.activeDataSourceConfiguration=n.id,n.id},add:function(e){r.dataSourceConfigurations[e.id]=e},"delete":function(e){delete r.dataSourceConfigurations[e]},dataSourceConfigurationsDefined:function(){return Object.keys(r.dataSourceConfigurations).length!==0}};var r=new n;return r.init(),r}return e.$inject=["ServiceProvider","DataSourceConfigurationFactory"],e}),define("acquire/services/dataSourceFactory",[],function(){"use strict";function e(){function e(e,t){this.dataSourceConfigId=e,this.data,this.name=t,this.formattedData}return e.prototype={constructor:e},e}return e.$inject=[],e}),define("acquire/services/dataSourceManager",[],function(){"use strict";function e(e,t){function n(){this.dataSources={}}n.prototype={constructor:n,init:function(){e.DataSourceManager===undefined&&e.add("DataSourceManager",r)},create:function(e,n){if(e!==undefined){var i=new t(e,n);r.add(i)}},add:function(e){r.dataSources[e.dataSourceConfigId]=e},"delete":function(e){delete r.dataSources[e]}};var r=new n;return r.init(),r}return e.$inject=["ServiceProvider","DataSourceFactory"],e}),define("acquire/services/dataSourceUtils",[],function(){"use strict";function e(e,t,n,r){function i(){}i.prototype={constructor:i,init:function(){e.DataSourceUtils===undefined&&e.add("DataSourceUtils",s)},acquire:function(e){r.$emit("acquiring data"),n(angular.fromJson(t.dataSourceConfigurations[e.dataSourceConfigId].httpConfig)).then(function(n){typeof n.data!="string"?e.data=JSON.stringify(n.data):e.data=n.data,r.$emit("data acquired")},function(t){r.$emit("data acquired")})},format:function(e){var n=new Function("data",t.dataSourceConfigurations[e.dataSourceConfigId].flattenDataFunctionString);try{e.formattedData=angular.toJson(n(angular.fromJson(e.data)))}catch(r){try{e.formattedData=n(e.data)}catch(r){}}try{e.formattedData=angular.fromJson(e.formattedData)}catch(r){try{e.formattedData=$.csv.toArrays(e.formattedData)}catch(r){}}}};var s=new i;return s.init(),s}return e.$inject=["ServiceProvider","DataSourceConfigurationManager","$http","$rootScope"],e}),define("common/controllers/controllerWrapper",[],function(){"use strict";function e(e,t,n){e.UiControls=t,e.ServiceProvider=n}return e.$inject=["$scope","UiControls","ServiceProvider"],e}),define("common/directives/gridsterDirective",[],function(){"use strict";function e(){return{restrict:"E",scope:{options:"="},link:function(e,t,n){var r=$(t.find("ul")[0]).gridster(e.options);e.gridster=r.data("gridster"),e.options.enableDragging||e.gridster.disable();if(e.options.parallax.enabled){require("bower_components/parallax/deploy/jquery.parallax.min");var i=$("<ul><li data-depth='"+e.options.parallax.dataDepth+"' class='layer'></li></ul>");i.parallax();var s=i.find("li");s.append(r),t.append(i)}}}}return e.$inject=[],e}),define("common/services/serviceProvider",[],function(){"use strict";function e(){function e(){}e.prototype={constructor:e,add:function(e,n){t[e]=n},"delete":function(e){delete t[e]}};var t=new e;return t}return e.$inject=[],e}),define("common/services/uiControls",[],function(){"use strict";function e(e,t,n,r,i,s){function o(){this.bottomSheetTemplateUrl,this.dialogTemplateUrl,this.dialogTitle}o.prototype={constructor:o,init:function(t,n){t&&(u.bottomSheetTemplateUrl=t),n&&(u.dialogTemplateUrl=n),e.UiControls===undefined&&e.add("UiControls",u)},openMenu:function(){$mdOpenMenu()},openBottomSheet:function(){i.show({templateUrl:u.bottomSheetTemplateUrl,controller:"ControllerWrapper"}).then(function(e){})},openDialog:function(e,t){u.dialogTitle=e,s.show({controller:"ControllerWrapper",templateUrl:u.dialogTemplateUrl,parent:angular.element(document.body),targetEvent:t,escapeToClose:!1}).then(function(e){},function(){})},showRenderingEngineProgress:function(){$("#rendererProgress").show(),$("#renderer").hide()},hideRenderingEngineProgress:function(){$("#rendererProgress").hide(),$("#renderer").show()},hideDialog:function(){s.hide()},cancelDialog:function(){s.cancel()},answerDialog:function(e){s.hide(e)},closeLeftSideNav:function(){u.leftSideNavOpen=!1},openLeftSideNav:function(){u.leftSideNavOpen=!0},closeRightSideNav:function(){u.rightSideNavOpen=!1},openRightSideNav:function(){u.rightSideNavOpen=!0}};var u=new o;return u.init(),u}return e.$inject=["ServiceProvider","$window","$mdSidenav","$mdUtil","$mdBottomSheet","$mdDialog"],e}),define("explore/directives/explorationDirective",[],function(){function e(e,t){return{restrict:"E",templateUrl:"explore/views/explore.html",link:function(n,r,i){t.init(),n.ExploreController=t,n.ServiceProvider=e}}}return e.$inject=["ServiceProvider","ExploreController"],e}),define("explore/services/exploreController",[],function(){"use strict";function e(e,t,n,r,i,s,o){function u(){this.selectedDataSourceConfigId,this.dialogContentView,this.constants}u.prototype={constructor:u,init:function(){t.init("explore/views/bottomSheetGridTemplate.html","explore/views/dialogTemplate.html"),a.constants={sortableOptions:{placeholder:"placeholder",connectWith:".dropzone",update:function(e,t){s(function(){n.renderingEngines[n.activeRenderingEngine].draw(r.dataSources[n.renderingEngines[n.activeRenderingEngine].dataSourceConfigId].formattedData)},0)}},dataExplorationGrid:{namespace:"#DataExploration",enableDragging:!1,widget_margins:[10,10],widget_base_dimensions:[(i.innerWidth-140)/6,(i.innerHeight-88-60)/2],min_cols:6,resize:{enabled:!1,start:function(e,t,n){console.log("START position: "+t.position.top+" "+t.position.left)},resize:function(e,t,n){console.log("RESIZE offset: "+t.pointer.diff_top+" "+t.pointer.diff_left)},stop:function(e,t,n){console.log("STOP position: "+t.position.top+" "+t.position.left)}},draggable:{start:function(e,t,n){console.log("START position: "+t.position.top+" "+t.position.left)},drag:function(e,t,n){console.log("DRAG offset: "+t.pointer.diff_top+" "+t.pointer.diff_left)},stop:function(e,t,n){console.log("STOP position: "+t.position.top+" "+t.position.left)}},parallax:{enabled:!1,dataDepth:0}}};var o=!1;angular.forEach(n.renderingEngines,function(e,t){o=!0}),o||a.new(),e.ExploreController===undefined&&e.add("ExploreController",a),angular.element(i).on("rowLabelDrillDownEvent",function(e){var t=n.renderingEngines[e.renderingEngineId],i=$(e.event.currentTarget).html(),o=t.rows[$(e.event.currentTarget).parent().children().index($(e.event.currentTarget))];t.addInclusionFilter(o,i),s(function(){t.draw(r.dataSources[t.dataSourceConfigId].formattedData)},0)}),angular.element(i).on("colLabelDrillDownEvent",function(e){var t=n.renderingEngines[e.renderingEngineId],i=$(e.event.currentTarget).html(),o=t.cols[$(e.event.currentTarget).parent().parent().children().index($(e.event.currentTarget).parent())];t.addInclusionFilter(o,i),s(function(){t.draw(r.dataSources[t.dataSourceConfigId].formattedData)},0)})},"new":function(){a.dialogContentView="Data Sources",a.selectedDataSourceConfigId=undefined,t.openDialog("Data Source")},initiateDataSourceWizard:function(){a.dialogContentView="",t.hideDialog(),o.$emit("initiate data source configuration wizard")},closeDialog:function(){t.hideDialog(),Object.keys(n.renderingEngines).length===0&&o.$emit("data source wizard configuration cancel")}};var a=new u;return a}return e.$inject=["ServiceProvider","UiControls","RenderingEngineManager","DataSourceManager","$window","$timeout","$rootScope"],e}),define("render/directives/renderingEngineDirective",[],function(){"use strict";function e(){return{restrict:"E",scope:{engine:"=",input:"="},link:{pre:function(e,t,n){e.engine.element=$(t),e.engine.draw(e.input)}}}}return e.$inject=[],e}),define("render/services/aggregators",[],function(){"use strict";function e(e,t,n){function r(){this.availableAggregators,this.availableAggregatorNames,this.availableAggregatorOptions,this.aggregatorTemplates}r.prototype={constructor:r,init:function(){var r=this;r.availableAggregators={},r.availableAggregatorNames=Object.keys(r.availableAggregators),r.aggregatorTemplates=t,r.addAggregator("Count",r.aggregatorTemplates.count(n.usFmtInt())),r.addAggregator("Count Unique Values",r.aggregatorTemplates.countUnique(n.usFmtInt())),r.addAggregator("List Unique Values",r.aggregatorTemplates.listUnique(", ")),r.addAggregator("Sum",r.aggregatorTemplates.sum(n.usFmt())),r.addAggregator("Integer Sum",r.aggregatorTemplates.sum(n.usFmtInt())),r.addAggregator("Average",r.aggregatorTemplates.average(n.usFmt())),r.addAggregator("Minimum",r.aggregatorTemplates.min(n.usFmt())),r.addAggregator("Maximum",r.aggregatorTemplates.max(n.usFmt())),r.addAggregator("Sum over Sum",r.aggregatorTemplates.sumOverSum(n.usFmt())),r.addAggregator("80% Upper Bound",r.aggregatorTemplates.sumOverSumBound80(!0,n.usFmt())),r.addAggregator("80% Lower Bound",r.aggregatorTemplates.sumOverSumBound80(!1,n.usFmt())),r.addAggregator("Sum as Fraction of Total",r.aggregatorTemplates.fractionOf(r.aggregatorTemplates.sum(),"total",n.usFmtPct())),r.addAggregator("Sum as Fraction of Rows",r.aggregatorTemplates.fractionOf(r.aggregatorTemplates.sum(),"row",n.usFmtPct())),r.addAggregator("Sum as Fraction of Columns",r.aggregatorTemplates.fractionOf(r.aggregatorTemplates.sum(),"col",n.usFmtPct())),r.addAggregator("Count as Fraction of Total",r.aggregatorTemplates.fractionOf(r.aggregatorTemplates.count(),"total",n.usFmtPct())),r.addAggregator("Count as Fraction of Rows",r.aggregatorTemplates.fractionOf(r.aggregatorTemplates.count(),"row",n.usFmtPct())),r.addAggregator("Count as Fraction of Columns",r.aggregatorTemplates.fractionOf(r.aggregatorTemplates.count(),"col",n.usFmtPct())),e.Aggregators===undefined&&e.add("Aggregators",i)},addAggregator:function(e,t){var n=this;n.availableAggregators[e]=t,n.availableAggregatorNames=Object.keys(n.availableAggregators)}};var i=new r;return i.init(),i}return e.$inject=["ServiceProvider","AggregatorTemplates","RenderingEngineUtils"],e}),define("render/services/aggregatorTemplates",[],function(){"use strict";function e(e,t){function n(){this.aggregatorTemplates}n.prototype={constructor:n,init:function(){e.AggregatorTemplates===undefined&&e.add("AggregatorTemplates",r)},count:function(e){return e==null&&(e=t.usFmtInt),function(){return function(t,n,r){return{count:0,push:function(){return this.count++},value:function(){return this.count},format:e}}}},countUnique:function(e){return e==null&&(e=t.usFmtInt),function(t){var n;return n=t[0],function(t,r,i){return{uniq:[],push:function(e){var t;if(t=e[n],indexOf.call(this.uniq,t)<0)return this.uniq.push(e[n])},value:function(){return this.uniq.length},format:e,numInputs:n!=null?0:1}}}},listUnique:function(e){return function(t){var n;return n=t[0],function(t,r,i){return{uniq:[],push:function(e){var t;if(t=e[n],indexOf.call(this.uniq,t)<0)return this.uniq.push(e[n])},value:function(){return this.uniq.join(e)},format:function(e){return e},numInputs:n!=null?0:1}}}},sum:function(e){return e==null&&(e=t.usFmt),function(t){var n;return n=t[0],function(t,r,i){return{sum:0,push:function(e){if(!isNaN(parseFloat(e[n])))return this.sum+=parseFloat(e[n])},value:function(){return this.sum},format:e,numInputs:n!=null?0:1}}}},min:function(e){return e==null&&(e=t.usFmt),function(t){var n;return n=t[0],function(t,r,i){return{val:null,push:function(e){var t,r;r=parseFloat(e[n]);if(!isNaN(r))return this.val=Math.min(r,(t=this.val)!=null?t:r)},value:function(){return this.val},format:e,numInputs:n!=null?0:1}}}},max:function(e){return e==null&&(e=t.usFmt),function(t){var n;return n=t[0],function(t,r,i){return{val:null,push:function(e){var t,r;r=parseFloat(e[n]);if(!isNaN(r))return this.val=Math.max(r,(t=this.val)!=null?t:r)},value:function(){return this.val},format:e,numInputs:n!=null?0:1}}}},average:function(e){return e==null&&(e=t.usFmt),function(t){var n;return n=t[0],function(t,r,i){return{sum:0,len:0,push:function(e){if(!isNaN(parseFloat(e[n])))return this.sum+=parseFloat(e[n]),this.len++},value:function(){return this.sum/this.len},format:e,numInputs:n!=null?0:1}}}},sumOverSum:function(e){return e==null&&(e=t.usFmt),function(t){var n,r;return r=t[0],n=t[1],function(t,i,s){return{sumNum:0,sumDenom:0,push:function(e){isNaN(parseFloat(e[r]))||(this.sumNum+=parseFloat(e[r]));if(!isNaN(parseFloat(e[n])))return this.sumDenom+=parseFloat(e[n])},value:function(){return this.sumNum/this.sumDenom},format:e,numInputs:r!=null&&n!=null?0:2}}}},sumOverSumBound80:function(e,n){return e==null&&(e=!0),n==null&&(n=t.usFmt),function(t){var r,i;return i=t[0],r=t[1],function(t,s,o){return{sumNum:0,sumDenom:0,push:function(e){isNaN(parseFloat(e[i]))||(this.sumNum+=parseFloat(e[i]));if(!isNaN(parseFloat(e[r])))return this.sumDenom+=parseFloat(e[r])},value:function(){var t;return t=e?1:-1,(.821187207574908/this.sumDenom+this.sumNum/this.sumDenom+1.2815515655446004*t*Math.sqrt(.410593603787454/(this.sumDenom*this.sumDenom)+this.sumNum*(1-this.sumNum/this.sumDenom)/(this.sumDenom*this.sumDenom)))/(1+1.642374415149816/this.sumDenom)},format:n,numInputs:i!=null&&r!=null?0:2}}}},fractionOf:function(e,n,r){return n==null&&(n="total"),r==null&&(r=t.usFmtPct),function(){var t;return t=1<=arguments.length?slice.call(arguments,0):[],function(i,s,o){return{selector:{total:[[],[]],row:[s,[]],col:[[],o]}[n],inner:e.apply(null,t)(i,s,o),push:function(e){return this.inner.push(e)},format:r,value:function(){return this.inner.value()/i.getAggregator.apply(i,this.selector).inner.value()},numInputs:e.apply(null,t)().numInputs}}}}};var r=new n;return r.init(),r}return e.$inject=["ServiceProvider","RenderingEngineUtils"],e}),define("render/services/pivotDataFactory",[],function(){"use strict";function e(e){function t(){this.colAttrs,this.rowAttrs,this.valAttrs,this.sorters,this.tree,this.rowKeys,this.colKeys,this.rowTotals,this.colTotals,this.allTotal,this.sorted,this.aggregatorName}return t.prototype={constructor:t,init:function(t,n){var r=this;r.aggregatorName=n.aggregatorName,r.colAttrs=n.cols,r.rowAttrs=n.rows,r.valAttrs=n.vals,r.sorters=n.sorters,r.tree={},r.rowKeys=[],r.colKeys=[],r.rowTotals={},r.colTotals={},r.allTotal=n.aggregator(r,[],[]),r.sorted=!1,e.forEachRecord(t,n.derivedAttributes,function(e){return function(t){if(n.filter(t))return e.processRecord(t,n)}}(r))},arrSort:function(t){var n,r;return r=function(){var r,i,s;s=[];for(r=0,i=t.length;r<i;r++)n=t[r],s.push(e.getSort(this.sorters,n));return s}.call(this),function(e,t){var n,i,s;for(i in r){s=r[i],n=s(e[i],t[i]);if(n!==0)return n}return 0}},sortKeys:function(){if(!this.sorted)return this.sorted=!0,this.rowKeys.sort(this.arrSort(this.rowAttrs)),this.colKeys.sort(this.arrSort(this.colAttrs))},getColKeys:function(){return this.sortKeys(),this.colKeys},getRowKeys:function(){return this.sortKeys(),this.rowKeys},processRecord:function(e,t){var n,r,i,s,o,u,a,f,l,c,h,p,d;n=[],p=[],f=this.colAttrs;for(s=0,o=f.length;s<o;s++)d=f[s],n.push((l=e[d])!=null?l:"null");c=this.rowAttrs;for(a=0,u=c.length;a<u;a++)d=c[a],p.push((h=e[d])!=null?h:"null");i=p.join(String.fromCharCode(0)),r=n.join(String.fromCharCode(0)),this.allTotal.push(e),p.length!==0&&(this.rowTotals[i]||(this.rowKeys.push(p),this.rowTotals[i]=t.aggregator(this,p,[])),this.rowTotals[i].push(e)),n.length!==0&&(this.colTotals[r]||(this.colKeys.push(n),this.colTotals[r]=t.aggregator(this,[],n)),this.colTotals[r].push(e));if(n.length!==0&&p.length!==0)return this.tree[i]||(this.tree[i]={}),this.tree[i][r]||(this.tree[i][r]=t.aggregator(this,p,n)),this.tree[i][r].push(e)},getAggregator:function(e,t){var n,r,i;return i=e.join(String.fromCharCode(0)),r=t.join(String.fromCharCode(0)),e.length===0&&t.length===0?n=this.allTotal:e.length===0?n=this.colTotals[r]:t.length===0?n=this.rowTotals[i]:n=this.tree[i][r],n!=null?n:{value:function(){return null},format:function(){return""}}}},t}return e.$inject=["RenderingEngineUtils"],e}),function(){var e,t={}.hasOwnProperty;(e=function(e){return"object"==typeof exports&&"object"==typeof module?e(require("jquery")):"function"==typeof define&&define.amd?define("render/plugins/dist/datatables_renderers.min",["jquery"],e):e(jQuery)})(function(e){var n,r;return n=function(n,r){var i,s,o,u,a,f,l,c,h,p,d,v,m,g,y,b,w,E,S,x,T,N,C,k;f={localeStrings:{totals:"Totals"}},r=e.extend(f,r),o=n.colAttrs,d=n.rowAttrs,m=n.getRowKeys(),a=n.getColKeys(),p=document.createElement("table"),e(p).width(r.datatables.width),p.className=r.datatables["class"].join(" "),S=document.createElement("thead"),y=document.createElement("tbody"),w=document.createElement("tfoot"),g=function(e,t,n){var r,i,s,o,u,a,f,l;if(0!==t){for(o=!0,l=r=0,u=n;u>=0?u>=r:r>=u;l=u>=0?++r:--r)e[t-1][l]!==e[t][l]&&(o=!1);if(o)return-1}for(s=0;t+s<e.length;){for(f=!1,l=i=0,a=n;a>=0?a>=i:i>=a;l=a>=0?++i:--i)e[t][l]!==e[t+s][l]&&(f=!0);if(f)break;s++}return s};for(c in o)if(t.call(o,c)){s=o[c],T=document.createElement("tr"),0===parseInt(c)&&0!==d.length&&(E=document.createElement("th"),E.setAttribute("colspan",d.length),E.setAttribute("rowspan",o.length),T.appendChild(E)),E=document.createElement("th"),E.className="pvtAxisLabel",e(E).css("white-space","nowrap"),E.innerHTML=s,T.appendChild(E);for(l in a)t.call(a,l)&&(u=a[l],k=g(a,parseInt(l),parseInt(c)),-1!==k&&(E=document.createElement("th"),e(E).off("dblclick").on("dblclick",function(t){var n;return n=e.Event("colLabelDrillDownEvent",{event:t,renderingEngineId:r.renderingEngineId}),e(window).trigger(n)}),E.className="pvtColLabel",E.innerHTML=u[c],E.setAttribute("colspan",k),parseInt(c)===o.length-1&&0!==d.length&&E.setAttribute("rowspan",2),T.appendChild(E)));0===parseInt(c)&&(E=document.createElement("th"),E.className="pvtTotalLabel",E.innerHTML=r.localeStrings.totals,E.setAttribute("rowspan",o.length+(0===d.length?0:1)),T.appendChild(E)),S.appendChild(T)}if(0!==d.length){T=document.createElement("tr");for(l in d)t.call(d,l)&&(h=d[l],E=document.createElement("th"),e(E).css("white-space","nowrap"),E.className="pvtAxisLabel",E.innerHTML=h,T.appendChild(E));E=document.createElement("th"),0===o.length&&(E.className="pvtTotalLabel",E.innerHTML=r.localeStrings.totals),T.appendChild(E),S.appendChild(T)}for(l in m)if(t.call(m,l)){v=m[l],T=document.createElement("tr");for(c in v)t.call(v,c)&&(N=v[c],E=document.createElement("th"),e(E).css("white-space","nowrap"),e(E).off("dblclick").on("dblclick",function(t){var n;return n=e.Event("rowLabelDrillDownEvent",{event:t,renderingEngineId:r.renderingEngineId}),e(window).trigger(n)}),E.className="pvtRowLabel",E.innerHTML=N,T.appendChild(E),parseInt(c)===d.length-1&&0!==o.length&&T.appendChild(document.createElement("th")));for(c in a)t.call(a,c)&&(u=a[c],i=n.getAggregator(v,u),C=i.value(),b=document.createElement("td"),b.className="pvtVal row"+l+" col"+c,b.innerHTML=i.format(C),b.setAttribute("data-value",C),T.appendChild(b));x=n.getAggregator(v,[]),C=x.value(),b=document.createElement("td"),b.className="pvtTotal rowTotal",b.innerHTML=x.format(C),b.setAttribute("data-value",C),b.setAttribute("data-for","row"+l),T.appendChild(b),y.appendChild(T)}T=document.createElement("tr"),E=document.createElement("th"),E.className="pvtTotalLabel",E.innerHTML=r.localeStrings.totals,E.setAttribute("colspan",d.length+(0===o.length?0:1)),T.appendChild(E);for(c in a)t.call(a,c)&&(u=a[c],x=n.getAggregator([],u),C=x.value(),b=document.createElement("td"),b.className="pvtTotal colTotal",b.innerHTML=x.format(C),b.setAttribute("data-value",C),b.setAttribute("data-for","col"+c),T.appendChild(b));return x=n.getAggregator([],[]),C=x.value(),b=document.createElement("td"),b.className="pvtGrandTotal",b.innerHTML=x.format(C),b.setAttribute("data-value",C),T.appendChild(b),p.appendChild(S),p.appendChild(y),w.appendChild(T),p.appendChild(w),p.setAttribute("data-numrows",m.length),p.setAttribute("data-numcols",a.length),p},e.fn.finalize=function(t){var n,r,i,s,o;return i=t.numRows,n=t.numCols,r=i,n>0&&(r+=1),s={scrollY:t.datatables.height,fixedColumns:{leftColumns:r,rightColumns:1},scrollX:!0,scrollCollapse:!0,paging:!1,keys:!0,dom:"Bfrtip",buttons:["csvHtml5","pdfHtml5","print"]},o=0!==i||0!==n?{html:this.width("100%"),type:"datatables",postRenderOpts:s,postRenderFunction:function(t,n){e(t).DataTable(n)}}:{html:this,type:"datatables"}},e.fn.heatmap=function(t){var n,r,i,s,o,u,a,f,l,c;switch(null==t&&(t="heatmap"),f=this.data("numrows"),a=this.data("numcols"),n=function(e,t,n){var r;return r=function(){switch(e){case"red":return function(e){return"ff"+e+e};case"green":return function(e){return e+"ff"+e};case"blue":return function(e){return""+e+e+"ff"}}}(),function(e){var i,s;return s=255-Math.round(255*(e-t)/(n-t)),i=s.toString(16).split(".")[0],1===i.length&&(i=0+i),r(i)}},r=function(t){return function(r,i){var s,o,u;return o=function(n){return t.find(r).each(function(){var t;return t=e(this).data("value"),null!=t&&isFinite(t)?n(t,e(this)):void 0})},u=[],o(function(e){return u.push(e)}),s=n(i,Math.min.apply(Math,u),Math.max.apply(Math,u)),o(function(e,t){return t.css("background-color","#"+s(e))})}}(this),t){case"heatmap":r(".pvtVal","red");break;case"rowheatmap":for(i=o=0,l=f;l>=0?l>o:o>l;i=l>=0?++o:--o)r(".pvtVal.row"+i,"red");break;case"colheatmap":for(s=u=0,c=a;c>=0?c>u:u>c;s=c>=0?++u:--u)r(".pvtVal.col"+s,"red")}return r(".pvtTotal.rowTotal","red"),r(".pvtTotal.colTotal","red"),this},e.fn.barchart=function(){var t,n,r,i,s,o;for(s=this.data("numrows"),i=this.data("numcols"),t=function(t){return function(n){var r,i,s,o;return r=function(r){return t.find(n).each(function(){var t;return t=e(this).data("value"),null!=t&&isFinite(t)?r(t,e(this)):void 0})},o=[],r(function(e){return o.push(e)}),i=Math.max.apply(Math,o),s=function(e){return 100*e/(1.4*i)},r(function(t,n){var r,i;return r=n.text(),i=e("<div>").css({position:"relative"}),i.append(e("<div>").css({position:"absolute",bottom:-2,left:0,right:0,height:s(t)+"%","background-color":"gray"})),i.append(e("<div>").text(r).css({position:"relative","padding-left":"5px","padding-right":"5px"})),n.css({padding:0,"padding-top":"5px","text-align":"center"}).html(i)})}}(this),n=r=0,o=s;o>=0?o>r:r>o;n=o>=0?++r:--r)t(".pvtVal.row"+n);return t(".pvtTotal.colTotal"),this},r={Table:function(t,r){return e(n(t,r)).finalize(r)},"Table Barchart":function(t,r){return e(n(t,r)).barchart().finalize(r)},Heatmap:function(t,r){return e(n(t,r)).heatmap().finalize(r)},"Row Heatmap":function(t,r){return e(n(t,r)).heatmap("rowheatmap").finalize(r)},"Col Heatmap":function(t,r){return e(n(t,r)).heatmap("colheatmap").finalize(r)}}})}.call(this),function(){var e;(e=function(e){return"object"==typeof exports&&"object"==typeof module?e(require("jquery")):"function"==typeof define&&define.amd?define("render/plugins/dist/gchart_renderers.min",["jquery"],e):e(jQuery)})(function(e){var t,n;return n=function(t,n){return function(i,s){var o,u,a,f,l,c,h,p,d,v,m,g,y,b,w,E,S,x,T,N,C,k,L,A,O,M,_,D,P,H,B,j;if(p={localeStrings:{vs:"vs",by:"by"},gchart:{}},s=e.extend(!0,p,s),null==(u=s.gchart).width&&(u.width=window.innerWidth/1.4),null==(a=s.gchart).height&&(a.height=window.innerHeight/1.4),O=i.getRowKeys(),0===O.length&&O.push([]),l=i.getColKeys(),0===l.length&&l.push([]),d=i.aggregatorName,i.valAttrs.length&&(d+="("+i.valAttrs.join(", ")+")"),y=function(){var e,t,n;for(n=[],e=0,t=O.length;t>e;e++)m=O[e],n.push(m.join("-"));return n}(),y.unshift(""),x=0,"ScatterChart"===t){c=[],N=i.tree;for(j in N){_=N[j];for(B in _)o=_[B],c.push([parseFloat(B),parseFloat(j),d+": \n"+o.format(o.value())])}h=new google.visualization.DataTable,h.addColumn("number",i.colAttrs.join("-")),h.addColumn("number",i.rowAttrs.join("-")),h.addColumn({type:"string",role:"tooltip"}),h.addRows(c),g=i.colAttrs.join("-"),D=i.rowAttrs.join("-"),M=""}else{for(c=[y],b=0,E=l.length;E>b;b++){for(f=l[b],L=[f.join("-")],x+=L[0].length,w=0,S=O.length;S>w;w++)A=O[w],o=i.getAggregator(A,f),null!=o.value()?(P=o.value(),e.isNumeric(P)?1>P?L.push(parseFloat(P.toPrecision(3))):L.push(parseFloat(P.toFixed(3))):L.push(P)):L.push(null);c.push(L)}h=google.visualization.arrayToDataTable(c),M=D=d,g=i.colAttrs.join("-"),""!==g&&(M+=" "+s.localeStrings.vs+" "+g),v=i.rowAttrs.join("-"),""!==v&&(M+=" "+s.localeStrings.by+" "+v)}return T={title:M,hAxis:{title:g,slantedText:x>50},vAxis:{title:D},tooltip:{textStyle:{fontName:"Arial",fontSize:12}},chartArea:{width:"80%",height:"80%"}},"ColumnChart"===t&&(T.vAxis.minValue=0),"ScatterChart"===t?T.legend={position:"none"}:2===c[0].length&&""===c[0][1]&&(T.legend={position:"none"}),e.extend(T,s.gchart,n),C=e("<div>").css({width:s.gchart.width,height:s.gchart.height}),H=new google.visualization.ChartWrapper({dataTable:h,chartType:t,options:T}),H.draw(C[0]),C.bind("dblclick",function(){var e;return e=new google.visualization.ChartEditor,google.visualization.events.addListener(e,"ok",function(){return e.getChartWrapper().draw(C[0])}),e.openDialog(H)}),k={html:C}}},t={"Line Chart":n("LineChart"),"Bar Chart":n("ColumnChart"),"Stacked Bar Chart":n("ColumnChart",{isStacked:!0}),"Area Chart":n("AreaChart",{isStacked:!0}),"Scatter Chart":n("ScatterChart")}})}.call(this),function(){var e;(e=function(e){return"object"==typeof exports&&"object"==typeof module?e(require("jquery"),require("c3")):"function"==typeof define&&define.amd?define("render/plugins/dist/c3_renderers.min",["jquery","c3"],e):e(jQuery,c3)})(function(e,t){var n,r;return r=function(n){return null==n&&(n={}),function(r,i){var s,o,u,f,l,c,h,p,d,v,m,g,y,b,w,E,S,x,T,N,C,k,L,A,O,M,_,D,P,H,B,j,F,I,q,R,U,z,W;if(v={localeStrings:{vs:"vs",by:"by"},c3:{}},i=e.extend(!0,v,i),null==(o=i.c3).size&&(o.size={}),null==(u=i.c3.size).width&&(u.width=window.innerWidth/1.4),null==(f=i.c3.size).height&&(f.height=window.innerHeight/1.4-50),null==n.type&&(n.type="line"),j=r.getRowKeys(),0===j.length&&j.push([]),c=r.getColKeys(),0===c.length&&c.push([]),w=function(){var e,t,n;for(n=[],e=0,t=c.length;t>e;e++)y=c[e],n.push(y.join("-"));return n}(),D=0,m=r.aggregatorName,r.valAttrs.length&&(m+="("+r.valAttrs.join(", ")+")"),"scatter"===n.type){p=[],b=r.colAttrs.join("-"),R=r.rowAttrs.join("-"),A=r.tree;for(W in A){q=A[W];for(z in q)s=q[z],d={},d[b]=parseFloat(z),d[R]=parseFloat(W),d.tooltip=s.format(s.value()),p.push(d)}}else{for(k=0,E=0,T=w.length;T>E;E++)z=w[E],k+=z.length;for(k>50&&(D=45),h=[],S=0,N=j.length;N>S;S++){for(B=j[S],H=B.join("-"),P=[""===H?r.aggregatorName:H],x=0,C=c.length;C>x;x++)l=c[x],U=parseFloat(r.getAggregator(B,l).value()),isFinite(U)?1>U?P.push(U.toPrecision(3)):P.push(U.toFixed(3)):P.push(null);h.push(P)}R=r.aggregatorName+(r.valAttrs.length?"("+r.valAttrs.join(", ")+")":""),b=r.colAttrs.join("-")}return I=m,""!==b&&(I+=" "+i.localeStrings.vs+" "+b),g=r.rowAttrs.join("-"),""!==g&&(I+=" "+i.localeStrings.by+" "+g),F=e("<p>",{style:"text-align: center; font-weight: bold"}),F.text(I),L={axis:{y:{label:R},x:{label:b,tick:{rotate:D,multiline:!1}}},data:{type:n.type},tooltip:{grouped:!1},color:{pattern:["#3366cc","#dc3912","#ff9900","#109618","#990099","#0099c6","#dd4477","#66aa00","#b82e2e","#316395","#994499","#22aa99","#aaaa11","#6633cc","#e67300","#8b0707","#651067","#329262","#5574a6","#3b3eac"]}},e.extend(L,i.c3),"scatter"===n.type?(L.data.x=b,L.axis.x.tick={fit:!1},L.data.json=p,L.data.keys={value:[b,R]},L.legend={show:!1},L.tooltip.format={title:function(){return m},name:function(){return""},value:function(e,t,n,r){return p[r].tooltip}}):(L.axis.x.type="category",L.axis.x.categories=w,L.data.columns=h),null!=n.stacked&&(L.data.groups=[function(){var e,t,n;for(n=[],e=0,t=j.length;t>e;e++)z=j[e],n.push(z.join("-"));return n}()]),O=e("<div>",{style:"display:none;"}).appendTo(e("body")),M=e("<div>").appendTo(O),L.bindto=M[0],t.generate(L),M.detach(),O.remove(),e("<div>").append(F,M),_={html:M}}},n={"C3 - Line Chart":r(),"C3 - Bar Chart":r({type:"bar"}),"C3 - Stacked Bar Chart":r({type:"bar",stacked:!0}),"C3 - Area Chart":r({type:"area",stacked:!0}),"C3 - Scatter Chart":r({type:"scatter"})}})}.call(this),function(){var e;(e=function(e){return"object"==typeof exports&&"object"==typeof module?e(require("jquery"),require("d3")):"function"==typeof define&&define.amd?define("render/plugins/dist/d3_renderers.min",["jquery","d3"],e):e(jQuery,d3)})(function(e,t){var n;return n={Treemap:function(n,r){var i,s,o,u,a,f,l,c,h,p,d,v,m,g;for(o={localeStrings:{},d3:{width:function(){return e(window).width()/1.4},height:function(){return e(window).height()/1.4}}},r=e.extend(o,r),c=e("<div>").css({width:r.d3.width(),height:r.d3.height()}),d={name:"All",children:[]},i=function(e,t,n){var r,s,o,u,a,f;if(0===t.length)return void (e.value=n);for(null==e.children&&(e.children=[]),f=t.shift(),a=e.children,s=0,o=a.length;o>s;s++)if(r=a[s],r.name===f)return void i(r,t,n);return u={name:f},i(u,t,n),e.children.push(u)},l=n.getRowKeys(),a=0,f=l.length;f>a;a++)p=l[a],m=n.getAggregator(p,[]).value(),null!=m&&i(d,p,m);return s=t.scale.category10(),g=r.d3.width(),u=r.d3.height(),v=t.layout.treemap().size([g,u]).sticky(!0).value(function(e){return e.size}),t.select(c[0]).append("div").style("position","relative").style("width",g+"px").style("height",u+"px").datum(d).selectAll(".node").data(v.padding([15,0,0,0]).value(function(e){return e.value}).nodes).enter().append("div").attr("class","node").style("background",function(e){return null!=e.children?"lightgrey":s(e.name)}).text(function(e){return e.name}).call(function(){this.style("left",function(e){return e.x+"px"}).style("top",function(e){return e.y+"px"}).style("width",function(e){return Math.max(0,e.dx-1)+"px"}).style("height",function(e){return Math.max(0,e.dy-1)+"px"})}),h={html:c}}}})}.call(this),define("render/services/renderers",["../../render/plugins/dist/datatables_renderers.min","../../render/plugins/dist/gchart_renderers.min","../../render/plugins/dist/c3_renderers.min","../../render/plugins/dist/d3_renderers.min"],function(e,t,n,r){"use strict";function i(i){function s(){this.availableRenderers,this.availableRendererNames,this.availableRendererOptions}s.prototype={constructor:s,init:function(){i.Renderers===undefined&&i.add("Renderers",o);var s=this;s.availableRenderers=$.extend({},e,t,n,r),s.availableRendererNames=Object.keys(s.availableRenderers),s.availableRendererOptions={gchart:{},datatables:{"class":["pvtTable","cell-border","compact","hover","order-column","row-border","zebra"]},c3:{size:{}},d3:{}}},addRenderers:function(e){var t=this;$.extend(t.availableRenderers,e),t.availableRendererNames=Object.keys(t.availableRenderers)},setRendererOptions:function(e,t){var n=this;n.availableRendererOptions[e]=t}};var o=new s;return o.init(),o}return i.$inject=["ServiceProvider"],i}),define("render/services/renderingEngineFactory",[],function(){"use strict";function t(t,n,r,i,s,o,u,a){function f(){this.id,this.element,this.disabled,this.title,this.rendererName,this.aggregatorName,this.aggInputAttributeName,this.numInputsToProcess,this.axisValues,this.shownAttributes,this.availableAttributes,this.tblCols,this.cols,this.rows,this.attributesAvailableForRowsAndCols,this.attributeFilterExclusions,this.attributeFilterInclusions,this.tile}return f.prototype={constructor:f,init:function(e){var t=this;t.id="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(e){var t=Math.random()*16|0,n=e=="x"?t:t&3|8;return n.toString(16)}),t.dataSourceConfigId=e,t.disabled=!1,t.title="Untitiled",t.tile={size_x:1,size_y:1,col:1,row:1},t.rendererName="Table",t.aggregatorName="Count",t.aggInputAttributeName=[],t.numInputsToProcess=[],t.axisValues={},t.shownAttributes=[],t.availableAttributes=[],t.tblCols=[],t.cols=[],t.rows=[],t.attributesAvailableForRowsAndCols=[],t.attributeFilterExclusions={},t.attributeFilterInclusions={}},setRendererName:function(e,t){var n=this;n.rendererName=e,n.draw(t)},setNumberOfAggregateInputs:function(){var n=this,r;try{r=t.availableAggregators[n.aggregatorName]([])().numInputs}catch(i){e=i,typeof console!="undefined"&&console!==null&&console.error(e.stack)}r===undefined?(n.numInputsToProcess=new Array,n.aggInputAttributeName=new Array):(n.numInputsToProcess=new Array(r),n.aggInputAttributeName.length!==r&&(n.aggInputAttributeName=new Array(r)))},setAggregatorName:function(e){var t=this;t.aggregatorName=e},isExcluded:function(e,t){var n=this;return n.attributeFilterExclusions[e]!==undefined?n.attributeFilterExclusions[e].indexOf(t)>=0?!1:!0:!0},addExclusionFilter:function(e,t){var n=this;if(n.attributeFilterExclusions[e]!==undefined){var r=this.attributeFilterExclusions[e].indexOf(t);r>=0?n.attributeFilterExclusions[e].splice(r,1):n.attributeFilterExclusions[e].push(t)}else n.attributeFilterExclusions[e]=[],n.attributeFilterExclusions[e].push(t);n.attributeFilterInclusions[e]=[],angular.forEach(n.axisValues[e],function(t,r){n.attributeFilterExclusions[e].indexOf(r)<0&&n.attributeFilterInclusions[e].push(r)})},addInclusionFilter:function(e,t){var n=this;n.attributeFilterInclusions[e]=[],n.attributeFilterExclusions[e]=[],n.addExclusionFilter(e,t);var r=n.attributeFilterInclusions[e];n.attributeFilterInclusions[e]=n.attributeFilterExclusions[e],n.attributeFilterExclusions[e]=r},updateTile:function(e,t,n,r){var i=this;i.tile={size_x:e,size_y:t,col:n,row:r}},draw:function(u){var f=this,l=s.defer();return a.$emit("draw initiated"),o(function(s){r.availableRendererOptions.renderingEngineId=f.id,r.availableRendererOptions.numRows=f.rows.length,r.availableRendererOptions.numCols=f.cols.length,angular.forEach(r.availableRendererOptions,function(e,t){switch(t){case"datatables":e.height=f.element.parent().parent().innerHeight()-24-40-31-31-22-(f.cols.length+1)*30+"px",e.width=f.element.parent().parent().innerWidth();break;case"gchart":e.height=f.element.parent().parent().innerHeight()-24-10,e.width=f.element.parent().parent().innerWidth();break;case"c3":e.size.height=f.element.parent().parent().innerHeight()-24-10,e.size.width=f.element.parent().parent().innerWidth();break;case"d3":e.height=function(){return f.element.parent().parent().innerHeight()},e.width=function(){return f.element.parent().parent().innerWidth()-16};break;default:}}),s=n.convertToArray(s);if(s!==undefined&&s.length>0){f.availableAttributes=f.rows.concat(f.cols);var o={cols:f.cols,rows:f.rows,vals:f.aggInputAttributeName,hiddenAttributes:[],filter:function(e){var t,r;for(var i in f.attributeFilterExclusions){t=f.attributeFilterExclusions[i];if(r=""+e[i],n.indexOf.call(t,r)>=0)return!1}return!0},aggregator:t.availableAggregators[f.aggregatorName](f.aggInputAttributeName),aggregatorName:f.aggregatorName,sorters:function(){},derivedAttributes:{}};f.tblCols=[],f.tblCols=function(){var e,t;e=s[0],t=[];for(var r in e){if(!n.hasProp.call(e,r))continue;t.push(r)}return t}(),f.axisValues={};for(var u=0,c=f.tblCols.length;u<c;u++){var h=f.tblCols[u];f.axisValues[h]={}}n.forEachRecord(s,o.derivedAttributes,function(e){var t,r,i;r=[];for(var s in e){if(!n.hasProp.call(e,s))continue;i=e[s],i==null&&(i="null"),(t=f.axisValues[s])[i]==null&&(t[i]=0),r.push(f.axisValues[s][i]++)}return r}),f.shownAttributes=[],f.shownAttributes=function(){var e,t,r;r=[];for(var t=0,e=f.tblCols.length;t<e;t++){var i=f.tblCols[t];n.indexOf.call(o.hiddenAttributes,i)<0&&r.push(i)}return r}(),f.attributesAvailableForRowsAndCols.length+f.rows.length+f.cols.length!==f.shownAttributes.length&&(f.attributesAvailableForRowsAndCols=f.shownAttributes);var p=null,d=null;try{d=new i,d.init(s,o);try{p=r.availableRenderers[f.rendererName](d,r.availableRendererOptions)}catch(v){e=v,typeof console!="undefined"&&console!==null&&console.error(e.stack),p=$("<span>").html(o.localeStrings.renderError)}}catch(v){e=v,typeof console!="undefined"&&console!==null&&console.error(e.stack),p=$("<span>").html(o.localeStrings.computeError)}f.element.empty(),f.element.append(p.html),a.$emit("draw complete"),p.postRenderFunction&&p.postRenderFunction(p.html,p.postRenderOpts)}l.resolve()},1500,!0,u),l.promise}},f}return t.$inject=["Aggregators","RenderingEngineUtils","Renderers","PivotDataFactory","$q","$timeout","$window","$rootScope"],t}),define("render/services/renderingEngineManager",[],function(){"use strict";function e(e,t,n,r,i,s,o){function u(){this.renderingEngines={},this.activeRenderingEngine}u.prototype={constructor:u,init:function(){t.RenderingEngineManager===undefined&&t.add("RenderingEngineManager",a)},create:function(t){if(i.dataSources[t]===undefined)i.create(t,r.dataSourceConfigurations[t].name),o(angular.fromJson(r.dataSourceConfigurations[t].httpConfig)).then(function(o){i.dataSources[t].data=$.csv.toArrays(o.data),s.format(i.dataSources[t]),e.hideDialog();var u=new n;u.init(t),u.active=!0,a.add(u),a.activeRenderingEngine=u.id},function(n){var r;i.delete(t)});else{e.hideDialog();var u=new n;u.init(t),a.add(u),a.activeRenderingEngine=u.id}},add:function(e){a.renderingEngines[e.id]=e},"delete":function(e){delete a.renderingEngines[e]},setActiveRenderingEngine:function(e){a.activeRenderingEngine=e,angular.forEach(a.renderingEngines,function(t){t.active=!1,t.id===e&&(t.active=!0)})},updateAllRenderingEngineTileSizeAndPosition:function(e){angular.forEach(e,function(e){a.renderingEngines[e.id].updateTile($(e).attr("data-sizex"),$(e).attr("data-sizey"),$(e).attr("data-col"),$(e).attr("data-row"))})}};var a=new u;return a.init(),a}return e.$inject=["UiControls","ServiceProvider","RenderingEngineFactory","DataSourceConfigurationManager","DataSourceManager","DataSourceUtils","$http"],e}),define("render/services/renderingEngineUtils",[],function(){"use strict";function e(e){function t(){}t.prototype={constructor:t,init:function(){e.RenderingEngineUtils===undefined&&e.add("RenderingEngineUtils",n)},hasProp:{}.hasOwnProperty,indexOf:[].indexOf||function(e){for(var t=0,n=this.length;t<n;t++)if(t in this&&this[t]===e)return t;return-1},convertToArray:function(e){var t;return t=[],n.forEachRecord(e,{},function(e){return t.push(e)}),t},bind:function(e,t){return function(){return e.apply(t,arguments)}},forEachRecord:function(e,t,r){var i,s,o,u,a,f,l,c,h,p,d,v;$.isEmptyObject(t)?i=r:i=function(e){var n,i,s;for(n in t)s=t[n],e[n]=(i=s(e))!=null?i:e[n];return r(e)};if($.isFunction(e))return e(i);if($.isArray(e)){if($.isArray(e[0])){p=[];for(o in e){if(!n.hasProp.call(e,o))continue;s=e[o];if(!(o>0))continue;c={},h=e[0];for(u in h){if(!n.hasProp.call(h,u))continue;a=h[u],c[a]=s[u]}p.push(i(c))}return p}d=[];for(f=0,l=e.length;f<l;f++)c=e[f],d.push(i(c));return d}if(e instanceof jQuery)return v=[],$("thead > tr > th",e).each(function(e){return v.push($(this).text())}),$("tbody > tr",e).each(function(e){return c={},$("td",this).each(function(e){return c[v[e]]=$(this).html()}),i(c)});throw new Error("unknown input format")},addSeparators:function(e,t,n){var r,i,s,o;e+="",i=e.split("."),s=i[0],o=i.length>1?n+i[1]:"",r=/(\d+)(\d{3})/;while(r.test(s))s=s.replace(r,"$1"+t+"$2");return s+o},numberFormat:function(e){var t=this,n;return n={digitsAfterDecimal:2,scaler:1,thousandsSep:",",decimalSep:".",prefix:"",suffix:"",showZero:!1},e=$.extend(n,e),function(n){var r;return isNaN(n)||!isFinite(n)?"":n===0&&!e.showZero?"":(r=t.addSeparators((e.scaler*n).toFixed(e.digitsAfterDecimal),e.thousandsSep,e.decimalSep),""+e.prefix+r+e.suffix)}},sortAs:function(e){var t,r,i;r={};for(t in e)i=e[t],r[i]=t;return function(e,t){return r[e]!=null&&r[t]!=null?r[e]-r[t]:r[e]!=null?-1:r[t]!=null?1:n.naturalSort(e,t)}},naturalSort:function(e,t){var n,r,i,s,o,u,a;u=/(\d+)|(\D+)/g,o=/\d/,a=/^0/;if(typeof e=="number"||typeof t=="number")return isNaN(e)?1:isNaN(t)?-1:e-t;n=String(e).toLowerCase(),i=String(t).toLowerCase();if(n===i)return 0;if(!o.test(n)||!o.test(i))return n>i?1:-1;n=n.match(u),i=i.match(u);while(n.length&&i.length){r=n.shift(),s=i.shift();if(r!==s)return o.test(r)&&o.test(s)?r.replace(a,".0")-s.replace(a,".0"):r>s?1:-1}return n.length-i.length},getSort:function(e,t){var r;return r=e(t),$.isFunction(r)?r:n.naturalSort},usFmt:function(){return n.numberFormat()},usFmtInt:function(){return n.numberFormat({digitsAfterDecimal:0})},usFmtPct:function(){return n.numberFormat({digitsAfterDecimal:1,scaler:100,suffix:"%"})}};var n=new t;return n.init(),n}return e.$inject=["ServiceProvider"],e}),define("syndicate/directives/dashboardDirective",[],function(){"use strict";function e(e,t,n){return{restrict:"E",scope:{renderingEngineManager:"="},link:{pre:function(t,n,r){$(".context-menu-list").remove(),t.DashboardFactory=new e($(n)),t.DashboardFactory.draw(t)}}}}return e.$inject=["DashboardFactory","ServiceProvider","$window"],e}),define("syndicate/services/dashboardFactory",[],function(){"use strict";function e(e,t,n,r,i,s,o){function u(e){this.id,this.element=e}return u.prototype={constructor:u,init:function(){var e=this;e.id="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(e){var t=Math.random()*16|0,n=e=="x"?t:t&3|8;return n.toString(16)})},draw:function(i){var u=this,a=s.defer();return o(function(i){i.ServiceProvider=r,i.options={enableDragging:!0,min_rows:30,widget_margins:[10,10],widget_base_dimensions:[n.innerWidth/4-24,n.innerWidth/4-24-21-20],min_cols:4,max_size_x:4,max_cols:4,resize:{enabled:!0,resize:function(e,t,n){},stop:function(e,t,n){i.renderingEngineManager.renderingEngines[n[0].id].draw(r.DataSourceManager.dataSources[i.renderingEngineManager.renderingEngines[n[0].id].dataSourceConfigId].formattedData),i.renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition(t.$player.parent().parent().data("gridster").$widgets)}},draggable:{handle:"div.context-menu.box",stop:function(e,t,n){i.renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition(t.$player.parent().data("gridster").$widgets)}},parallax:{enabled:!0,dataDepth:.05}};var s=document.createElement("ul");s.setAttribute("class","gridster");var o=1;angular.forEach(i.renderingEngineManager.renderingEngines,function(n,r){var a="contextMenu"+o;i[a]={callback:function(t,r){switch(t){case"edit":i.renderingEngineManager.setActiveRenderingEngine(n.id),e.$emit("Explore View");break;case"delete":u.element.isolateScope().gridster.remove_widget(n.element.parent().parent()),i.renderingEngineManager.delete(n.id);var s=!0;angular.forEach(i.renderingEngineManager.renderingEngines,function(e,t){s=!1}),s&&e.$emit("Explore View");break;default:var o="clicked: "+t;window.console&&console.log(o)||alert(o)}},items:{edit:{name:"Edit",icon:"edit",chartId:r},"delete":{name:"Delete",icon:"delete"}}};var f=document.createElement("li");f.setAttribute("class","md-whiteframe-z5"),f.setAttribute("id",r),f.setAttribute("data-max-sizex",5),f.setAttribute("data-max-sizey",3),f.setAttribute("data-row",n.tile.row),f.setAttribute("data-col",n.tile.col),f.setAttribute("data-sizex",n.tile.size_x),f.setAttribute("data-sizey",n.tile.size_y),$(s).append(f),$(f).append(t("<header style='cursor:move' class='ui-dialog-titlebar ui-widget-header' context-menu='"+a+"' context-menu-selector=\"'.context-menu'\"><div class='context-menu box' ><span class='handle ui-icon ui-icon-gear' style='display:inline-block'></span>"+n.title+"</div></header>")(i));var l=document.createElement("div");l.setAttribute("class","gridsterWidgetContainer");var c=t("<rendering-engine-directive input='ServiceProvider.DataSourceManager.dataSources[renderingEngineManager.renderingEngines[\""+r+"\"].dataSourceConfigId].formattedData' engine='renderingEngineManager.renderingEngines[\""+r+"\"]'></rendering-engine-directive>")(i);$(l).append(c[0]),$(f).append(l),o++}),u.element.append(s);var f=$(s).gridster(i.options);i.gridster=f.data("gridster"),i.options.enableDragging||i.gridster.disable();if(i.options.parallax.enabled){var l=$("<ul><li data-depth='"+i.options.parallax.dataDepth+"' class='layer'></li></ul>");l.parallax();var c=l.find("li");c.append(f),u.element.append(l)}a.resolve()},500,!0,i),a.promise}},u}return e.$inject=["$rootScope","$compile","$window","ServiceProvider","UiControls","$q","$timeout"],e}),define("rndr-angular-module",["acquire/directives/acquisitionDirective","acquire/services/acquisitionController","acquire/services/dataSourceConfigurationFactory","acquire/services/dataSourceConfigurationManager","acquire/services/dataSourceFactory","acquire/services/dataSourceManager","acquire/services/dataSourceUtils","common/controllers/controllerWrapper","common/directives/gridsterDirective","common/services/serviceProvider","common/services/uiControls","explore/directives/explorationDirective","explore/services/exploreController","render/directives/renderingEngineDirective","render/services/aggregators","render/services/aggregatorTemplates","render/services/pivotDataFactory","render/services/renderers","render/services/renderingEngineFactory","render/services/renderingEngineManager","render/services/renderingEngineUtils","syndicate/directives/dashboardDirective","syndicate/services/dashboardFactory"],function(e,t,n,r,i,s,o,u,a,f,l,c,h,p,d,v,m,g,y,b,w,E,S){var x=angular.module("ngRndr",[]);x.directive("acquisitionDirective",e),x.factory("AcquisitionController",t),x.factory("DataSourceConfigurationFactory",n),x.factory("DataSourceConfigurationManager",r),x.factory("DataSourceFactory",i),x.factory("DataSourceManager",s),x.factory("DataSourceUtils",o),x.controller("ControllerWrapper",u),x.directive("gridsterDirective",a),x.factory("ServiceProvider",f),x.factory("UiControls",l),x.directive("explorationDirective",c),x.factory("ExploreController",h),x.directive("renderingEngineDirective",p),x.factory("Aggregators",d),x.factory("AggregatorTemplates",v),x.directive("dashboardDirective",E),x.factory("DashboardFactory",S),x.factory("PivotDataFactory",m),x.factory("Renderers",g),x.factory("RenderingEngineFactory",y),x.factory("RenderingEngineManager",b),x.factory("RenderingEngineUtils",w)});
+define('acquire/directives/acquisitionDirective',[], function() {
+    'use strict';
+
+    function acquisitionDirective(AcquisitionController, DataSourceConfigurationManager, DataSourceManager, DataSourceUtils) {
+        return {
+            restrict: 'E',
+            templateUrl:'acquire/views/acquire.html',
+            link: function(scope, element, attrs) {
+                AcquisitionController.init();
+                scope.AcquisitionController = AcquisitionController;
+                scope.DataSourceConfigurationManager = DataSourceConfigurationManager;
+                scope.DataSourceManager = DataSourceManager;
+                scope.DataSourceUtils = DataSourceUtils;
+            }
+        };
+    }
+
+    return acquisitionDirective;
+});
+define('acquire/services/acquisitionController',[], function() {
+    'use strict';
+
+    function AcquisitionController(RenderingEngineFactory, RenderingEngineManager, DataSourceUtils, DataSourceManager, DataSourceConfigurationManager, $rootScope, $window) {
+        function AcquisitionController() {
+        }
+        AcquisitionController.prototype = {
+            constructor: AcquisitionController,
+            init: function() {
+                DataSourceManager.create(DataSourceConfigurationManager.create("Untitled"), "Untitled");
+                $rootScope.$on('acquiring data', function(){
+                    acquisitionController.dataAcquisitionInProgress = true;
+                });
+                $rootScope.$on('data acquired', function(){
+                    acquisitionController.dataAcquisitionInProgress = false;
+                });
+                $rootScope.$emit('data source configuration wizard init');
+            },
+            save: function() {
+                var renderingEngine = new RenderingEngineFactory();
+                renderingEngine.init(DataSourceConfigurationManager.activeDataSourceConfiguration);
+                renderingEngine.active = true;
+                RenderingEngineManager.add(renderingEngine);
+                //There may be an active rendering engine, if so deactivate
+                if(RenderingEngineManager.activeRenderingEngine){
+                    RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].active = false;
+                }
+                //Set the active rendering engine to this one
+                RenderingEngineManager.activeRenderingEngine = renderingEngine.id;
+                DataSourceConfigurationManager.activeDataSourceConfiguration = "";
+                $rootScope.$emit('data source configuration wizard save');
+            },
+            cancel: function() {
+                DataSourceManager.delete(DataSourceManager.dataSources[DataSourceConfigurationManager.activeDataSourceConfiguration].dataSourceConfigId);
+                DataSourceConfigurationManager.delete(DataSourceConfigurationManager.activeDataSourceConfiguration);
+                DataSourceConfigurationManager.activeDataSourceConfiguration = "";
+                $rootScope.$emit('data source wizard configuration cancel');
+            },
+            openDocumentation: function(view) {
+                $window.open('https://docs.angularjs.org/api/ng/service/$http#usage', '_blank');
+            },
+            aceLoaded: function(_editor) {
+                // Options
+                $(_editor.container).height($('#mainContent').height() - 16);
+                $(_editor.container).width($('#mainContent').width() - 16);
+            },
+            aceChanged: function(e) {
+                var tmp;
+            }
+        };
+        var acquisitionController = new AcquisitionController();
+        return acquisitionController;
+    }
+
+    return AcquisitionController;
+});
+define('acquire/services/dataSourceConfigurationFactory',[], function() {
+    'use strict';
+
+    function DataSourceConfigurationFactory() {
+        function DataSourceConfigurationFactory(name) {
+            this.id;
+            this.flattenDataFunctionString;
+            this.httpConfig;
+            this.name = name;
+        }
+        DataSourceConfigurationFactory.prototype = {
+            constructor: DataSourceConfigurationFactory,
+            init: function() {
+                var self = this;
+                self.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                    return v.toString(16);
+                });
+                self.httpConfig = angular.toJson({
+                    method: 'GET',
+                    url: 'http://nicolas.kruchten.com/pivottable/examples/montreal_2014.csv'
+                });
+                self.flattenDataFunctionString = 'return data;';
+            }
+        };
+        return DataSourceConfigurationFactory;
+    }
+
+    return DataSourceConfigurationFactory;
+});
+define('acquire/services/dataSourceConfigurationManager',[], function() {
+    'use strict';
+
+    function DataSourceConfigurationManager(DataSourceConfigurationFactory) {
+        function DataSourceConfigurationManager() {
+            this.dataSourceConfigurations = {};
+            this.activeDataSourceConfiguration;
+        }
+        DataSourceConfigurationManager.prototype = {
+            constructor: DataSourceConfigurationManager,
+            init: function() {},
+            create: function(name) {
+                var dataSourceConfiguration = new DataSourceConfigurationFactory(name);
+                dataSourceConfiguration.init();
+                dataSourceConfigurationManager.add(dataSourceConfiguration);
+                dataSourceConfigurationManager.activeDataSourceConfiguration = dataSourceConfiguration.id;
+                return dataSourceConfiguration.id;
+            },
+            add: function(dataSourceConfiguration){
+                dataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfiguration.id] = dataSourceConfiguration;
+            },
+            delete: function(id){
+                delete dataSourceConfigurationManager.dataSourceConfigurations[id];
+            },
+            dataSourceConfigurationsDefined: function(){
+                return Object.keys(dataSourceConfigurationManager.dataSourceConfigurations).length !== 0;
+            }
+        };
+        var dataSourceConfigurationManager = new DataSourceConfigurationManager();
+        dataSourceConfigurationManager.init();
+        return dataSourceConfigurationManager;
+    }
+
+    return DataSourceConfigurationManager;
+});
+define('acquire/services/dataSourceFactory',[], function() {
+    'use strict';
+
+    function DataSourceFactory() {
+        function DataSourceFactory(dataSourceConfigId, name) {
+            this.dataSourceConfigId = dataSourceConfigId;
+            this.data;
+            this.name = name;
+            this.formattedData;
+        }
+        DataSourceFactory.prototype = {
+            constructor: DataSourceFactory
+        };
+        return DataSourceFactory;
+    }
+
+    return DataSourceFactory;
+});
+define('acquire/services/dataSourceManager',[], function() {
+    'use strict';
+
+    function DataSourceManager(DataSourceFactory) {
+        function DataSourceManager() {
+            this.dataSources = {};
+        }
+        DataSourceManager.prototype = {
+            constructor: DataSourceManager,
+            init: function(){},
+            create: function(dataSourceConfigurationId, name) {
+                if(dataSourceConfigurationId !== undefined){
+                    var dataSource = new DataSourceFactory(dataSourceConfigurationId, name);
+                    dataSourceManager.add(dataSource);
+                }
+            },
+            add: function(dataSource){
+                dataSourceManager.dataSources[dataSource.dataSourceConfigId] = dataSource;
+            },
+            delete: function(dataSourceConfigId){
+                delete dataSourceManager.dataSources[dataSourceConfigId];
+            }
+        };
+        var dataSourceManager = new DataSourceManager();
+        dataSourceManager.init();
+        return dataSourceManager;
+    }
+
+    return DataSourceManager;
+});
+define('acquire/services/dataSourceUtils',[], function() {
+    'use strict';
+
+    function DataSourceUtils(DataSourceConfigurationManager, $http, $rootScope) {
+        function DataSourceUtils() {
+        }
+        DataSourceUtils.prototype = {
+            constructor: DataSourceUtils,
+            init: function(){},
+            acquire: function(dataSource) {
+                $rootScope.$emit('acquiring data');
+                $http(angular.fromJson(DataSourceConfigurationManager.dataSourceConfigurations[dataSource.dataSourceConfigId].httpConfig)).then(function successCallback(response) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+                    if(typeof response.data !== "string"){
+                      dataSource.data = JSON.stringify(response.data);
+                    } else {
+                      dataSource.data = response.data;
+                    }
+                    $rootScope.$emit('data acquired');
+                }, function errorCallback(response) {
+                    $rootScope.$emit('data acquired');
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
+            },
+            format: function(dataSource) {
+                var flatten = new Function("data", DataSourceConfigurationManager.dataSourceConfigurations[dataSource.dataSourceConfigId].flattenDataFunctionString);
+                try{
+                    dataSource.formattedData = angular.toJson(flatten(angular.fromJson(dataSource.data)));
+                } catch(e){
+                    try{
+                        dataSource.formattedData = flatten(dataSource.data);
+                    } catch(e){
+                        //Do nothing
+                    }
+                }
+                try{
+                  dataSource.formattedData = angular.fromJson(dataSource.formattedData);
+                } catch(e){
+                  try{
+                    dataSource.formattedData = $.csv.toArrays(dataSource.formattedData);
+                  } catch(e){
+                    //Do nothing
+                  }
+                }
+            }
+        };
+        var dataSourceUtils = new DataSourceUtils();
+        dataSourceUtils.init();
+        return dataSourceUtils;
+    }
+
+    return DataSourceUtils;
+});
+define('explore/directives/explorationDirective',[], function() {
+
+    function explorationDirective(ExploreController, RenderingEngineManager, DataSourceManager) {
+        return {
+            restrict: 'E',
+            templateUrl:'explore/views/explore.html',
+            link: function(scope, element, attrs) {
+                ExploreController.init();
+                scope.ExploreController = ExploreController;
+                scope.RenderingEngineManager = RenderingEngineManager;
+                scope.DataSourceManager = DataSourceManager;
+            }
+        };
+    }
+
+    return explorationDirective;
+});
+define('explore/services/exploreController',[], function() {
+    'use strict';
+
+    function ExploreController(RenderingEngineManager, DataSourceManager, $window, $timeout, $rootScope) {
+        function ExploreController() {
+            this.selectedDataSourceConfigId;
+            this.dialogContentView;
+            this.constants;
+        }
+        ExploreController.prototype = {
+            constructor: ExploreController,
+            init: function() {
+                exploreController.constants = {
+                    sortableOptions: {
+                        placeholder: "placeholder",
+                        connectWith: ".dropzone",
+                        update: function(e, ui) {
+                            //TODO: Need a way to provide feedback to the user that the renderer is updating                             
+                            //UiControls.showRenderingEngineProgress(); ???
+                                                            
+                            //TODO: Need to remove any RenderingEngine.attributeFilterInclusions and  RenderingEngine.attributeFilterExclusions
+                            //that are not on the row or column
+                            
+                            //Cannot correctly update renderer until the angular digest completes which updates the RenderingEngine.rows and
+                            //RenderingEngine.cols arrays. We must get on the call stack after the that cycle completes 
+                            $timeout(function() {
+                                RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].draw(DataSourceManager.dataSources[RenderingEngineManager.renderingEngines[RenderingEngineManager.activeRenderingEngine].dataSourceConfigId].formattedData);
+                            }, 0);
+                        }
+                    },
+                    dataExplorationGrid: {
+                        namespace: '#DataExploration',
+                        enableDragging: false,
+                        widget_margins: [10, 10],
+                        /*
+                         * Determination of the widget dimension is calculated as follows:
+                         * 
+                         *     (($window.innerWidth - (# of columns +1)*(column margin)*2 margins on either side)/# of columns)
+                         *     (($window.innerHeight - (pixel height of toolbars) - (# of rows +1)*(row margin)*2 margins on either side)/# of rows)
+                         */
+                        widget_base_dimensions: [(($window.innerWidth - 7*(10)*2)/6) , (($window.innerHeight - 88 - 3*(10)*2)/2)],
+                        min_cols: 6,
+                        resize: {
+                            enabled: false,
+                            start: function(e, ui, $widget) {
+                                console.log('START position: ' + ui.position.top + ' ' + ui.position.left);
+                            },
+                            resize: function(e, ui, $widget) {
+                                console.log('RESIZE offset: ' + ui.pointer.diff_top + ' ' + ui.pointer.diff_left);
+                            },
+                            stop: function(e, ui, $widget) {
+                                console.log('STOP position: ' + ui.position.top + ' ' + ui.position.left);
+                            }
+                        },
+                        draggable: {
+                            start: function(e, ui, $widget) {
+                                console.log('START position: ' + ui.position.top + ' ' + ui.position.left);
+                            },
+                            drag: function(e, ui, $widget) {
+                                console.log('DRAG offset: ' + ui.pointer.diff_top + ' ' + ui.pointer.diff_left);
+                            },
+                            stop: function(e, ui, $widget) {
+                                console.log('STOP position: ' + ui.position.top + ' ' + ui.position.left);
+                            }
+                        },
+                        parallax: {
+                            enabled: false,
+                            dataDepth: 0
+                        }
+                    }
+                };
+                var requireDataSourceConfigSelection = false;
+                angular.forEach(RenderingEngineManager.renderingEngines, function(RenderingEngine, uuid) {
+                     requireDataSourceConfigSelection = true;
+                });
+                if(!requireDataSourceConfigSelection){
+                    exploreController.new();
+                }
+                angular.element($window).on( "rowLabelDrillDownEvent", function(e) {
+                    var RenderingEngine = RenderingEngineManager.renderingEngines[e.renderingEngineId];
+                    var filterByAttributeValue = $(e.event.currentTarget).html();
+                    var attributeFilterName = RenderingEngine.rows[$(e.event.currentTarget).parent().children().index($(e.event.currentTarget))];
+                    RenderingEngine.addInclusionFilter(attributeFilterName, filterByAttributeValue);
+                    $timeout(function() {
+                        RenderingEngine.draw(DataSourceManager.dataSources[RenderingEngine.dataSourceConfigId].formattedData);
+                    }, 0);
+                });
+                angular.element($window).on( "colLabelDrillDownEvent", function(e) {
+                    var RenderingEngine = RenderingEngineManager.renderingEngines[e.renderingEngineId];
+                    var filterByAttributeValue = $(e.event.currentTarget).html();
+                    var attributeFilterName = RenderingEngine.cols[$(e.event.currentTarget).parent().parent().children().index($(e.event.currentTarget).parent())];
+                    RenderingEngine.addInclusionFilter(attributeFilterName, filterByAttributeValue);
+                    $timeout(function() {
+                        RenderingEngine.draw(DataSourceManager.dataSources[RenderingEngine.dataSourceConfigId].formattedData);
+                    }, 0);
+                });
+                $rootScope.$emit('explore:init');
+            },
+            new: function(){
+                exploreController.selectedDataSourceConfigId = undefined;
+                $rootScope.$emit('explore:new');
+            }
+        };
+        var exploreController = new ExploreController();
+        return exploreController;
+    }
+
+    return ExploreController;
+});
+define('render/directives/renderingEngineDirective',[], function() {
+    'use strict';
+
+    function renderingEngineDirective() {
+        return {
+            restrict: 'E',
+            scope: {
+                'engine': '=',
+                'input': '='
+            },
+            link: {
+                pre: function(scope, element, attr) {
+                    scope.engine.element = $(element);
+                    scope.engine.draw(scope.input);
+                }
+            }
+        };
+    }
+
+    return renderingEngineDirective;
+});
+define('render/services/aggregators',[], function() {
+    'use strict';
+
+    function Aggregators(AggregatorTemplates, RenderingEngineUtils) {
+        function Aggregators() {
+            this.availableAggregators;
+            this.availableAggregatorNames;
+            this.availableAggregatorOptions;
+            this.aggregatorTemplates;
+        }
+        Aggregators.prototype = {
+            constructor: Aggregators,
+            init: function() {
+                var self = this;
+                self.availableAggregators = {};
+                self.availableAggregatorNames = Object.keys(self.availableAggregators);
+                self.aggregatorTemplates = AggregatorTemplates;
+                self.addAggregator('Count', self.aggregatorTemplates.count(RenderingEngineUtils.usFmtInt()));
+                self.addAggregator('Count Unique Values', self.aggregatorTemplates.countUnique(RenderingEngineUtils.usFmtInt()));
+                self.addAggregator('List Unique Values', self.aggregatorTemplates.listUnique(', '));
+                self.addAggregator('Sum', self.aggregatorTemplates.sum(RenderingEngineUtils.usFmt()));
+                self.addAggregator('Integer Sum', self.aggregatorTemplates.sum(RenderingEngineUtils.usFmtInt()));
+                self.addAggregator('Average', self.aggregatorTemplates.average(RenderingEngineUtils.usFmt()));
+                self.addAggregator('Minimum', self.aggregatorTemplates.min(RenderingEngineUtils.usFmt()));
+                self.addAggregator('Maximum', self.aggregatorTemplates.max(RenderingEngineUtils.usFmt()));
+                self.addAggregator('Sum over Sum', self.aggregatorTemplates.sumOverSum(RenderingEngineUtils.usFmt()));
+                self.addAggregator('80% Upper Bound', self.aggregatorTemplates.sumOverSumBound80(true, RenderingEngineUtils.usFmt()));
+                self.addAggregator('80% Lower Bound', self.aggregatorTemplates.sumOverSumBound80(false, RenderingEngineUtils.usFmt()));
+                self.addAggregator('Sum as Fraction of Total', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.sum(), 'total', RenderingEngineUtils.usFmtPct()));
+                self.addAggregator('Sum as Fraction of Rows', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.sum(), 'row', RenderingEngineUtils.usFmtPct()));
+                self.addAggregator('Sum as Fraction of Columns', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.sum(), 'col', RenderingEngineUtils.usFmtPct()));
+                self.addAggregator('Count as Fraction of Total', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'total', RenderingEngineUtils.usFmtPct()));
+                self.addAggregator('Count as Fraction of Rows', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'row', RenderingEngineUtils.usFmtPct()));
+                self.addAggregator('Count as Fraction of Columns', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'col', RenderingEngineUtils.usFmtPct()));
+            },
+            addAggregator: function(AggregatorName, Aggregator){
+                var self = this;
+                self.availableAggregators[AggregatorName] = Aggregator;
+                self.availableAggregatorNames = Object.keys(self.availableAggregators);
+            }
+        };
+        var aggregators = new Aggregators();
+        aggregators.init();
+        return aggregators;
+    }
+
+    return Aggregators;
+});
+define('render/services/aggregatorTemplates',[], function() {
+    'use strict';
+
+    function AggregatorTemplates(RenderingEngineUtils) {
+        function AggregatorTemplates() {
+            this.aggregatorTemplates;
+        }
+        AggregatorTemplates.prototype = {
+            constructor: AggregatorTemplates,
+            init: function(){},
+            count: function(formatter) {
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmtInt;
+                }
+                return function() {
+                    return function(data, rowKey, colKey) {
+                        return {
+                            count: 0,
+                            push: function() {
+                                return this.count++;
+                            },
+                            value: function() {
+                                return this.count;
+                            },
+                            format: formatter
+                        };
+                    };
+                };
+            },
+            countUnique: function(formatter) {
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmtInt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            uniq: [],
+                            push: function(record) {
+                                var ref;
+                                if (ref = record[attr], indexOf.call(this.uniq, ref) < 0) {
+                                    return this.uniq.push(record[attr]);
+                                }
+                            },
+                            value: function() {
+                                return this.uniq.length;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            listUnique: function(sep) {
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            uniq: [],
+                            push: function(record) {
+                                var ref;
+                                if (ref = record[attr], indexOf.call(this.uniq, ref) < 0) {
+                                    return this.uniq.push(record[attr]);
+                                }
+                            },
+                            value: function() {
+                                return this.uniq.join(sep);
+                            },
+                            format: function(x) {
+                                return x;
+                            },
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            sum: function(formatter) {
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            sum: 0,
+                            push: function(record) {
+                                if (!isNaN(parseFloat(record[attr]))) {
+                                    return this.sum += parseFloat(record[attr]);
+                                }
+                            },
+                            value: function() {
+                                return this.sum;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            min: function(formatter) {
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            val: null,
+                            push: function(record) {
+                                var ref, x;
+                                x = parseFloat(record[attr]);
+                                if (!isNaN(x)) {
+                                    return this.val = Math.min(x, (ref = this.val) != null ? ref : x);
+                                }
+                            },
+                            value: function() {
+                                return this.val;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            max: function(formatter) {
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            val: null,
+                            push: function(record) {
+                                var ref, x;
+                                x = parseFloat(record[attr]);
+                                if (!isNaN(x)) {
+                                    return this.val = Math.max(x, (ref = this.val) != null ? ref : x);
+                                }
+                            },
+                            value: function() {
+                                return this.val;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            average: function(formatter) {
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            sum: 0,
+                            len: 0,
+                            push: function(record) {
+                                if (!isNaN(parseFloat(record[attr]))) {
+                                    this.sum += parseFloat(record[attr]);
+                                    return this.len++;
+                                }
+                            },
+                            value: function() {
+                                return this.sum / this.len;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            sumOverSum: function(formatter) {
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmt;
+                }
+                return function(arg) {
+                    var denom, num;
+                    num = arg[0], denom = arg[1];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            sumNum: 0,
+                            sumDenom: 0,
+                            push: function(record) {
+                                if (!isNaN(parseFloat(record[num]))) {
+                                    this.sumNum += parseFloat(record[num]);
+                                }
+                                if (!isNaN(parseFloat(record[denom]))) {
+                                    return this.sumDenom += parseFloat(record[denom]);
+                                }
+                            },
+                            value: function() {
+                                return this.sumNum / this.sumDenom;
+                            },
+                            format: formatter,
+                            numInputs: (num != null) && (denom != null) ? 0 : 2
+                        };
+                    };
+                };
+            },
+            sumOverSumBound80: function(upper, formatter) {
+                if (upper == null) {
+                    upper = true;
+                }
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmt;
+                }
+                return function(arg) {
+                    var denom, num;
+                    num = arg[0], denom = arg[1];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            sumNum: 0,
+                            sumDenom: 0,
+                            push: function(record) {
+                                if (!isNaN(parseFloat(record[num]))) {
+                                    this.sumNum += parseFloat(record[num]);
+                                }
+                                if (!isNaN(parseFloat(record[denom]))) {
+                                    return this.sumDenom += parseFloat(record[denom]);
+                                }
+                            },
+                            value: function() {
+                                var sign;
+                                sign = upper ? 1 : -1;
+                                return (0.821187207574908 / this.sumDenom + this.sumNum / this.sumDenom + 1.2815515655446004 * sign * Math.sqrt(0.410593603787454 / (this.sumDenom * this.sumDenom) + (this.sumNum * (1 - this.sumNum / this.sumDenom)) / (this.sumDenom * this.sumDenom))) / (1 + 1.642374415149816 / this.sumDenom);
+                            },
+                            format: formatter,
+                            numInputs: (num != null) && (denom != null) ? 0 : 2
+                        };
+                    };
+                };
+            },
+            fractionOf: function(wrapped, type, formatter) {
+                if (type == null) {
+                    type = 'total';
+                }
+                if (formatter == null) {
+                    formatter = RenderingEngineUtils.usFmtPct;
+                }
+                return function() {
+                    var x;
+                    x = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            selector: {
+                                total: [[], []],
+                                row: [rowKey, []],
+                                col: [[], colKey]
+                            }[type],
+                            inner: wrapped.apply(null, x)(data, rowKey, colKey),
+                            push: function(record) {
+                                return this.inner.push(record);
+                            },
+                            format: formatter,
+                            value: function() {
+                                return this.inner.value() / data.getAggregator.apply(data, this.selector).inner.value();
+                            },
+                            numInputs: wrapped.apply(null, x)().numInputs
+                        };
+                    };
+                };
+            }
+        };
+        var agregatorTemplates = new AggregatorTemplates();
+        agregatorTemplates.init();
+        return agregatorTemplates;
+    }
+
+    return AggregatorTemplates;
+});
+define('render/services/pivotDataFactory',[], function() {
+    'use strict';
+
+    function PivotDataFactory(RenderingEngineUtils) {
+        function PivotDataFactory() {
+            this.colAttrs;
+            this.rowAttrs;
+            this.valAttrs;
+            this.sorters;
+            this.tree;
+            this.rowKeys;
+            this.colKeys;
+            this.rowTotals;
+            this.colTotals;
+            this.allTotal;
+            this.sorted;
+            this.aggregatorName;
+        }
+        PivotDataFactory.prototype = {
+            constructor: PivotDataFactory,
+            init: function(input, opts) {
+                var self = this;
+                self.aggregatorName = opts.aggregatorName;
+                self.colAttrs = opts.cols;
+                self.rowAttrs = opts.rows;
+                self.valAttrs = opts.vals;
+                self.sorters = opts.sorters;
+                self.tree = {};
+                self.rowKeys = [];
+                self.colKeys = [];
+                self.rowTotals = {};
+                self.colTotals = {};
+                self.allTotal = opts.aggregator(self, [], []);
+                self.sorted = false;
+                RenderingEngineUtils.forEachRecord(input, opts.derivedAttributes, (function(_this) {
+                    return function(record) {
+                        if (opts.filter(record)) {
+                            return _this.processRecord(record, opts);
+                        }
+                    };
+                })(self));
+            },
+            arrSort: function(attrs) {
+                var a, sortersArr;
+                sortersArr = (function() {
+                    var l, len1, results;
+                    results = [];
+                    for (l = 0, len1 = attrs.length; l < len1; l++) {
+                        a = attrs[l];
+                        results.push(RenderingEngineUtils.getSort(this.sorters, a));
+                    }
+                    return results;
+                }).call(this);
+                return function(a, b) {
+                    var comparison, i, sorter;
+                    for (i in sortersArr) {
+                        sorter = sortersArr[i];
+                        comparison = sorter(a[i], b[i]);
+                        if (comparison !== 0) {
+                            return comparison;
+                        }
+                    }
+                    return 0;
+                };
+            },
+            sortKeys: function() {
+                if (!this.sorted) {
+                    this.sorted = true;
+                    this.rowKeys.sort(this.arrSort(this.rowAttrs));
+                    return this.colKeys.sort(this.arrSort(this.colAttrs));
+                }
+            },
+            getColKeys: function() {
+                this.sortKeys();
+                return this.colKeys;
+            },
+            getRowKeys: function() {
+                this.sortKeys();
+                return this.rowKeys;
+            },
+            processRecord: function(record, opts) {
+                var colKey, flatColKey, flatRowKey, l, len1, len2, n, ref, ref1, ref2, ref3, rowKey, x;
+                colKey = [];
+                rowKey = [];
+                ref = this.colAttrs;
+                for (l = 0, len1 = ref.length; l < len1; l++) {
+                    x = ref[l];
+                    colKey.push((ref1 = record[x]) != null ? ref1 : "null");
+                }
+                ref2 = this.rowAttrs;
+                for (n = 0, len2 = ref2.length; n < len2; n++) {
+                    x = ref2[n];
+                    rowKey.push((ref3 = record[x]) != null ? ref3 : "null");
+                }
+                flatRowKey = rowKey.join(String.fromCharCode(0));
+                flatColKey = colKey.join(String.fromCharCode(0));
+                this.allTotal.push(record);
+                if (rowKey.length !== 0) {
+                    if (!this.rowTotals[flatRowKey]) {
+                        this.rowKeys.push(rowKey);
+                        this.rowTotals[flatRowKey] = opts.aggregator(this, rowKey, []);
+                    }
+                    this.rowTotals[flatRowKey].push(record);
+                }
+                if (colKey.length !== 0) {
+                    if (!this.colTotals[flatColKey]) {
+                        this.colKeys.push(colKey);
+                        this.colTotals[flatColKey] = opts.aggregator(this, [], colKey);
+                    }
+                    this.colTotals[flatColKey].push(record);
+                }
+                if (colKey.length !== 0 && rowKey.length !== 0) {
+                    if (!this.tree[flatRowKey]) {
+                        this.tree[flatRowKey] = {};
+                    }
+                    if (!this.tree[flatRowKey][flatColKey]) {
+                        this.tree[flatRowKey][flatColKey] = opts.aggregator(this, rowKey, colKey);
+                    }
+                    return this.tree[flatRowKey][flatColKey].push(record);
+                }
+            },
+            getAggregator: function(rowKey, colKey) {
+                var agg, flatColKey, flatRowKey;
+                flatRowKey = rowKey.join(String.fromCharCode(0));
+                flatColKey = colKey.join(String.fromCharCode(0));
+                if (rowKey.length === 0 && colKey.length === 0) {
+                    agg = this.allTotal;
+                } else if (rowKey.length === 0) {
+                    agg = this.colTotals[flatColKey];
+                } else if (colKey.length === 0) {
+                    agg = this.rowTotals[flatRowKey];
+                } else {
+                    agg = this.tree[flatRowKey][flatColKey];
+                }
+                return agg != null ? agg : {
+                    value: (function() {
+                        return null;
+                    }),
+                    format: function() {
+                        return "";
+                    }
+                };
+            }
+        };
+        return PivotDataFactory;
+    }
+
+    return PivotDataFactory;
+});
+define('render/services/renderers',[], 
+    function() {
+    'use strict';
+
+    function Renderers() {
+        function Renderers() {
+            this.availableRenderers;
+            this.availableRendererNames;
+            this.availableRendererOptions;
+        }
+        Renderers.prototype = {
+            constructor: Renderers,
+            init: function() {
+                var self = this;
+                self.availableRenderers = {}; 
+                self.availableRendererNames = [];
+                self.availableRendererOptions = {};
+            },
+            addRenderers: function(renderers){
+                var self = this;
+                $.extend(self.availableRenderers, renderers);
+                self.availableRendererNames = Object.keys(self.availableRenderers);
+            },
+            setRendererOptions: function(properyName, config) {
+                var self = this;
+                self.availableRendererOptions[properyName] = config;
+            }
+        };
+        var renderers = new Renderers();
+        renderers.init();
+        return renderers;
+    }
+
+    return Renderers;
+});
+define('render/services/renderingEngineFactory',[], function() {
+    'use strict';
+
+    function RenderingEngineFactory(Aggregators, RenderingEngineUtils, Renderers, PivotDataFactory, $q, $timeout, $window, $rootScope) {
+        function RenderingEngineFactory() {
+            this.id;
+            this.element;
+            this.disabled;
+            this.title;
+            this.rendererName;
+            this.aggregatorName;
+            this.aggInputAttributeName;
+            this.numInputsToProcess;
+            this.axisValues;
+            this.shownAttributes;
+            this.availableAttributes;
+            this.tblCols;
+            this.cols;
+            this.rows;
+            this.attributesAvailableForRowsAndCols;
+            this.attributeFilterExclusions;
+            this.attributeFilterInclusions;
+            this.tile;
+        }
+        RenderingEngineFactory.prototype = {
+            constructor: RenderingEngineFactory,
+            init: function(dataSourceConfigId) {
+                var self = this;
+                self.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                    return v.toString(16);
+                });
+                self.dataSourceConfigId = dataSourceConfigId;
+                //Does not belong here...This is a flag that the tabs use in the
+                //Explore perspective to know which tab is active. We should have
+                //some sort of tab manager that tracks this...
+                self.disabled = false; 
+                self.title = "Untitiled";
+                //Does not belong here...This is an objet the dashboardFactory uses in
+                //the Dashboard Designer perspective to know location and size of the widget.
+                //We should have some sort of dashboard manager that tracks this...
+                self.tile = {
+                    size_x: 1,
+                    size_y: 1,
+                    col: 1,
+                    row: 1
+                };
+                self.rendererName = "Table";
+                self.aggregatorName = "Count";
+                self.aggInputAttributeName = [];
+                self.numInputsToProcess = [];
+                self.axisValues = {};
+                self.shownAttributes = [];
+                self.availableAttributes = [];
+                self.tblCols = [];
+                self.cols = [];
+                self.rows = [];
+                self.attributesAvailableForRowsAndCols = [];
+                self.attributeFilterExclusions = {};
+                self.attributeFilterInclusions = {};
+            },
+            setRendererName: function(rendererName, data) {
+                var self = this;
+                self.rendererName = rendererName;
+                self.draw(data);
+            },
+            setNumberOfAggregateInputs: function (){
+                var self = this;
+                var numInputs;
+                try {
+                    numInputs = Aggregators.availableAggregators[self.aggregatorName]([])().numInputs;
+                } catch(_error) {
+                    //Log error and do nothing...we just needed to know how many inputs we need to collect
+                    e = _error;
+                    if (typeof console !== "undefined" && console !== null) {
+                        console.error(e.stack);
+                    }
+                }
+                if(numInputs === undefined) {
+                    self.numInputsToProcess = new Array();
+                    self.aggInputAttributeName = new Array();
+                } else {
+                    self.numInputsToProcess = new Array(numInputs);
+                    if(self.aggInputAttributeName.length !== numInputs) {
+                        self.aggInputAttributeName = new Array(numInputs);
+                    }
+                }
+            },
+            setAggregatorName: function(aggregatorName) {
+                var self = this;
+                self.aggregatorName = aggregatorName;
+            },
+            isExcluded: function(property, key) {
+                var self = this;
+                if(self.attributeFilterExclusions[property] !== undefined) {
+                    if(self.attributeFilterExclusions[property].indexOf(key) >= 0){
+                        return false;
+                    } else {
+                        return true;    
+                    }
+                }
+                return true;
+            },
+            addExclusionFilter: function(attributeFilterName, filterByAttributeValue) {
+                var self = this;
+                if(self.attributeFilterExclusions[attributeFilterName] !== undefined) {
+                    var index = this.attributeFilterExclusions[attributeFilterName].indexOf(filterByAttributeValue);
+                    if(index >= 0) {
+                        self.attributeFilterExclusions[attributeFilterName].splice(index, 1);
+                    } else {
+                        self.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
+                    }
+                } else {
+                    self.attributeFilterExclusions[attributeFilterName] = [];
+                    self.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
+                } 
+                self.attributeFilterInclusions[attributeFilterName] = [];
+                angular.forEach(self.axisValues[attributeFilterName], function(value, key) {
+                    if(self.attributeFilterExclusions[attributeFilterName].indexOf(key) < 0) {
+                        self.attributeFilterInclusions[attributeFilterName].push(key);
+                    }
+                });
+            },
+            addInclusionFilter: function(attributeFilterName, filterByAttributeValue) {
+                var self = this;
+                self.attributeFilterInclusions[attributeFilterName] = [];
+                self.attributeFilterExclusions[attributeFilterName] = [];
+                self.addExclusionFilter(attributeFilterName, filterByAttributeValue);
+                var oldAttributeFilterInclusions = self.attributeFilterInclusions[attributeFilterName];
+                self.attributeFilterInclusions[attributeFilterName] = self.attributeFilterExclusions[attributeFilterName];
+                self.attributeFilterExclusions[attributeFilterName] = oldAttributeFilterInclusions;
+            },
+            //Does not belong here...This is an objet the dashboardFactory uses in
+            //the Dashboard Designer perspective to know location and size of the widget.
+            //We should have some sort of dashboard manager that tracks this...
+            updateTile: function(size_x, size_y, col, row){
+                var self = this;
+                self.tile = {
+                    size_x: size_x,
+                    size_y: size_y,
+                    col: col,
+                    row: row
+                };
+            },
+            /*
+             * @param {string} [table]
+             *    A plain JSON-serialized string of the data.
+             */
+            draw: function(data) {
+                var self = this;
+                var deferred = $q.defer();
+                $rootScope.$emit('draw initiated');
+                $timeout(function(data) {
+                    //Set the RenderingEngine id, # rows, and #cols for access in renderer
+                    Renderers.availableRendererOptions['renderingEngineId'] = self.id;
+                    Renderers.availableRendererOptions['numRows'] = self.rows.length;
+                    Renderers.availableRendererOptions['numCols'] = self.cols.length;
+                    //Set the height and width for each renderer option to fit into container
+                    angular.forEach(Renderers.availableRendererOptions, function(value, key) {
+                        switch (key){
+                            case "datatables":
+                                value.height = (self.element.parent().parent().innerHeight() - 24 - 40 - 31 - 31 - 22 - ((self.cols.length + 1)*30)) + 'px'; //height - header - buttons - table head - table foot - bottom message - # of cols
+                                value.width = self.element.parent().parent().innerWidth();
+                                break;
+                            case "gchart":
+                                value.height = self.element.parent().parent().innerHeight() - 24 - 10;//height - header - title?
+                                value.width = self.element.parent().parent().innerWidth();
+                                break;
+                            case "c3":
+                                value.size.height = self.element.parent().parent().innerHeight() - 24 - 10;//height - header - title?
+                                value.size.width = self.element.parent().parent().innerWidth();
+                                break;
+                            case "d3":
+                                value.height = function(){ return self.element.parent().parent().innerHeight();};//height is ignored for d3???
+                                value.width = function(){ return self.element.parent().parent().innerWidth() - 16;};//d3 draws a little too wide???
+                                break;
+                            default:
+                                //do nothing
+                        }
+                                
+                    });
+                    data = RenderingEngineUtils.convertToArray(data);
+                    if(data !== undefined){
+                        if(data.length > 0){
+                            self.availableAttributes = self.rows.concat(self.cols);
+                            var opts = {
+                                cols: self.cols,
+                                rows: self.rows,
+                                vals: self.aggInputAttributeName,
+                                hiddenAttributes: [],
+                                filter: function(record) {
+                                    var excludedItems, ref7;
+                                    for (var k in self.attributeFilterExclusions) {
+                                        excludedItems = self.attributeFilterExclusions[k];
+                                        if (ref7 = "" + record[k], RenderingEngineUtils.indexOf.call(excludedItems, ref7) >= 0) {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                },
+                                aggregator: Aggregators.availableAggregators[self.aggregatorName](self.aggInputAttributeName),
+                                aggregatorName: self.aggregatorName,
+                                sorters: function() {},
+                                derivedAttributes: {}
+                            };
+                            self.tblCols = [];
+                            self.tblCols = (function() {
+                                var ref, results;
+                                ref = data[0];
+                                results = [];
+                                for (var k in ref) {
+                                    if (!RenderingEngineUtils.hasProp.call(ref, k)) continue;
+                                    results.push(k);
+                                }
+                                return results;
+                            })();
+                            self.axisValues = {};
+                            for (var l = 0, len1 = self.tblCols.length; l < len1; l++) {
+                                var x = self.tblCols[l];
+                                self.axisValues[x] = {};
+                            }
+                            RenderingEngineUtils.forEachRecord(data, opts.derivedAttributes, function(record) {
+                                var base, results, v;
+                                results = [];
+                                for (var k in record) {
+                                    if (!RenderingEngineUtils.hasProp.call(record, k)) continue;
+                                    v = record[k];
+                                    if (v == null) {
+                                        v = "null";
+                                    }
+                                    if ((base = self.axisValues[k])[v] == null) {
+                                        base[v] = 0;
+                                    }
+                                    results.push(self.axisValues[k][v]++);
+                                }
+                                return results;
+                            });
+                            self.shownAttributes = [];
+                            self.shownAttributes = (function() {
+                                var len2, n, results;
+                                results = [];
+                                for (var n = 0, len2 = self.tblCols.length; n < len2; n++) {
+                                    var c = self.tblCols[n];
+                                    if (RenderingEngineUtils.indexOf.call(opts.hiddenAttributes, c) < 0) {
+                                        results.push(c);
+                                    }
+                                }
+                                return results;
+                            })();
+                            if(self.attributesAvailableForRowsAndCols.length + self.rows.length + self.cols.length !== self.shownAttributes.length) {
+                                self.attributesAvailableForRowsAndCols = self.shownAttributes;
+                            }
+                            var result = null;
+                            var DataView = null;
+                            try {
+                                DataView = new PivotDataFactory();
+                                DataView.init(data, opts);
+                                try {
+                                    result = Renderers.availableRenderers[self.rendererName](DataView, Renderers.availableRendererOptions);
+                                } catch (_error) {
+                                    e = _error;
+                                    if (typeof console !== "undefined" && console !== null) {
+                                        console.error(e.stack);
+                                    }
+                                    result = $("<span>").html(opts.localeStrings.renderError);
+                                }
+                            } catch (_error) {
+                                e = _error;
+                                if (typeof console !== "undefined" && console !== null) {
+                                    console.error(e.stack);
+                                }
+                                result = $("<span>").html(opts.localeStrings.computeError);
+                            }
+                            //Remove old viz
+                            self.element.empty();
+                            //append the new viz
+                            self.element.append(result.html);
+                            $rootScope.$emit('draw complete');
+                            //run any post render functions defined by visual
+                            if(result.postRenderFunction){
+                                result.postRenderFunction(result.html, result.postRenderOpts);
+                            }
+                        }
+                    }
+                    deferred.resolve();
+                }, 1500, true, data);
+                return deferred.promise;
+            }
+        };
+        return RenderingEngineFactory;
+    }
+
+    return RenderingEngineFactory;
+});
+define('render/services/renderingEngineManager',[], function() {
+    'use strict';
+
+    function RenderingEngineManager(RenderingEngineFactory, DataSourceConfigurationManager, DataSourceManager, DataSourceUtils, $http) {
+        function RenderingEngineManager() {
+            this.renderingEngines = {};
+            this.activeRenderingEngine;
+        }
+        RenderingEngineManager.prototype = {
+            constructor: RenderingEngineManager,
+            init: function(){},
+            create: function(dataSourceConfigurationId) {
+                if(DataSourceManager.dataSources[dataSourceConfigurationId] === undefined){
+                    DataSourceManager.create(dataSourceConfigurationId, DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].name);
+                    $http(angular.fromJson(DataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].httpConfig)).then(function successCallback(response) {
+                        // this callback will be called asynchronously
+                        // when the response is available
+                        DataSourceManager.dataSources[dataSourceConfigurationId].data = $.csv.toArrays(response.data);
+                        DataSourceUtils.format(DataSourceManager.dataSources[dataSourceConfigurationId]);
+                        var renderingEngine = new RenderingEngineFactory();
+                        renderingEngine.init(dataSourceConfigurationId);
+                        renderingEngine.active = true;  
+                        renderingEngineManager.add(renderingEngine);
+                        renderingEngineManager.activeRenderingEngine = renderingEngine.id;
+                    }, function errorCallback(response) {
+                        var tmp;
+                        DataSourceManager.delete(dataSourceConfigurationId);
+                    });
+                } else{
+                    var renderingEngine = new RenderingEngineFactory();
+                    renderingEngine.init(dataSourceConfigurationId);
+                    renderingEngineManager.add(renderingEngine);
+                    renderingEngineManager.activeRenderingEngine = renderingEngine.id;
+                }
+            },
+            add: function(renderingEngine){
+                renderingEngineManager.renderingEngines[renderingEngine.id] = renderingEngine;
+            },
+            delete: function(id){
+                delete renderingEngineManager.renderingEngines[id];
+            },
+            setActiveRenderingEngine: function(id){
+                renderingEngineManager.activeRenderingEngine = id;
+                angular.forEach(renderingEngineManager.renderingEngines, function(RenderingEngine) {
+                    RenderingEngine.active = false;
+                    if(RenderingEngine.id === id){
+                        RenderingEngine.active = true;
+                    }
+                });
+            },
+            updateAllRenderingEngineTileSizeAndPosition: function($widgets){
+                angular.forEach($widgets, function($widget){
+                    renderingEngineManager.renderingEngines[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'))
+                });
+            }
+        };
+        var renderingEngineManager = new RenderingEngineManager();
+        renderingEngineManager.init();
+        return renderingEngineManager;
+    }
+
+    return RenderingEngineManager;
+});
+define('render/services/renderingEngineUtils',[], function() {
+    'use strict';
+
+    function RenderingEngineUtils() {
+        function RenderingEngineUtils() {
+        }
+        RenderingEngineUtils.prototype = {
+            constructor: RenderingEngineUtils,
+            init: function(){},
+            hasProp: {}.hasOwnProperty,
+            indexOf: [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
+            convertToArray: function(input) {
+                var result;
+                result = [];
+                renderingEngineUtils.forEachRecord(input, {}, function(record) {
+                    return result.push(record);
+                });
+                return result;
+            },
+            bind: function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+            forEachRecord: function(input, derivedAttributes, f) {
+                var addRecord, compactRecord, i, j, k, l, len1, record, ref, results, results1, tblCols;
+                if ($.isEmptyObject(derivedAttributes)) {
+                    addRecord = f;
+                } else {
+                    addRecord = function(record) {
+                        var k, ref, v;
+                        for (k in derivedAttributes) {
+                            v = derivedAttributes[k];
+                            record[k] = (ref = v(record)) != null ? ref : record[k];
+                        }
+                        return f(record);
+                    };
+                }
+                if ($.isFunction(input)) {
+                    return input(addRecord);
+                } else if ($.isArray(input)) {
+                    if ($.isArray(input[0])) {
+                        results = [];
+                        for (i in input) {
+                            if (!renderingEngineUtils.hasProp.call(input, i)) continue;
+                            compactRecord = input[i];
+                            if (!(i > 0)) {
+                                continue;
+                            }
+                            record = {};
+                            ref = input[0];
+                            for (j in ref) {
+                                if (!renderingEngineUtils.hasProp.call(ref, j)) continue;
+                                k = ref[j];
+                                record[k] = compactRecord[j];
+                            }
+                            results.push(addRecord(record));
+                        }
+                        return results;
+                    } else {
+                        results1 = [];
+                        for (l = 0, len1 = input.length; l < len1; l++) {
+                            record = input[l];
+                            results1.push(addRecord(record));
+                        }
+                        return results1;
+                    }
+                } else if (input instanceof jQuery) {
+                    tblCols = [];
+                    $('thead > tr > th', input).each(function(i) {
+                        return tblCols.push($(this).text());
+                    });
+                    return $('tbody > tr', input).each(function(i) {
+                        record = {};
+                        $('td', this).each(function(j) {
+                            return record[tblCols[j]] = $(this).html();
+                        });
+                        return addRecord(record);
+                    });
+                } else {
+                    throw new Error('unknown input format');
+                }
+            },
+            addSeparators: function(nStr, thousandsSep, decimalSep) {
+                var rgx, x, x1, x2;
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? decimalSep + x[1] : '';
+                rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + thousandsSep + '$2');
+                }
+                return x1 + x2;
+            },
+            numberFormat: function(opts) {
+                var self = this;
+                var defaults;
+                defaults = {
+                    digitsAfterDecimal: 2,
+                    scaler: 1,
+                    thousandsSep: ',',
+                    decimalSep: '.',
+                    prefix: '',
+                    suffix: '',
+                    showZero: false
+                };
+                opts = $.extend(defaults, opts);
+                return function(x) {
+                    var result;
+                    if (isNaN(x) || !isFinite(x)) {
+                        return '';
+                    }
+                    if (x === 0 && !opts.showZero) {
+                        return '';
+                    }
+                    result = self.addSeparators((opts.scaler * x).toFixed(opts.digitsAfterDecimal), opts.thousandsSep, opts.decimalSep);
+                    return '' + opts.prefix + result + opts.suffix;
+                };
+            },
+            sortAs: function(order) {
+                var i, mapping, x;
+                mapping = {};
+                for (i in order) {
+                    x = order[i];
+                    mapping[x] = i;
+                }
+                return function(a, b) {
+                    if ((mapping[a] != null) && (mapping[b] != null)) {
+                        return mapping[a] - mapping[b];
+                    } else if (mapping[a] != null) {
+                        return -1;
+                    } else if (mapping[b] != null) {
+                        return 1;
+                    } else {
+                        return renderingEngineUtils.naturalSort(a, b);
+                    }
+                };
+            },
+            naturalSort: function(as, bs) {
+                var a, a1, b, b1, rd, rx, rz;
+                rx = /(\d+)|(\D+)/g;
+                rd = /\d/;
+                rz = /^0/;
+                if (typeof as === 'number' || typeof bs === 'number') {
+                    if (isNaN(as)) {
+                        return 1;
+                    }
+                    if (isNaN(bs)) {
+                        return -1;
+                    }
+                    return as - bs;
+                }
+                a = String(as).toLowerCase();
+                b = String(bs).toLowerCase();
+                if (a === b) {
+                    return 0;
+                }
+                if (!(rd.test(a) && rd.test(b))) {
+                    return (a > b ? 1 : -1);
+                }
+                a = a.match(rx);
+                b = b.match(rx);
+                while (a.length && b.length) {
+                    a1 = a.shift();
+                    b1 = b.shift();
+                    if (a1 !== b1) {
+                        if (rd.test(a1) && rd.test(b1)) {
+                            return a1.replace(rz, '.0') - b1.replace(rz, '.0');
+                        } else {
+                            return (a1 > b1 ? 1 : -1);
+                        }
+                    }
+                }
+                return a.length - b.length;
+            },
+            getSort: function(sorters, attr) {
+                var sort;
+                sort = sorters(attr);
+                if ($.isFunction(sort)) {
+                    return sort;
+                } else {
+                    return renderingEngineUtils.naturalSort;
+                }
+            },
+            usFmt: function() {
+                return renderingEngineUtils.numberFormat();
+            },
+            usFmtInt: function() {
+                return renderingEngineUtils.numberFormat({
+                    digitsAfterDecimal: 0
+                });
+            },
+            usFmtPct:  function() {
+                return renderingEngineUtils.numberFormat({
+                    digitsAfterDecimal: 1,
+                    scaler: 100,
+                    suffix: '%'
+                });
+            }
+        };
+        var renderingEngineUtils = new RenderingEngineUtils();
+        renderingEngineUtils.init();
+        return renderingEngineUtils;
+    }
+
+    return RenderingEngineUtils;
+});
+define('syndicate/directives/dashboardDirective',[], function() {
+    'use strict';
+
+    function dashboardDirective(DashboardFactory, $window) {
+        return {
+            restrict: 'E',
+            scope: {
+                'renderingEngineManager': '='
+            },
+            link: {
+                pre: function(scope, element, attrs) {
+                //Clean up any existing context menus before we create more    
+                $('.context-menu-list').remove();
+                scope.DashboardFactory = new DashboardFactory($(element));
+                scope.DashboardFactory.draw(scope);
+                }
+            }
+        };
+    }
+
+    return dashboardDirective;
+});
+define('syndicate/services/dashboardFactory',[], function() {
+    'use strict';
+
+    function DashboardFactory($rootScope, $compile, $window, $q, $timeout, DataSourceManager) {
+        function DashboardFactory(element) {
+            this.id;
+            this.element = element;
+        }
+        DashboardFactory.prototype = {
+            constructor: DashboardFactory,
+            init: function() {
+                var self = this;
+                self.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                    return v.toString(16);
+                });
+            },
+            draw: function(scope) {
+                var self = this;
+                var deferred = $q.defer();
+                $timeout(function(scope) {
+                    scope.DataSourceManager = DataSourceManager;
+                    scope.options = {
+                        enableDragging: true,
+                        //                                 autogrow_cols: true,
+                        min_rows: 30,
+                        widget_margins: [10, 10],
+                        widget_base_dimensions: [($window.innerWidth / 4) - 24, (($window.innerWidth / 4) - 24 - 21 - 20)],
+                        min_cols: 4,
+                        max_size_x: 4,
+                        max_cols: 4,
+                        //                                 avoid_overlapped_widgets: false,
+                        //                                 autogenerate_stylesheet: true,
+                        //                                 widget_margins: [],
+                        //                                 widget_base_dimensions: [],
+                        resize: {
+                            enabled: true,
+                            resize: function(e, ui, $widget) {
+                            },
+                            stop: function(e, ui, $widget) {
+                                scope.renderingEngineManager.renderingEngines[$widget[0].id].draw(DataSourceManager.dataSources[scope.renderingEngineManager.renderingEngines[$widget[0].id].dataSourceConfigId].formattedData);
+                                scope.renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().parent().data('gridster').$widgets);
+                            }
+                        },
+                        draggable: {
+                            handle: 'div.context-menu.box',
+                            stop: function(e, ui, $widget) {
+                                scope.renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().data('gridster').$widgets);
+                            }
+                        },
+                        //http://matthew.wagerfield.com/parallax/
+                        parallax: {
+                            enabled: true,
+                            dataDepth: 0.05
+                        }
+                    };
+                    var ul = document.createElement('ul');
+                    ul.setAttribute('class','gridster');
+                    //Build the grid from the renderingEngineManager
+                    var i = 1;
+                    angular.forEach(scope.renderingEngineManager.renderingEngines, function(RenderingEngine, uuid) {
+                        var contextMenu = 'contextMenu' + i;
+                        scope[contextMenu] = {
+                            callback: function(key, options) {
+                                switch(key) {
+                                    case "edit":
+                                        scope.renderingEngineManager.setActiveRenderingEngine(RenderingEngine.id);
+                                        $rootScope.$emit('Explore View');
+                                        break;
+                                    case "delete":
+                                        self.element.isolateScope().gridster.remove_widget(RenderingEngine.element.parent().parent());
+                                        scope.renderingEngineManager.delete(RenderingEngine.id);
+                                        var returnToExploration = true;
+                                        angular.forEach(scope.renderingEngineManager.renderingEngines, function(RenderingEngine, uuid) {
+                                            returnToExploration = false;
+                                        });
+                                        if(returnToExploration){
+                                            $rootScope.$emit('Explore View');
+                                        }
+                                        break;
+                                    default:
+                                        var m = "clicked: " + key;
+                                        window.console && console.log(m) || alert(m);
+                                }
+                            },
+                            items: {
+                                "edit": {
+                                    name: "Edit",
+                                    icon: "edit",
+                                    chartId: uuid
+                                },
+                                "delete": {
+                                    name: "Delete",
+                                    icon: "delete"
+                                }
+                            }
+                        };
+                        var li = document.createElement('li');
+                        li.setAttribute('class','md-whiteframe-z5');
+                        li.setAttribute('id', uuid);
+                        li.setAttribute('data-max-sizex', 5);
+                        li.setAttribute('data-max-sizey', 3);
+                        li.setAttribute('data-row', RenderingEngine.tile.row);
+                        li.setAttribute('data-col', RenderingEngine.tile.col);
+                        li.setAttribute('data-sizex', RenderingEngine.tile.size_x);
+                        li.setAttribute('data-sizey', RenderingEngine.tile.size_y);
+                        $(ul).append(li);
+                        $(li).append($compile("<header style='cursor:move' class='ui-dialog-titlebar ui-widget-header' context-menu='" + contextMenu + "' context-menu-selector=\"'.context-menu'\"><div class='context-menu box' ><span class='handle ui-icon ui-icon-gear' style='display:inline-block'></span>" + RenderingEngine.title + "</div></header>")(scope));
+                        var div = document.createElement('div');
+                        div.setAttribute('class','gridsterWidgetContainer');
+                        var renderer = $compile("<rendering-engine-directive input='DataSourceManager.dataSources[renderingEngineManager.renderingEngines[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEngineManager.renderingEngines[\"" + uuid + "\"]'></rendering-engine-directive>")(scope);
+                        $(div).append(renderer[0]);
+                        $(li).append(div);
+                        i++;
+                    });
+                    self.element.append(ul);
+                    var gridster = $(ul).gridster(scope.options);
+                    //squirell this away on the scope so that later (like in the delete context menu) it can be accessed
+                    scope.gridster = gridster.data('gridster');
+                    if (!scope.options.enableDragging) {
+                        scope.gridster.disable();
+                    }
+                    if(scope.options.parallax.enabled){
+                        var parallax = $("<ul><li data-depth='" + scope.options.parallax.dataDepth + "' class='layer'></li></ul>");
+                        parallax.parallax();
+                        var parallaxLi = parallax.find('li');
+                        parallaxLi.append(gridster);
+                        self.element.append(parallax);
+                    }
+                    deferred.resolve();
+                }, 500, true, scope);
+                return deferred.promise;
+            }
+        };
+        return DashboardFactory;
+    }
+
+    return DashboardFactory;
+});
+define('syndicate/directives/gridsterDirective',[], function() {
+    'use strict';
+
+    function gridsterDirective() {
+        return {
+            restrict: 'E',
+            scope: {
+                options: '='
+            },
+            link: function(scope, element, attrs) {
+                //initialize the gridster jQuery plugin and set the object on the scope
+                var gridster = $(element.find('ul')[0]).gridster(scope.options);
+                scope.gridster = gridster.data('gridster');
+                if (!scope.options.enableDragging) {
+                    scope.gridster.disable();
+                }
+                if(scope.options.parallax.enabled){
+                    require('bower_components/parallax/deploy/jquery.parallax.min');
+                    
+                    var parallax = $("<ul><li data-depth='" + scope.options.parallax.dataDepth + "' class='layer'></li></ul>");
+                    parallax.parallax();
+                    var parallaxLi = parallax.find('li');
+                    parallaxLi.append(gridster);
+                    element.append(parallax);
+                }
+            }
+        };
+    }
+
+    return gridsterDirective;
+});
+define('rndr-angular-module',['acquire/directives/acquisitionDirective',
+    'acquire/services/acquisitionController',
+    'acquire/services/dataSourceConfigurationFactory',
+    'acquire/services/dataSourceConfigurationManager',
+    'acquire/services/dataSourceFactory',
+    'acquire/services/dataSourceManager',
+    'acquire/services/dataSourceUtils',
+    'explore/directives/explorationDirective',
+    'explore/services/exploreController',
+    'render/directives/renderingEngineDirective',
+    'render/services/aggregators',
+    'render/services/aggregatorTemplates',
+    'render/services/pivotDataFactory',
+    'render/services/renderers',
+    'render/services/renderingEngineFactory',
+    'render/services/renderingEngineManager',
+    'render/services/renderingEngineUtils',
+    'syndicate/directives/dashboardDirective',
+    'syndicate/services/dashboardFactory',
+    'syndicate/directives/gridsterDirective'], 
+function(acquisitionDirective,
+    AcquisitionController,
+    DataSourceConfigurationFactory,
+    DataSourceConfigurationManager,
+    DataSourceFactory,
+    DataSourceManager,
+    DataSourceUtils,
+    explorationDirective,
+    ExploreController,
+    renderingEngineDirective,
+    Aggregators,
+    AggregatorTemplates,
+    PivotDataFactory,
+    Renderers,
+    RenderingEngineFactory,
+    RenderingEngineManager,
+    RenderingEngineUtils,
+    dashboardDirective,
+    DashboardFactory,
+    gridsterDirective) {
+
+    // Create module
+    var app = angular.module('ngRndr', []);
+
+    // Annotate module dependencies
+    acquisitionDirective.$inject=['AcquisitionController', 'DataSourceConfigurationManager', 'DataSourceManager', 'DataSourceUtils'];
+    gridsterDirective.$inject=[];
+    explorationDirective.$inject=['ExploreController', 'RenderingEngineManager', 'DataSourceManager'];
+    dashboardDirective.$inject=['DashboardFactory', '$window'];
+    renderingEngineDirective.$inject=[];
+    AcquisitionController.$inject=['RenderingEngineFactory', 'RenderingEngineManager', 'DataSourceUtils', 'DataSourceManager', 'DataSourceConfigurationManager', '$rootScope', '$window'];
+    DataSourceConfigurationFactory.$inject=[];
+    DataSourceConfigurationManager.$inject=['DataSourceConfigurationFactory'];
+    DataSourceFactory.$inject=[];
+    DataSourceManager.$inject=['DataSourceFactory'];
+    DataSourceUtils.$inject=['DataSourceConfigurationManager', '$http', '$rootScope'];
+    ExploreController.$inject=['RenderingEngineManager', 'DataSourceManager', '$window', '$timeout', '$rootScope'];
+    Aggregators.$inject=['AggregatorTemplates', 'RenderingEngineUtils'];
+    AggregatorTemplates.$inject=['RenderingEngineUtils'];
+    PivotDataFactory.$inject=['RenderingEngineUtils'];
+    Renderers.$inject=[];
+    RenderingEngineFactory.$inject=['Aggregators', 'RenderingEngineUtils', 'Renderers', 'PivotDataFactory', '$q', '$timeout', '$window', '$rootScope'];
+    RenderingEngineManager.$inject=['RenderingEngineFactory', 'DataSourceConfigurationManager', 'DataSourceManager', 'DataSourceUtils', '$http'];
+    RenderingEngineUtils.$inject=[];
+    DashboardFactory.$inject=['$rootScope', '$compile', '$window', '$q', '$timeout', 'DataSourceManager'];
+
+    // Module directives
+    app.directive('acquisitionDirective', acquisitionDirective);
+    app.directive('gridsterDirective', gridsterDirective);
+    app.directive('explorationDirective', explorationDirective);
+    app.directive('dashboardDirective', dashboardDirective);
+    app.directive('renderingEngineDirective', renderingEngineDirective);
+
+    // Module services
+    app.service('AcquisitionController', AcquisitionController);
+    app.service('DataSourceConfigurationFactory', DataSourceConfigurationFactory);
+    app.service('DataSourceConfigurationManager', DataSourceConfigurationManager);
+    app.service('DataSourceFactory', DataSourceFactory);
+    app.service('DataSourceManager', DataSourceManager);
+    app.service('DataSourceUtils', DataSourceUtils);
+    app.service('ExploreController', ExploreController);
+    app.service('Aggregators', Aggregators);
+    app.service('AggregatorTemplates', AggregatorTemplates);
+    app.service('PivotDataFactory', PivotDataFactory);
+    app.service('Renderers', Renderers);
+    app.service('RenderingEngineFactory', RenderingEngineFactory);
+    app.service('RenderingEngineManager', RenderingEngineManager);
+    app.service('RenderingEngineUtils', RenderingEngineUtils);
+    app.service('DashboardFactory', DashboardFactory);
+});
