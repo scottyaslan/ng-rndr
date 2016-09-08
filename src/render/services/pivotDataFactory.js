@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    function PivotDataFactory(RenderingEngineUtils) {
+    return function (dataUtils) {
         function PivotDataFactory() {
             this.colAttrs;
             this.rowAttrs;
@@ -32,7 +32,7 @@ define([], function() {
                 self.colTotals = {};
                 self.allTotal = opts.aggregator(self, [], []);
                 self.sorted = false;
-                RenderingEngineUtils.forEachRecord(input, opts.derivedAttributes, (function(_this) {
+                dataUtils.forEachRecord(input, opts.derivedAttributes, (function(_this) {
                     return function(record) {
                         if (opts.filter(record)) {
                             return _this.processRecord(record, opts);
@@ -47,7 +47,7 @@ define([], function() {
                     results = [];
                     for (l = 0, len1 = attrs.length; l < len1; l++) {
                         a = attrs[l];
-                        results.push(RenderingEngineUtils.getSort(this.sorters, a));
+                        results.push(dataUtils.getSort(this.sorters, a));
                     }
                     return results;
                 }).call(this);
@@ -144,6 +144,4 @@ define([], function() {
         };
         return PivotDataFactory;
     }
-
-    return PivotDataFactory;
 });

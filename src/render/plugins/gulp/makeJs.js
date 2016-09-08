@@ -1,5 +1,4 @@
 var gulp = require('gulp'),
-    coffee = require('gulp-coffee'),
     gutil = require('gulp-util'),
     uglify = require("gulp-uglify"),
     rename = require('gulp-rename'),
@@ -8,12 +7,11 @@ var gulp = require('gulp'),
 
 gulp.task('makeJs', function() {
     
-    gulp.src('./*.coffee')
+    gulp.src('./src/*.js')
         //compile to js (and create map files)
         .pipe(sourcemaps.init())
-        .pipe(coffee()).on('error', gutil.log)
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dist'))
+        .pipe(gulp.dest('../../../dist/plugins'))
         
         //minify js files as well
         .pipe(filter('*.js'))//filter, to avoid doing this processing on the map files generated above 

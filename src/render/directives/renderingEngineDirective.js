@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    function renderingEngineDirective() {
+    return function() {
         return {
             restrict: 'E',
             scope: {
@@ -16,6 +16,4 @@ define([], function() {
             }
         };
     }
-
-    return renderingEngineDirective;
 });

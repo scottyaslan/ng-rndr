@@ -1,16 +1,14 @@
 define([], function() {
     'use strict';
 
-    function AggregatorTemplates(RenderingEngineUtils) {
+    return function(dataUtils) {
         function AggregatorTemplates() {
-            this.aggregatorTemplates;
         }
         AggregatorTemplates.prototype = {
             constructor: AggregatorTemplates,
-            init: function(){},
             count: function(formatter) {
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmtInt;
+                    formatter = dataUtils.usFmtInt;
                 }
                 return function() {
                     return function(data, rowKey, colKey) {
@@ -29,7 +27,7 @@ define([], function() {
             },
             countUnique: function(formatter) {
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmtInt;
+                    formatter = dataUtils.usFmtInt;
                 }
                 return function(arg) {
                     var attr;
@@ -78,7 +76,7 @@ define([], function() {
             },
             sum: function(formatter) {
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmt;
+                    formatter = dataUtils.usFmt;
                 }
                 return function(arg) {
                     var attr;
@@ -102,7 +100,7 @@ define([], function() {
             },
             min: function(formatter) {
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmt;
+                    formatter = dataUtils.usFmt;
                 }
                 return function(arg) {
                     var attr;
@@ -128,7 +126,7 @@ define([], function() {
             },
             max: function(formatter) {
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmt;
+                    formatter = dataUtils.usFmt;
                 }
                 return function(arg) {
                     var attr;
@@ -154,7 +152,7 @@ define([], function() {
             },
             average: function(formatter) {
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmt;
+                    formatter = dataUtils.usFmt;
                 }
                 return function(arg) {
                     var attr;
@@ -180,7 +178,7 @@ define([], function() {
             },
             sumOverSum: function(formatter) {
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmt;
+                    formatter = dataUtils.usFmt;
                 }
                 return function(arg) {
                     var denom, num;
@@ -211,7 +209,7 @@ define([], function() {
                     upper = true;
                 }
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmt;
+                    formatter = dataUtils.usFmt;
                 }
                 return function(arg) {
                     var denom, num;
@@ -244,7 +242,7 @@ define([], function() {
                     type = 'total';
                 }
                 if (formatter == null) {
-                    formatter = RenderingEngineUtils.usFmtPct;
+                    formatter = dataUtils.usFmtPct;
                 }
                 return function() {
                     var x;
@@ -270,10 +268,7 @@ define([], function() {
                 };
             }
         };
-        var agregatorTemplates = new AggregatorTemplates();
-        agregatorTemplates.init();
-        return agregatorTemplates;
-    }
 
-    return AggregatorTemplates;
+        return new AggregatorTemplates();
+    }
 });

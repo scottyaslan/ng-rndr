@@ -18,8 +18,8 @@ module.exports = function(grunt) {
                 }
             },
             main: {
-              src: ['src/acquire/**/*.html', 'src/explore/**/*.html'],
-              dest: 'dist/rndr-templates.js'
+              src: ['src/explore/**/*.html'],
+              dest: 'dist/ng-rndr-templates.js'
             }
         },
         requirejs: {
@@ -31,9 +31,9 @@ module.exports = function(grunt) {
                     'd3': 'empty:',
                 },
                 removeCombined: true,
-                out: './dist/rndr.js',
+                out: './dist/ng-rndr.js',
                 optimize: 'none',
-                name: 'rndr-angular-module'
+                name: 'ng-rndr'
             },
             dev:{
                 options:{

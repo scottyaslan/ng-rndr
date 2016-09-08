@@ -1,0 +1,273 @@
+define([], function() {
+    'use strict';
+
+    return function(aggregators, dataUtils, renderers, PivotDataFactory, $q, $timeout, $window, $rootScope) {
+        function RenderingEngine() {
+            this.id;
+            this.element;
+            this.disabled;
+            this.title;
+            this.rendererName;
+            this.aggregatorName;
+            this.aggInputAttributeName;
+            this.numInputsToProcess;
+            this.axisValues;
+            this.shownAttributes;
+            this.availableAttributes;
+            this.tblCols;
+            this.cols;
+            this.rows;
+            this.attributesAvailableForRowsAndCols;
+            this.attributeFilterExclusions;
+            this.attributeFilterInclusions;
+            this.tile;
+        }
+        RenderingEngine.prototype = {
+            constructor: RenderingEngine,
+            init: function(dataSourceConfigId, renderingEngineId) {
+                var self = this;
+                if(renderingEngineId === undefined || renderingEngineId === ''){
+                    self.id = dataUtils.generateUUID();
+                } else {
+                    self.id = renderingEngineId;
+                }
+                self.dataSourceConfigId = dataSourceConfigId;
+                self.title = "Untitiled";
+                self.rendererName = "Table";
+                self.aggregatorName = "Count";
+                self.aggInputAttributeName = [];
+                self.numInputsToProcess = [];
+                self.axisValues = {};
+                self.shownAttributes = [];
+                self.availableAttributes = [];
+                self.tblCols = [];
+                self.cols = [];
+                self.rows = [];
+                self.attributesAvailableForRowsAndCols = [];
+                self.attributeFilterExclusions = {};
+                self.attributeFilterInclusions = {};
+            },
+            setRendererName: function(rendererName, data) {
+                var self = this;
+                self.rendererName = rendererName;
+                self.draw(data);
+            },
+            setNumberOfAggregateInputs: function (){
+                var self = this;
+                var numInputs;
+                try {
+                    numInputs = aggregators.availableAggregators[self.aggregatorName]([])().numInputs;
+                } catch(_error) {
+                    //Log error and do nothing...we just needed to know how many inputs we need to collect
+                    e = _error;
+                    if (typeof console !== "undefined" && console !== null) {
+                        console.error(e.stack);
+                    }
+                }
+                if(numInputs === undefined) {
+                    self.numInputsToProcess = new Array();
+                    self.aggInputAttributeName = new Array();
+                } else {
+                    self.numInputsToProcess = new Array(numInputs);
+                    if(self.aggInputAttributeName.length !== numInputs) {
+                        self.aggInputAttributeName = new Array(numInputs);
+                    }
+                }
+            },
+            setAggregatorName: function(aggregatorName) {
+                var self = this;
+                self.aggregatorName = aggregatorName;
+            },
+            isExcluded: function(property, key) {
+                var self = this;
+                if(self.attributeFilterExclusions[property] !== undefined) {
+                    if(self.attributeFilterExclusions[property].indexOf(key) >= 0){
+                        return false;
+                    } else {
+                        return true;    
+                    }
+                }
+                return true;
+            },
+            addExclusionFilter: function(attributeFilterName, filterByAttributeValue) {
+                var self = this;
+                if(self.attributeFilterExclusions[attributeFilterName] !== undefined) {
+                    var index = this.attributeFilterExclusions[attributeFilterName].indexOf(filterByAttributeValue);
+                    if(index >= 0) {
+                        self.attributeFilterExclusions[attributeFilterName].splice(index, 1);
+                    } else {
+                        self.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
+                    }
+                } else {
+                    self.attributeFilterExclusions[attributeFilterName] = [];
+                    self.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
+                } 
+                self.attributeFilterInclusions[attributeFilterName] = [];
+                angular.forEach(self.axisValues[attributeFilterName], function(value, key) {
+                    if(self.attributeFilterExclusions[attributeFilterName].indexOf(key) < 0) {
+                        self.attributeFilterInclusions[attributeFilterName].push(key);
+                    }
+                });
+            },
+            addInclusionFilter: function(attributeFilterName, filterByAttributeValue) {
+                var self = this;
+                self.attributeFilterInclusions[attributeFilterName] = [];
+                self.attributeFilterExclusions[attributeFilterName] = [];
+                self.addExclusionFilter(attributeFilterName, filterByAttributeValue);
+                var oldAttributeFilterInclusions = self.attributeFilterInclusions[attributeFilterName];
+                self.attributeFilterInclusions[attributeFilterName] = self.attributeFilterExclusions[attributeFilterName];
+                self.attributeFilterExclusions[attributeFilterName] = oldAttributeFilterInclusions;
+            },
+
+            /*
+             * @param {string} [table]
+             *    A plain JSON-serialized string of the data.
+             */
+            draw: function(data) {
+                var self = this;
+                var deferred = $q.defer();
+                $rootScope.$emit('RenderingEngine:draw:begin');
+                $timeout(function(data) {
+                    //Set the RenderingEngine id, # rows, and #cols for access in renderer
+                    renderers.availableRendererOptions['renderingEngineId'] = self.id;
+                    renderers.availableRendererOptions['numRows'] = self.rows.length;
+                    renderers.availableRendererOptions['numCols'] = self.cols.length;
+                    //Set the height and width for each renderer option to fit into container
+                    angular.forEach(renderers.availableRendererOptions, function(value, key) {
+                        switch (key){
+                            case "datatables":
+                                value.height = (self.element.parent().parent().innerHeight() - 24 - 40 - 31 - 31 - 22 - ((self.cols.length + 1)*30)) + 'px'; //height - header - buttons - table head - table foot - bottom message - # of cols
+                                value.width = self.element.parent().parent().innerWidth();
+                                break;
+                            case "gchart":
+                                value.height = self.element.parent().parent().innerHeight() - 24 - 10;//height - header - title?
+                                value.width = self.element.parent().parent().innerWidth();
+                                break;
+                            case "c3":
+                                value.size.height = self.element.parent().parent().innerHeight() - 24 - 10;//height - header - title?
+                                value.size.width = self.element.parent().parent().innerWidth();
+                                break;
+                            case "d3":
+                                value.height = function(){ return self.element.parent().parent().innerHeight();};//height is ignored for d3???
+                                value.width = function(){ return self.element.parent().parent().innerWidth() - 16;};//d3 draws a little too wide???
+                                break;
+                            default:
+                                //do nothing
+                        }
+                                
+                    });
+                    if(data !== undefined){
+                        data = dataUtils.convertToArray(data);
+                    } else {
+                        data = [];
+                    }
+                    if(data !== undefined){
+                        if(data.length > 0){
+                            self.availableAttributes = self.rows.concat(self.cols);
+                            var opts = {
+                                cols: self.cols,
+                                rows: self.rows,
+                                vals: self.aggInputAttributeName,
+                                hiddenAttributes: [],
+                                filter: function(record) {
+                                    var excludedItems, ref7;
+                                    for (var k in self.attributeFilterExclusions) {
+                                        excludedItems = self.attributeFilterExclusions[k];
+                                        if (ref7 = "" + record[k], dataUtils.indexOf.call(excludedItems, ref7) >= 0) {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                },
+                                aggregator: aggregators.availableAggregators[self.aggregatorName](self.aggInputAttributeName),
+                                aggregatorName: self.aggregatorName,
+                                sorters: function() {},
+                                derivedAttributes: {}
+                            };
+                            self.tblCols = [];
+                            self.tblCols = (function() {
+                                var ref, results;
+                                ref = data[0];
+                                results = [];
+                                for (var k in ref) {
+                                    if (!dataUtils.hasProp.call(ref, k)) continue;
+                                    results.push(k);
+                                }
+                                return results;
+                            })();
+                            self.axisValues = {};
+                            for (var l = 0, len1 = self.tblCols.length; l < len1; l++) {
+                                var x = self.tblCols[l];
+                                self.axisValues[x] = {};
+                            }
+                            dataUtils.forEachRecord(data, opts.derivedAttributes, function(record) {
+                                var base, results, v;
+                                results = [];
+                                for (var k in record) {
+                                    if (!dataUtils.hasProp.call(record, k)) continue;
+                                    v = record[k];
+                                    if (v == null) {
+                                        v = "null";
+                                    }
+                                    if ((base = self.axisValues[k])[v] == null) {
+                                        base[v] = 0;
+                                    }
+                                    results.push(self.axisValues[k][v]++);
+                                }
+                                return results;
+                            });
+                            self.shownAttributes = [];
+                            self.shownAttributes = (function() {
+                                var len2, n, results;
+                                results = [];
+                                for (var n = 0, len2 = self.tblCols.length; n < len2; n++) {
+                                    var c = self.tblCols[n];
+                                    if (dataUtils.indexOf.call(opts.hiddenAttributes, c) < 0) {
+                                        results.push(c);
+                                    }
+                                }
+                                return results;
+                            })();
+                            if(self.attributesAvailableForRowsAndCols.length + self.rows.length + self.cols.length !== self.shownAttributes.length) {
+                                self.attributesAvailableForRowsAndCols = self.shownAttributes;
+                            }
+                            var result = null;
+                            var DataView = null;
+                            try {
+                                DataView = new PivotDataFactory();
+                                DataView.init(data, opts);
+                                try {
+                                    result = renderers.availableRenderers[self.rendererName](DataView, renderers.availableRendererOptions);
+                                } catch (_error) {
+                                    e = _error;
+                                    if (typeof console !== "undefined" && console !== null) {
+                                        console.error(e.stack);
+                                    }
+                                    result = $("<span>").html(opts.localeStrings.renderError);
+                                }
+                            } catch (_error) {
+                                e = _error;
+                                if (typeof console !== "undefined" && console !== null) {
+                                    console.error(e.stack);
+                                }
+                                result = $("<span>").html(opts.localeStrings.computeError);
+                            }
+                            //Remove old viz
+                            self.element.empty();
+                            //append the new viz
+                            self.element.append(result.html);
+                            $rootScope.$emit('RenderingEngine:draw:complete');
+                            //run any post render functions defined by visual
+                            if(result.postRenderFunction){
+                                result.postRenderFunction(result.html, result.postRenderOpts);
+                            }
+                        }
+                    }
+                    deferred.resolve();
+                }, 1500, true, data);
+                return deferred.promise;
+            }
+        };
+        return RenderingEngine;
+    }
+});

@@ -2,11 +2,12 @@ define([],
     function() {
     'use strict';
 
-    function Renderers() {
+    return function() {
         function Renderers() {
             this.availableRenderers;
             this.availableRendererNames;
             this.availableRendererOptions;
+            this.init();
         }
         Renderers.prototype = {
             constructor: Renderers,
@@ -26,10 +27,7 @@ define([],
                 self.availableRendererOptions[properyName] = config;
             }
         };
-        var renderers = new Renderers();
-        renderers.init();
-        return renderers;
+        
+        return new Renderers();
     }
-
-    return Renderers;
 });
