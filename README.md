@@ -1,6 +1,6 @@
 ##ngRNDR
 
-ngRNDR is an angular module for visualizing data. 
+ngRNDR is an pluggable and embeddable angular module for visualizing a data model.  
 
 ##Building
 
