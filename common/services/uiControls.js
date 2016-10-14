@@ -24,14 +24,14 @@ define([], function() {
             openBottomSheet: function() {
                 $mdBottomSheet.show({
                     templateUrl: uiControls.bottomSheetTemplateUrl,
-                    controller: 'ControllerWrapper'
+                    controller: 'controllerWrapper'
                 }).then(function(clickedItem) {});
             },
             openDialog: function(dialogTitle, dialogWidth) {
                 uiControls.dialogTitle = dialogTitle;
                 uiControls.dialogWidth = dialogWidth;
                 $mdDialog.show({
-                    controller: 'ControllerWrapper',
+                    controller: 'controllerWrapper',
                     templateUrl: uiControls.dialogTemplateUrl,
                     parent: angular.element(document.body),
                     escapeToClose: false

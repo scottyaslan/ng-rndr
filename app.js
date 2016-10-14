@@ -1,5 +1,5 @@
 define(['../ngRNDR/AppController',
-        '../ngRNDR/common/controllers/ControllerWrapper',
+        '../ngRNDR/common/controllers/controllerWrapper',
         '../ngRNDR/common/services/uiControls',
         '../ngRNDR/acquire/services/acquisitionController',
         '../ngRNDR/acquire/directives/acquisitionDirective',
@@ -26,7 +26,7 @@ define(['../ngRNDR/AppController',
         'ui-ace'
     ],
     function(AppController,
-        ControllerWrapper,
+        controllerWrapper,
         uiControls,
         acquisitionController,
         acquisitionDirective,
@@ -82,14 +82,14 @@ define(['../ngRNDR/AppController',
             '$scope',
             '$q'
         ];
-        ControllerWrapper.$inject = ['$scope', 'uiControls', 'dataSourceManager', 'dataSourceConfigurationManager', 'acquisitionController', 'exploreController', 'renderingEngineManager', 'aggregators'];
+        controllerWrapper.$inject = ['$scope', 'uiControls', 'dataSourceManager', 'dataSourceConfigurationManager', 'acquisitionController', 'exploreController', 'renderingEngineManager', 'aggregators'];
         acquisitionDirective.$inject = ['acquisitionController', 'dataSourceConfigurationManager', 'dataSourceManager'];
 
         app.config(config);
 
         // Module controllers
         app.controller('Controller', AppController);
-        app.controller('ControllerWrapper', ControllerWrapper);
+        app.controller('controllerWrapper', controllerWrapper);
 
         // Module services
         app.service('uiControls', uiControls);
