@@ -1,19 +1,20 @@
 define([], function() {
     'use strict';
 
-    function UiControls($window, $mdSidenav, $mdUtil, $mdBottomSheet, $mdDialog) {
-        function UiControls() {
+    return function($window, $mdSidenav, $mdUtil, $mdBottomSheet, $mdDialog) {
+        function uiControls() {
             this.bottomSheetTemplateUrl;
             this.dialogTemplateUrl;
             this.dialogTitle;
+            this.init();
         };
-        UiControls.prototype = {
-            constructor: UiControls,
+        uiControls.prototype = {
+            constructor: uiControls,
             init: function(bottomSheetTemplateUrl, dialogTemplateUrl) {
-                if(bottomSheetTemplateUrl){
+                if (bottomSheetTemplateUrl) {
                     uiControls.bottomSheetTemplateUrl = bottomSheetTemplateUrl;
                 }
-                if(dialogTemplateUrl){
+                if (dialogTemplateUrl) {
                     uiControls.dialogTemplateUrl = dialogTemplateUrl;
                 }
             },
@@ -26,21 +27,21 @@ define([], function() {
                     controller: 'ControllerWrapper'
                 }).then(function(clickedItem) {});
             },
-            openDialog: function(dialogTitle, ev) {
+            openDialog: function(dialogTitle, dialogWidth) {
                 uiControls.dialogTitle = dialogTitle;
+                uiControls.dialogWidth = dialogWidth;
                 $mdDialog.show({
                     controller: 'ControllerWrapper',
                     templateUrl: uiControls.dialogTemplateUrl,
                     parent: angular.element(document.body),
-                    targetEvent: ev,
                     escapeToClose: false
                 }).then(function(answer) {}, function() {});
             },
-            showRenderingEngineProgress: function(){
+            showRenderingEngineProgress: function() {
                 $("#rendererProgress").show();
                 $("#renderer").hide();
             },
-            hideRenderingEngineProgress: function(){
+            hideRenderingEngineProgress: function() {
                 $("#rendererProgress").hide();
                 $("#renderer").show();
             },
@@ -66,10 +67,7 @@ define([], function() {
                 uiControls.rightSideNavOpen = true;
             }
         };
-        var uiControls = new UiControls();
-        uiControls.init();
+        var uiControls = new uiControls();
         return uiControls;
     }
-
-    return UiControls;
 });

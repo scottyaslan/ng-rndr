@@ -1,0 +1,116 @@
+<md-content flex id="data_analytics_toolkit" ng-controller="Controller" ng-switch on="Controller.mainContentView" flex layout-fill layout="column" tabIndex="-1" role="main" style="overflow: hidden;">
+    <md-menu-bar ng-if="Controller.mainContentView !== 'Data Source Configuration Wizard' && Controller.mainContentView !== 'Dashboard Designer' && Controller.mainContentView !== '' && Controller.mainContentView !== undefined && Controller.embedded !== true" class="md-whiteframe-z5" style="z-index:3;">
+        <md-menu>
+            <button ng-click="$mdOpenMenu()">
+                File
+            </button>
+            <md-menu-content>
+                <md-menu-item>
+                    <md-menu>
+                        <md-button ng-click="$mdOpenMenu()">New</md-button>
+                        <md-menu-content>
+                            <md-menu-item>
+                                <md-button ng-click="Controller.initiateDataExploration(true);">Data Exploration</md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="Controller.initiateDataSourceConfigurationWizard();">Data Source Configuration</md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                </md-menu-item>
+                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEngineManager.activeRenderingEngine">
+                    <md-button ng-click="Controller.selectFile('open');">Open</md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="Controller.selectFile('import');">Import</md-button>
+                </md-menu-item>
+                <md-menu-item ng-if="renderingEngineManager.size() > 0">
+                    <md-button ng-click="Controller.export();">Export</md-button>
+                </md-menu-item>
+                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEngineManager.activeRenderingEngine">
+                    <md-button ng-click="exploreController.dialogContentView = 'Rename';uiControls.openDialog('Name')">Rename</md-button>
+                </md-menu-item>
+                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEngineManager.activeRenderingEngine">
+                    <md-button ng-click="Controller.deleteRenderingEngine(renderingEngineManager.activeRenderingEngine);">Delete</md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+        <md-menu>
+            <!--  move $mdOpenMenu() into uiControls -->
+            <button ng-disabled="Controller.sandboxMenusEnabled()" ng-click="$mdOpenMenu()">
+                Perspective
+            </button>
+            <md-menu-content style="z-index:3;">
+                <md-menu-item>
+                    <md-button ng-click="Controller.initiateDataExploration(false);">Explore</md-button>
+                </md-menu-item>
+                <md-menu-item ng-if="!Controller.sandboxMenusEnabled()">
+                    <md-button ng-click="Controller.mainContentView = 'Dashboard Designer'">Dashboard Designer</md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+        <md-menu>
+            <!--  move $mdOpenMenu() into uiControls -->
+            <button ng-disabled="Controller.sandboxMenusEnabled()" ng-click="$mdOpenMenu()">
+                View
+            </button>
+            <md-menu-content style="z-index:3;">
+                <md-menu-item ng-repeat="rendererName in renderers.list()">
+                    <md-button ng-click="renderingEngineManager.renderingEngines[renderingEngineManager.activeRenderingEngine].draw(dataSourceManager.dataSources[renderingEngineManager.renderingEngines[renderingEngineManager.activeRenderingEngine].dataSourceConfigId].formattedData, rendererName)">
+                        {{rendererName}}
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+        <md-menu>
+            <!--  move $mdOpenMenu() into uiControls -->
+            <button ng-disabled="Controller.sandboxMenusEnabled()" ng-click="$mdOpenMenu()">
+                Options
+            </button>
+            <md-menu-content>
+                <md-menu-item>
+                    <md-button ng-click="exploreController.dialogContentView = 'Aggregate';uiControls.openDialog('Aggregate')">
+                        Aggregate
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="exploreController.dialogContentView = 'Filters';uiControls.openDialog('Filters')">
+                        Filter
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+    </md-menu-bar>
+    <md-content style="height: 100%;" layout='column' ng-switch-when="Loading">
+        <md-content flex layout="row" layout-fill layout-align="center center">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </md-content>
+    </md-content>
+    <md-content style="height: 100%;" layout='column' ng-switch-when="Explore">
+        <exploration-directive style="height: 100%;"></exploration-directive>
+    </md-content>
+    <md-content style="height: 100%;" layout='column' ng-switch-when="Data Source Configuration Wizard">
+        <acquisition-directive style="height: 100%;"></acquisition-directive>
+    </md-content>
+    <md-content style="height: 100%; overflow-x: hidden;" layout='column' ng-switch-when="Dashboard Designer">
+        <dashboard-directive rendering-engine-manager="renderingEngineManager" options="options"></dashboard-directive>
+    </md-content>
+    <md-content style="height: 100%; background-color: lightgrey" layout='row' layout-align="center center" ng-switch-default>
+        <md-card flex="50" class="md-whiteframe-z5">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">RNDR</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-content>
+                <p>
+                    Acquire data over http from any REST service...Explore and visualize your data with pivot tables, google charts, D3, and C3 charting libraries...Create your own visualization plugin...Syndicate your data with the metro style tiles...
+                </p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised md-primary" ng-click="Controller.initiateDataExploration();">Explore</md-button>
+                <md-button class="md-raised md-primary" ng-click="Controller.initiateDataSourceConfigurationWizard();">Data Source Configuration</md-button>
+            </md-card-actions>
+        </md-card>
+    </md-content>
+</md-content>

@@ -13,7 +13,7 @@ var RNDR = function() {
         //  Set the environment variables we need
         self.ipaddress = '';
         self.port = 3000;
-        if(typeof self.ipaddress === "undefined") {
+        if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
             self.ipaddress = "127.0.0.1";
@@ -25,7 +25,7 @@ var RNDR = function() {
      *  @param {string} sig  Signal to terminate on.
      */
     self.terminator = function(sig) {
-        if(typeof sig === "string") {
+        if (typeof sig === "string") {
             console.log('%s: Received %s - terminating sample app ...', Date(Date.now()), sig);
             process.exit(1);
         }
@@ -56,14 +56,14 @@ var RNDR = function() {
         app.engine('html', require('ejs').renderFile);
         app.set('view engine', 'ejs');
         app.use(express.favicon());
-        app.use(express.json({limit: '50mb'}));
-        app.use(express.urlencoded({limit: '50mb'}));
+        app.use(express.json({ limit: '50mb' }));
+        app.use(express.urlencoded({ limit: '50mb' }));
         app.use(express.logger('dev'));
         app.use(express.json());
         app.use(express.urlencoded());
         app.use(express.methodOverride());
         app.use(express.cookieParser('rndr'));
-        app.use(express.session({secret: 'rndr'})); 
+        app.use(express.session({ secret: 'rndr' }));
         app.use(app.router);
         app.use('/ngRNDR', express.static(path.join(__dirname, './')));
         // Handle 404
@@ -77,7 +77,7 @@ var RNDR = function() {
             res.render('500.html');
         });
         // development only
-        if('development' == app.get('env')) {
+        if ('development' == app.get('env')) {
             app.use(express.errorHandler());
         }
     };
