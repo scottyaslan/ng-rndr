@@ -3,8 +3,8 @@ module.exports = function(grunt) {
         copy: {
             main: {
                 files: [
-                  {expand: true, src: ['LICENSE'], dest: 'dist/', filter: 'isFile'},
-                  {expand: true, src: ['README.md'], dest: 'dist/', filter: 'isFile'},
+                    { expand: true, src: ['LICENSE'], dest: 'dist/', filter: 'isFile' },
+                    { expand: true, src: ['README.md'], dest: 'dist/', filter: 'isFile' },
                 ]
             }
         },
@@ -21,14 +21,25 @@ module.exports = function(grunt) {
                     endFile: 'wrap.end'
                 }
             },
-            dev:{
-                options:{
-                    optimize:'none'
+            dev: {
+                options: {
+                    optimize: 'none'
                 }
             },
-            release:{
-                options:{
-                    optimize:'uglify'
+            release: {
+                options: {
+                    optimize: 'uglify',
+                    out: './dist/ng-rndr.min.js'
+                }
+            }
+        },
+        uglify: {
+            my_target: {
+                options: {
+                    sourceMap: true
+                },
+                files: {
+                    './dist/ng-rndr.min.js': ['./dist/ng-rndr.js']
                 }
             }
         }
@@ -38,6 +49,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('dev',['requirejs:dev']);
-    grunt.registerTask('release',['requirejs:release', 'copy:main']);
+    grunt.registerTask('dev', ['requirejs:dev']);
+    grunt.registerTask('release', ['requirejs:dev', 'requirejs:release', 'uglify:my_target', 'copy:main']);
 };

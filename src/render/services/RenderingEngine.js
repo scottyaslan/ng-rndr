@@ -1,267 +1,139 @@
 define([], function() {
     'use strict';
 
-    return function(aggregators, dataUtils, renderers, PivotDataFactory, $q, $timeout, $window, $rootScope) {
-        function RenderingEngine() {
-            this.id;
-            this.element;
-            this.disabled;
-            this.title;
-            this.rendererName;
-            this.aggregatorName;
-            this.aggInputAttributeName;
-            this.numInputsToProcess;
-            this.axisValues;
-            this.shownAttributes;
-            this.availableAttributes;
-            this.tblCols;
-            this.cols;
-            this.rows;
-            this.attributesAvailableForRowsAndCols;
-            this.attributeFilterExclusions;
-            this.attributeFilterInclusions;
-            this.tile;
+    return function(aggregators, dataUtils, renderers, dataViews, $q, $timeout, $window, $rootScope) {
+        /**
+         * {@link RenderingEngine} constructor.
+         * 
+         * @param {string} dataSourceConfigId The UUID of the data source.
+         * @param {string} [renderingEngineId]  The UUID of this `renderingEngine`.
+         * @param {string} [title]              The title of this  `renderingEngine`.
+         * @param {string} [rendererName]       The name of the renderer plugin.
+         * @param {string} [aggregatorName]     Then name of the aggregator plugin.
+         */
+        function RenderingEngine(dataSourceConfigId, renderingEngineId, title, dataViewName, rendererName) {
+            this.dataSourceConfigId = dataSourceConfigId;
+
+            if (renderingEngineId === undefined || renderingEngineId === '') {
+                this.id = dataUtils.generateUUID();
+            } else {
+                this.id = renderingEngineId;
+            }
+
+            if (title === undefined || title === '') {
+                this.title = "Untitiled";
+            } else {
+                this.title = title;
+            }
+
+            if (rendererName === undefined || rendererName === '') {
+                this.rendererName = "DT - Table";
+            } else {
+                this.rendererName = rendererName;
+            }
+
+            this.dataView = {
+                meta: dataViews[renderers[this.rendererName].opts.dataViewName].meta()
+            };
         }
         RenderingEngine.prototype = {
-            constructor: RenderingEngine,
-            init: function(dataSourceConfigId, renderingEngineId) {
-                var self = this;
-                if(renderingEngineId === undefined || renderingEngineId === ''){
-                    self.id = dataUtils.generateUUID();
-                } else {
-                    self.id = renderingEngineId;
-                }
-                self.dataSourceConfigId = dataSourceConfigId;
-                self.title = "Untitiled";
-                self.rendererName = "Table";
-                self.aggregatorName = "Count";
-                self.aggInputAttributeName = [];
-                self.numInputsToProcess = [];
-                self.axisValues = {};
-                self.shownAttributes = [];
-                self.availableAttributes = [];
-                self.tblCols = [];
-                self.cols = [];
-                self.rows = [];
-                self.attributesAvailableForRowsAndCols = [];
-                self.attributeFilterExclusions = {};
-                self.attributeFilterInclusions = {};
-            },
-            setRendererName: function(rendererName, data) {
-                var self = this;
-                self.rendererName = rendererName;
-                self.draw(data);
-            },
-            setNumberOfAggregateInputs: function (){
-                var self = this;
-                var numInputs;
-                try {
-                    numInputs = aggregators.availableAggregators[self.aggregatorName]([])().numInputs;
-                } catch(_error) {
-                    //Log error and do nothing...we just needed to know how many inputs we need to collect
-                    e = _error;
-                    if (typeof console !== "undefined" && console !== null) {
-                        console.error(e.stack);
-                    }
-                }
-                if(numInputs === undefined) {
-                    self.numInputsToProcess = new Array();
-                    self.aggInputAttributeName = new Array();
-                } else {
-                    self.numInputsToProcess = new Array(numInputs);
-                    if(self.aggInputAttributeName.length !== numInputs) {
-                        self.aggInputAttributeName = new Array(numInputs);
-                    }
-                }
-            },
-            setAggregatorName: function(aggregatorName) {
-                var self = this;
-                self.aggregatorName = aggregatorName;
-            },
-            isExcluded: function(property, key) {
-                var self = this;
-                if(self.attributeFilterExclusions[property] !== undefined) {
-                    if(self.attributeFilterExclusions[property].indexOf(key) >= 0){
-                        return false;
-                    } else {
-                        return true;    
-                    }
-                }
-                return true;
-            },
-            addExclusionFilter: function(attributeFilterName, filterByAttributeValue) {
-                var self = this;
-                if(self.attributeFilterExclusions[attributeFilterName] !== undefined) {
-                    var index = this.attributeFilterExclusions[attributeFilterName].indexOf(filterByAttributeValue);
-                    if(index >= 0) {
-                        self.attributeFilterExclusions[attributeFilterName].splice(index, 1);
-                    } else {
-                        self.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
-                    }
-                } else {
-                    self.attributeFilterExclusions[attributeFilterName] = [];
-                    self.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
-                } 
-                self.attributeFilterInclusions[attributeFilterName] = [];
-                angular.forEach(self.axisValues[attributeFilterName], function(value, key) {
-                    if(self.attributeFilterExclusions[attributeFilterName].indexOf(key) < 0) {
-                        self.attributeFilterInclusions[attributeFilterName].push(key);
-                    }
-                });
-            },
-            addInclusionFilter: function(attributeFilterName, filterByAttributeValue) {
-                var self = this;
-                self.attributeFilterInclusions[attributeFilterName] = [];
-                self.attributeFilterExclusions[attributeFilterName] = [];
-                self.addExclusionFilter(attributeFilterName, filterByAttributeValue);
-                var oldAttributeFilterInclusions = self.attributeFilterInclusions[attributeFilterName];
-                self.attributeFilterInclusions[attributeFilterName] = self.attributeFilterExclusions[attributeFilterName];
-                self.attributeFilterExclusions[attributeFilterName] = oldAttributeFilterInclusions;
-            },
-
-            /*
-             * @param {string} [table]
-             *    A plain JSON-serialized string of the data.
+            /**
+             * @typedef RenderingEngine
+             * @type {object}
+             * @property {string} dataSourceConfigId - The UUID of the data source.
+             * @property {string} id - The UUID of this rendering engine.
+             * @property {string} title - The title of this rendering engine.
+             * @property {string} rendererName - The name of the renderer plugin.
+             * @property {string} aggregatorName - The name of the aggregator plugin.
+             * @property {object} aggregator - The aggregator of this rendering engine.
+             * @property {string} aggregator.name - The name of the aggregator for this rendering engine.
+             * @property {function} aggregator.aggregate - The name of the aggregator for this rendering engine.
+             * @property {Array} aggregator.numInputsToProcess - The number aggregator for this rendering engine.
+             * @property {Array} aggregator.aggInputAttributeName - The name of the aggregator for this rendering engine.
              */
-            draw: function(data) {
+            constructor: RenderingEngine,
+            /**
+             * Intialize the 'renderingEngine''s `aggregator` object.
+             */
+            initializeAggregator: function() {
+                if (this.aggregator === undefined) {
+                    this.aggregator = {
+                        name: "Count",
+                        aggregate: function() {},
+                        numInputsToProcess: [],
+                        aggInputAttributeName: []
+                    }
+                }
+
+                var numInputs = aggregators[this.aggregator.name].aggregate([])([]).numInputs;
+                if (numInputs === undefined) {
+                    this.aggregator.numInputsToProcess = new Array();
+                    this.aggregator.aggInputAttributeName = new Array();
+                } else {
+                    this.aggregator.numInputsToProcess = new Array(numInputs);
+                    if (this.aggregator.aggInputAttributeName.length !== numInputs) {
+                        this.aggregator.aggInputAttributeName = new Array(numInputs);
+                    }
+                }
+
+                this.aggregator.aggregate = aggregators[this.aggregator.name].aggregate([this.aggregator.aggInputAttributeName]);
+            },
+            /**
+             * Creates configured `DataView` and invokes the configured `renderer` to build the DOM and
+             * attach it to the view.
+             *  
+             * @param  {object} data The `data` can be in any format that the configured `DataView` can understand.
+             * @param  {string} rendererName The name of the renderer to use.
+             * 
+             * @return {Promise}      A promise that resolves once the view is attached to the DOM. 
+             */
+            draw: function(data, rendererName) {
                 var self = this;
+
+                if (rendererName !== undefined && rendererName !== '') {
+                    self.rendererName = rendererName;
+                }
+
                 var deferred = $q.defer();
                 $rootScope.$emit('RenderingEngine:draw:begin');
                 $timeout(function(data) {
-                    //Set the RenderingEngine id, # rows, and #cols for access in renderer
-                    renderers.availableRendererOptions['renderingEngineId'] = self.id;
-                    renderers.availableRendererOptions['numRows'] = self.rows.length;
-                    renderers.availableRendererOptions['numCols'] = self.cols.length;
-                    //Set the height and width for each renderer option to fit into container
-                    angular.forEach(renderers.availableRendererOptions, function(value, key) {
-                        switch (key){
-                            case "datatables":
-                                value.height = (self.element.parent().parent().innerHeight() - 24 - 40 - 31 - 31 - 22 - ((self.cols.length + 1)*30)) + 'px'; //height - header - buttons - table head - table foot - bottom message - # of cols
-                                value.width = self.element.parent().parent().innerWidth();
-                                break;
-                            case "gchart":
-                                value.height = self.element.parent().parent().innerHeight() - 24 - 10;//height - header - title?
-                                value.width = self.element.parent().parent().innerWidth();
-                                break;
-                            case "c3":
-                                value.size.height = self.element.parent().parent().innerHeight() - 24 - 10;//height - header - title?
-                                value.size.width = self.element.parent().parent().innerWidth();
-                                break;
-                            case "d3":
-                                value.height = function(){ return self.element.parent().parent().innerHeight();};//height is ignored for d3???
-                                value.width = function(){ return self.element.parent().parent().innerWidth() - 16;};//d3 draws a little too wide???
-                                break;
-                            default:
-                                //do nothing
+                    var result;
+                    try {
+                        self.initializeAggregator();
+                        var opts = {
+                            id: self.id,
+                            title: self.title,
+                            aggregator: self.aggregator,
+                            dataUtils: dataUtils,
+                            meta: self.dataView.meta
+                        };
+                        self.dataView = new dataViews[renderers[self.rendererName].opts.dataViewName].view(data, opts);
+                        try {
+                            renderers[self.rendererName].opts.height = self.element.parent().parent().innerHeight();
+                            renderers[self.rendererName].opts.width = self.element.parent().parent().innerWidth();
+                            result = renderers[self.rendererName].render(self.dataView, renderers[self.rendererName].opts);
+                        } catch (_error) {
+                            e = _error;
+                            if (typeof console !== "undefined" && console !== null) {
+                                console.error(e.stack);
+                            }
+                            result = $("<span>").html(opts.localeStrings.renderError);
                         }
-                                
-                    });
-                    if(data !== undefined){
-                        data = dataUtils.convertToArray(data);
-                    } else {
-                        data = [];
+                    } catch (_error) {
+                        e = _error;
+                        if (typeof console !== "undefined" && console !== null) {
+                            console.error(e.stack);
+                        }
+                        result = $("<span>").html(opts.localeStrings.computeError);
                     }
-                    if(data !== undefined){
-                        if(data.length > 0){
-                            self.availableAttributes = self.rows.concat(self.cols);
-                            var opts = {
-                                cols: self.cols,
-                                rows: self.rows,
-                                vals: self.aggInputAttributeName,
-                                hiddenAttributes: [],
-                                filter: function(record) {
-                                    var excludedItems, ref7;
-                                    for (var k in self.attributeFilterExclusions) {
-                                        excludedItems = self.attributeFilterExclusions[k];
-                                        if (ref7 = "" + record[k], dataUtils.indexOf.call(excludedItems, ref7) >= 0) {
-                                            return false;
-                                        }
-                                    }
-                                    return true;
-                                },
-                                aggregator: aggregators.availableAggregators[self.aggregatorName](self.aggInputAttributeName),
-                                aggregatorName: self.aggregatorName,
-                                sorters: function() {},
-                                derivedAttributes: {}
-                            };
-                            self.tblCols = [];
-                            self.tblCols = (function() {
-                                var ref, results;
-                                ref = data[0];
-                                results = [];
-                                for (var k in ref) {
-                                    if (!dataUtils.hasProp.call(ref, k)) continue;
-                                    results.push(k);
-                                }
-                                return results;
-                            })();
-                            self.axisValues = {};
-                            for (var l = 0, len1 = self.tblCols.length; l < len1; l++) {
-                                var x = self.tblCols[l];
-                                self.axisValues[x] = {};
-                            }
-                            dataUtils.forEachRecord(data, opts.derivedAttributes, function(record) {
-                                var base, results, v;
-                                results = [];
-                                for (var k in record) {
-                                    if (!dataUtils.hasProp.call(record, k)) continue;
-                                    v = record[k];
-                                    if (v == null) {
-                                        v = "null";
-                                    }
-                                    if ((base = self.axisValues[k])[v] == null) {
-                                        base[v] = 0;
-                                    }
-                                    results.push(self.axisValues[k][v]++);
-                                }
-                                return results;
-                            });
-                            self.shownAttributes = [];
-                            self.shownAttributes = (function() {
-                                var len2, n, results;
-                                results = [];
-                                for (var n = 0, len2 = self.tblCols.length; n < len2; n++) {
-                                    var c = self.tblCols[n];
-                                    if (dataUtils.indexOf.call(opts.hiddenAttributes, c) < 0) {
-                                        results.push(c);
-                                    }
-                                }
-                                return results;
-                            })();
-                            if(self.attributesAvailableForRowsAndCols.length + self.rows.length + self.cols.length !== self.shownAttributes.length) {
-                                self.attributesAvailableForRowsAndCols = self.shownAttributes;
-                            }
-                            var result = null;
-                            var DataView = null;
-                            try {
-                                DataView = new PivotDataFactory();
-                                DataView.init(data, opts);
-                                try {
-                                    result = renderers.availableRenderers[self.rendererName](DataView, renderers.availableRendererOptions);
-                                } catch (_error) {
-                                    e = _error;
-                                    if (typeof console !== "undefined" && console !== null) {
-                                        console.error(e.stack);
-                                    }
-                                    result = $("<span>").html(opts.localeStrings.renderError);
-                                }
-                            } catch (_error) {
-                                e = _error;
-                                if (typeof console !== "undefined" && console !== null) {
-                                    console.error(e.stack);
-                                }
-                                result = $("<span>").html(opts.localeStrings.computeError);
-                            }
-                            //Remove old viz
-                            self.element.empty();
-                            //append the new viz
-                            self.element.append(result.html);
-                            $rootScope.$emit('RenderingEngine:draw:complete');
-                            //run any post render functions defined by visual
-                            if(result.postRenderFunction){
-                                result.postRenderFunction(result.html, result.postRenderOpts);
-                            }
-                        }
+                    // remove old viz
+                    self.element.empty();
+                    // append the new viz
+                    self.element.append(result.html);
+                    $rootScope.$emit('RenderingEngine:draw:complete');
+                    // run any post render functions defined by visual
+                    if (result.postRenderFunction) {
+                        result.postRenderFunction(result.html, result.postRenderOpts);
                     }
                     deferred.resolve();
                 }, 1500, true, data);

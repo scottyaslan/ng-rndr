@@ -4,6 +4,7 @@
   } else if (typeof exports === 'object' && typeof module === "object") {
     module.exports = factory(root.$, root.angular);
   } else {
-    factory(root.$, root.angular);
+    root.ngRNDR = factory(root.$, root.angular);
+    root.ngRNDR.plugins = {};
   }
 }(this, function () {

@@ -2,9 +2,15 @@ define([], function() {
     'use strict';
 
     return function(dataUtils) {
-        function AggregatorTemplates() {
-        }
+        /**
+         * {@link AggregatorTemplates} constructor.
+         */
+        function AggregatorTemplates() {}
         AggregatorTemplates.prototype = {
+            /**
+             * @typedef AggregatorTemplates
+             * @type {object}
+             */
             constructor: AggregatorTemplates,
             count: function(formatter) {
                 if (formatter == null) {
@@ -37,7 +43,7 @@ define([], function() {
                             uniq: [],
                             push: function(record) {
                                 var ref;
-                                if (ref = record[attr], indexOf.call(this.uniq, ref) < 0) {
+                                if (ref = record[attr], this.uniq.indexOf(ref) < 0) {
                                     return this.uniq.push(record[attr]);
                                 }
                             },
@@ -59,7 +65,7 @@ define([], function() {
                             uniq: [],
                             push: function(record) {
                                 var ref;
-                                if (ref = record[attr], indexOf.call(this.uniq, ref) < 0) {
+                                if (ref = record[attr], this.uniq.indexOf(ref) < 0) {
                                     return this.uniq.push(record[attr]);
                                 }
                             },
@@ -250,9 +256,14 @@ define([], function() {
                     return function(data, rowKey, colKey) {
                         return {
                             selector: {
-                                total: [[], []],
+                                total: [
+                                    [],
+                                    []
+                                ],
                                 row: [rowKey, []],
-                                col: [[], colKey]
+                                col: [
+                                    [], colKey
+                                ]
                             }[type],
                             inner: wrapped.apply(null, x)(data, rowKey, colKey),
                             push: function(record) {

@@ -2,15 +2,27 @@ define([], function() {
     'use strict';
 
     return function() {
-        function DataUtils() {
-        }
+        /**
+         * {@link DataUtils} constructor.
+         */
+        function DataUtils() {}
         DataUtils.prototype = {
+            /**
+             * @typedef DataUtils
+             * @type {object}
+             */
             constructor: DataUtils,
             hasProp: {}.hasOwnProperty,
-            indexOf: [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
-            generateUUID: function(){
-                return  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            indexOf: [].indexOf || function(item) {
+                for (var i = 0, l = this.length; i < l; i++) {
+                    if (i in this && this[i] === item) return i;
+                }
+                return -1;
+            },
+            generateUUID: function() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0,
+                        v = c == 'x' ? r : (r & 0x3 | 0x8);
                     return v.toString(16);
                 })
             },
@@ -23,7 +35,11 @@ define([], function() {
                 });
                 return result;
             },
-            bind: function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+            bind: function(fn, me) {
+                return function() {
+                    return fn.apply(me, arguments);
+                };
+            },
             forEachRecord: function(input, derivedAttributes, f) {
                 var self = this;
                 var addRecord, compactRecord, i, j, k, l, len1, record, ref, results, results1, tblCols;
@@ -198,7 +214,7 @@ define([], function() {
                     digitsAfterDecimal: 0
                 });
             },
-            usFmtPct:  function() {
+            usFmtPct: function() {
                 var self = this;
                 return self.numberFormat({
                     digitsAfterDecimal: 1,

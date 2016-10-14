@@ -2,45 +2,55 @@ define([], function() {
     'use strict';
 
     return function(aggregatorTemplates, dataUtils) {
+        /**
+         * {@link Aggregators} constructor.
+         */
         function Aggregators() {
-            this.availableAggregators;
-            this.availableAggregatorNames;
-            this.availableAggregatorOptions;
-            this.aggregatorTemplates;
-            this.init();
+            this.add('Count', aggregatorTemplates.count(dataUtils.usFmtInt()));
+            this.add('Count Unique Values', aggregatorTemplates.countUnique(dataUtils.usFmtInt()));
+            this.add('List Unique Values', aggregatorTemplates.listUnique(', '));
+            this.add('Sum', aggregatorTemplates.sum(dataUtils.usFmt()));
+            this.add('Integer Sum', aggregatorTemplates.sum(dataUtils.usFmtInt()));
+            this.add('Average', aggregatorTemplates.average(dataUtils.usFmt()));
+            this.add('Minimum', aggregatorTemplates.min(dataUtils.usFmt()));
+            this.add('Maximum', aggregatorTemplates.max(dataUtils.usFmt()));
+            this.add('Sum over Sum', aggregatorTemplates.sumOverSum(dataUtils.usFmt()));
+            this.add('80% Upper Bound', aggregatorTemplates.sumOverSumBound80(true, dataUtils.usFmt()));
+            this.add('80% Lower Bound', aggregatorTemplates.sumOverSumBound80(false, dataUtils.usFmt()));
+            this.add('Sum as Fraction of Total', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(), 'total', dataUtils.usFmtPct()));
+            this.add('Sum as Fraction of Rows', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(), 'row', dataUtils.usFmtPct()));
+            this.add('Sum as Fraction of Columns', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(), 'col', dataUtils.usFmtPct()));
+            this.add('Count as Fraction of Total', aggregatorTemplates.fractionOf(aggregatorTemplates.count(), 'total', dataUtils.usFmtPct()));
+            this.add('Count as Fraction of Rows', aggregatorTemplates.fractionOf(aggregatorTemplates.count(), 'row', dataUtils.usFmtPct()));
+            this.add('Count as Fraction of Columns', aggregatorTemplates.fractionOf(aggregatorTemplates.count(), 'col', dataUtils.usFmtPct()));
         }
         Aggregators.prototype = {
+            /**
+             * @typedef Aggregators
+             * @type {object}
+             */
             constructor: Aggregators,
-            init: function() {
-                var self = this;
-                self.availableAggregators = {};
-                self.availableAggregatorNames = Object.keys(self.availableAggregators);
-                self.aggregatorTemplates = aggregatorTemplates;
-                self.addAggregator('Count', self.aggregatorTemplates.count(dataUtils.usFmtInt()));
-                self.addAggregator('Count Unique Values', self.aggregatorTemplates.countUnique(dataUtils.usFmtInt()));
-                self.addAggregator('List Unique Values', self.aggregatorTemplates.listUnique(', '));
-                self.addAggregator('Sum', self.aggregatorTemplates.sum(dataUtils.usFmt()));
-                self.addAggregator('Integer Sum', self.aggregatorTemplates.sum(dataUtils.usFmtInt()));
-                self.addAggregator('Average', self.aggregatorTemplates.average(dataUtils.usFmt()));
-                self.addAggregator('Minimum', self.aggregatorTemplates.min(dataUtils.usFmt()));
-                self.addAggregator('Maximum', self.aggregatorTemplates.max(dataUtils.usFmt()));
-                self.addAggregator('Sum over Sum', self.aggregatorTemplates.sumOverSum(dataUtils.usFmt()));
-                self.addAggregator('80% Upper Bound', self.aggregatorTemplates.sumOverSumBound80(true, dataUtils.usFmt()));
-                self.addAggregator('80% Lower Bound', self.aggregatorTemplates.sumOverSumBound80(false, dataUtils.usFmt()));
-                self.addAggregator('Sum as Fraction of Total', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.sum(), 'total', dataUtils.usFmtPct()));
-                self.addAggregator('Sum as Fraction of Rows', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.sum(), 'row', dataUtils.usFmtPct()));
-                self.addAggregator('Sum as Fraction of Columns', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.sum(), 'col', dataUtils.usFmtPct()));
-                self.addAggregator('Count as Fraction of Total', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'total', dataUtils.usFmtPct()));
-                self.addAggregator('Count as Fraction of Rows', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'row', dataUtils.usFmtPct()));
-                self.addAggregator('Count as Fraction of Columns', self.aggregatorTemplates.fractionOf(self.aggregatorTemplates.count(), 'col', dataUtils.usFmtPct()));
+            /**
+             * Adds an aggregator function by `name` for fast lookup.
+             * 
+             * @param {string} name       The lookup name of the aggregate function.
+             * @param {function} aggregator The aggregate function.
+             */
+            add: function(name, aggregator) {
+                this[name] = {
+                    aggregate: aggregator
+                };
             },
-            addAggregator: function(AggregatorName, Aggregator){
-                var self = this;
-                self.availableAggregators[AggregatorName] = Aggregator;
-                self.availableAggregatorNames = Object.keys(self.availableAggregators);
+            /**
+             * Lists the available aggregator plugins.
+             * 
+             * @return {Array.<string>} The lookup names.
+             */
+            list: function() {
+                return Object.keys(this);
             }
         };
-        
+
         return new Aggregators();
     }
 });

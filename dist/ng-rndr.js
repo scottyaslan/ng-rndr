@@ -1,6 +1,1671 @@
-/**
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery', 'angular'], factory);
+  } else if (typeof exports === 'object' && typeof module === "object") {
+    module.exports = factory(root.$, root.angular);
+  } else {
+    root.ngRNDR = factory(root.$, root.angular);
+    root.ngRNDR.plugins = {};
+  }
+}(this, function () {/**
  * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
  * Released under MIT license, http://github.com/requirejs/almond/LICENSE
  */
+//Going sloppy to avoid 'use strict' string cost, but strict practices should
+//be followed.
+/*global setTimeout: false */
 
-(function(e,t){typeof define=="function"&&define.amd?define(["jquery","angular"],t):typeof exports=="object"&&typeof module=="object"?module.exports=t(e.$,e.angular):t(e.$,e.angular)})(this,function(){var t,n,r;return function(e){function v(e,t){return h.call(e,t)}function m(e,t){var n,r,i,s,o,u,a,f,c,h,p,v,m=t&&t.split("/"),g=l.map,y=g&&g["*"]||{};if(e){e=e.split("/"),o=e.length-1,l.nodeIdCompat&&d.test(e[o])&&(e[o]=e[o].replace(d,"")),e[0].charAt(0)==="."&&m&&(v=m.slice(0,m.length-1),e=v.concat(e));for(c=0;c<e.length;c++){p=e[c];if(p===".")e.splice(c,1),c-=1;else if(p===".."){if(c===0||c===1&&e[2]===".."||e[c-1]==="..")continue;c>0&&(e.splice(c-1,2),c-=2)}}e=e.join("/")}if((m||y)&&g){n=e.split("/");for(c=n.length;c>0;c-=1){r=n.slice(0,c).join("/");if(m)for(h=m.length;h>0;h-=1){i=g[m.slice(0,h).join("/")];if(i){i=i[r];if(i){s=i,u=c;break}}}if(s)break;!a&&y&&y[r]&&(a=y[r],f=c)}!s&&a&&(s=a,u=f),s&&(n.splice(0,u,s),e=n.join("/"))}return e}function g(t,n){return function(){var r=p.call(arguments,0);return typeof r[0]!="string"&&r.length===1&&r.push(null),s.apply(e,r.concat([t,n]))}}function y(e){return function(t){return m(t,e)}}function b(e){return function(t){a[e]=t}}function w(t){if(v(f,t)){var n=f[t];delete f[t],c[t]=!0,i.apply(e,n)}if(!v(a,t)&&!v(c,t))throw new Error("No "+t);return a[t]}function E(e){var t,n=e?e.indexOf("!"):-1;return n>-1&&(t=e.substring(0,n),e=e.substring(n+1,e.length)),[t,e]}function S(e){return e?E(e):[]}function x(e){return function(){return l&&l.config&&l.config[e]||{}}}var i,s,o,u,a={},f={},l={},c={},h=Object.prototype.hasOwnProperty,p=[].slice,d=/\.js$/;o=function(e,t){var n,r=E(e),i=r[0],s=t[1];return e=r[1],i&&(i=m(i,s),n=w(i)),i?n&&n.normalize?e=n.normalize(e,y(s)):e=m(e,s):(e=m(e,s),r=E(e),i=r[0],e=r[1],i&&(n=w(i))),{f:i?i+"!"+e:e,n:e,pr:i,p:n}},u={require:function(e){return g(e)},exports:function(e){var t=a[e];return typeof t!="undefined"?t:a[e]={}},module:function(e){return{id:e,uri:"",exports:a[e],config:x(e)}}},i=function(t,n,r,i){var s,l,h,p,d,m,y=[],E=typeof r,x;i=i||t,m=S(i);if(E==="undefined"||E==="function"){n=!n.length&&r.length?["require","exports","module"]:n;for(d=0;d<n.length;d+=1){p=o(n[d],m),l=p.f;if(l==="require")y[d]=u.require(t);else if(l==="exports")y[d]=u.exports(t),x=!0;else if(l==="module")s=y[d]=u.module(t);else if(v(a,l)||v(f,l)||v(c,l))y[d]=w(l);else{if(!p.p)throw new Error(t+" missing "+l);p.p.load(p.n,g(i,!0),b(l),{}),y[d]=a[l]}}h=r?r.apply(a[t],y):undefined;if(t)if(s&&s.exports!==e&&s.exports!==a[t])a[t]=s.exports;else if(h!==e||!x)a[t]=h}else t&&(a[t]=r)},t=n=s=function(t,n,r,a,f){if(typeof t=="string")return u[t]?u[t](n):w(o(t,S(n)).f);if(!t.splice){l=t,l.deps&&s(l.deps,l.callback);if(!n)return;n.splice?(t=n,n=r,r=null):t=e}return n=n||function(){},typeof r=="function"&&(r=a,a=f),a?i(e,t,n,r):setTimeout(function(){i(e,t,n,r)},4),s},s.config=function(e){return s(e)},t._defined=a,r=function(e,t,n){if(typeof e!="string")throw new Error("See almond README: incorrect module build, no module name");t.splice||(n=t,t=[]),!v(a,e)&&!v(f,e)&&(f[e]=[e,t,n])},r.amd={jQuery:!0}}(),r("../node_modules/almond/almond",function(){}),r("render/directives/renderingEngineDirective",[],function(){"use strict";return function(){return{restrict:"E",scope:{engine:"=",input:"="},link:{pre:function(e,t,n){e.engine.element=$(t),e.engine.draw(e.input)}}}}}),r("render/services/aggregators",[],function(){"use strict";return function(e,t){function n(){this.availableAggregators,this.availableAggregatorNames,this.availableAggregatorOptions,this.aggregatorTemplates,this.init()}return n.prototype={constructor:n,init:function(){var n=this;n.availableAggregators={},n.availableAggregatorNames=Object.keys(n.availableAggregators),n.aggregatorTemplates=e,n.addAggregator("Count",n.aggregatorTemplates.count(t.usFmtInt())),n.addAggregator("Count Unique Values",n.aggregatorTemplates.countUnique(t.usFmtInt())),n.addAggregator("List Unique Values",n.aggregatorTemplates.listUnique(", ")),n.addAggregator("Sum",n.aggregatorTemplates.sum(t.usFmt())),n.addAggregator("Integer Sum",n.aggregatorTemplates.sum(t.usFmtInt())),n.addAggregator("Average",n.aggregatorTemplates.average(t.usFmt())),n.addAggregator("Minimum",n.aggregatorTemplates.min(t.usFmt())),n.addAggregator("Maximum",n.aggregatorTemplates.max(t.usFmt())),n.addAggregator("Sum over Sum",n.aggregatorTemplates.sumOverSum(t.usFmt())),n.addAggregator("80% Upper Bound",n.aggregatorTemplates.sumOverSumBound80(!0,t.usFmt())),n.addAggregator("80% Lower Bound",n.aggregatorTemplates.sumOverSumBound80(!1,t.usFmt())),n.addAggregator("Sum as Fraction of Total",n.aggregatorTemplates.fractionOf(n.aggregatorTemplates.sum(),"total",t.usFmtPct())),n.addAggregator("Sum as Fraction of Rows",n.aggregatorTemplates.fractionOf(n.aggregatorTemplates.sum(),"row",t.usFmtPct())),n.addAggregator("Sum as Fraction of Columns",n.aggregatorTemplates.fractionOf(n.aggregatorTemplates.sum(),"col",t.usFmtPct())),n.addAggregator("Count as Fraction of Total",n.aggregatorTemplates.fractionOf(n.aggregatorTemplates.count(),"total",t.usFmtPct())),n.addAggregator("Count as Fraction of Rows",n.aggregatorTemplates.fractionOf(n.aggregatorTemplates.count(),"row",t.usFmtPct())),n.addAggregator("Count as Fraction of Columns",n.aggregatorTemplates.fractionOf(n.aggregatorTemplates.count(),"col",t.usFmtPct()))},addAggregator:function(e,t){var n=this;n.availableAggregators[e]=t,n.availableAggregatorNames=Object.keys(n.availableAggregators)}},new n}}),r("render/services/aggregatorTemplates",[],function(){"use strict";return function(e){function t(){}return t.prototype={constructor:t,count:function(t){return t==null&&(t=e.usFmtInt),function(){return function(e,n,r){return{count:0,push:function(){return this.count++},value:function(){return this.count},format:t}}}},countUnique:function(t){return t==null&&(t=e.usFmtInt),function(e){var n;return n=e[0],function(e,r,i){return{uniq:[],push:function(e){var t;if(t=e[n],indexOf.call(this.uniq,t)<0)return this.uniq.push(e[n])},value:function(){return this.uniq.length},format:t,numInputs:n!=null?0:1}}}},listUnique:function(e){return function(t){var n;return n=t[0],function(t,r,i){return{uniq:[],push:function(e){var t;if(t=e[n],indexOf.call(this.uniq,t)<0)return this.uniq.push(e[n])},value:function(){return this.uniq.join(e)},format:function(e){return e},numInputs:n!=null?0:1}}}},sum:function(t){return t==null&&(t=e.usFmt),function(e){var n;return n=e[0],function(e,r,i){return{sum:0,push:function(e){if(!isNaN(parseFloat(e[n])))return this.sum+=parseFloat(e[n])},value:function(){return this.sum},format:t,numInputs:n!=null?0:1}}}},min:function(t){return t==null&&(t=e.usFmt),function(e){var n;return n=e[0],function(e,r,i){return{val:null,push:function(e){var t,r;r=parseFloat(e[n]);if(!isNaN(r))return this.val=Math.min(r,(t=this.val)!=null?t:r)},value:function(){return this.val},format:t,numInputs:n!=null?0:1}}}},max:function(t){return t==null&&(t=e.usFmt),function(e){var n;return n=e[0],function(e,r,i){return{val:null,push:function(e){var t,r;r=parseFloat(e[n]);if(!isNaN(r))return this.val=Math.max(r,(t=this.val)!=null?t:r)},value:function(){return this.val},format:t,numInputs:n!=null?0:1}}}},average:function(t){return t==null&&(t=e.usFmt),function(e){var n;return n=e[0],function(e,r,i){return{sum:0,len:0,push:function(e){if(!isNaN(parseFloat(e[n])))return this.sum+=parseFloat(e[n]),this.len++},value:function(){return this.sum/this.len},format:t,numInputs:n!=null?0:1}}}},sumOverSum:function(t){return t==null&&(t=e.usFmt),function(e){var n,r;return r=e[0],n=e[1],function(e,i,s){return{sumNum:0,sumDenom:0,push:function(e){isNaN(parseFloat(e[r]))||(this.sumNum+=parseFloat(e[r]));if(!isNaN(parseFloat(e[n])))return this.sumDenom+=parseFloat(e[n])},value:function(){return this.sumNum/this.sumDenom},format:t,numInputs:r!=null&&n!=null?0:2}}}},sumOverSumBound80:function(t,n){return t==null&&(t=!0),n==null&&(n=e.usFmt),function(e){var r,i;return i=e[0],r=e[1],function(e,s,o){return{sumNum:0,sumDenom:0,push:function(e){isNaN(parseFloat(e[i]))||(this.sumNum+=parseFloat(e[i]));if(!isNaN(parseFloat(e[r])))return this.sumDenom+=parseFloat(e[r])},value:function(){var e;return e=t?1:-1,(.821187207574908/this.sumDenom+this.sumNum/this.sumDenom+1.2815515655446004*e*Math.sqrt(.410593603787454/(this.sumDenom*this.sumDenom)+this.sumNum*(1-this.sumNum/this.sumDenom)/(this.sumDenom*this.sumDenom)))/(1+1.642374415149816/this.sumDenom)},format:n,numInputs:i!=null&&r!=null?0:2}}}},fractionOf:function(t,n,r){return n==null&&(n="total"),r==null&&(r=e.usFmtPct),function(){var e;return e=1<=arguments.length?slice.call(arguments,0):[],function(i,s,o){return{selector:{total:[[],[]],row:[s,[]],col:[[],o]}[n],inner:t.apply(null,e)(i,s,o),push:function(e){return this.inner.push(e)},format:r,value:function(){return this.inner.value()/i.getAggregator.apply(i,this.selector).inner.value()},numInputs:t.apply(null,e)().numInputs}}}}},new t}}),r("render/services/PivotDataFactory",[],function(){"use strict";return function(e){function t(){this.colAttrs,this.rowAttrs,this.valAttrs,this.sorters,this.tree,this.rowKeys,this.colKeys,this.rowTotals,this.colTotals,this.allTotal,this.sorted,this.aggregatorName}return t.prototype={constructor:t,init:function(t,n){var r=this;r.aggregatorName=n.aggregatorName,r.colAttrs=n.cols,r.rowAttrs=n.rows,r.valAttrs=n.vals,r.sorters=n.sorters,r.tree={},r.rowKeys=[],r.colKeys=[],r.rowTotals={},r.colTotals={},r.allTotal=n.aggregator(r,[],[]),r.sorted=!1,e.forEachRecord(t,n.derivedAttributes,function(e){return function(t){if(n.filter(t))return e.processRecord(t,n)}}(r))},arrSort:function(t){var n,r;return r=function(){var r,i,s;s=[];for(r=0,i=t.length;r<i;r++)n=t[r],s.push(e.getSort(this.sorters,n));return s}.call(this),function(e,t){var n,i,s;for(i in r){s=r[i],n=s(e[i],t[i]);if(n!==0)return n}return 0}},sortKeys:function(){if(!this.sorted)return this.sorted=!0,this.rowKeys.sort(this.arrSort(this.rowAttrs)),this.colKeys.sort(this.arrSort(this.colAttrs))},getColKeys:function(){return this.sortKeys(),this.colKeys},getRowKeys:function(){return this.sortKeys(),this.rowKeys},processRecord:function(e,t){var n,r,i,s,o,u,a,f,l,c,h,p,d;n=[],p=[],f=this.colAttrs;for(s=0,o=f.length;s<o;s++)d=f[s],n.push((l=e[d])!=null?l:"null");c=this.rowAttrs;for(a=0,u=c.length;a<u;a++)d=c[a],p.push((h=e[d])!=null?h:"null");i=p.join(String.fromCharCode(0)),r=n.join(String.fromCharCode(0)),this.allTotal.push(e),p.length!==0&&(this.rowTotals[i]||(this.rowKeys.push(p),this.rowTotals[i]=t.aggregator(this,p,[])),this.rowTotals[i].push(e)),n.length!==0&&(this.colTotals[r]||(this.colKeys.push(n),this.colTotals[r]=t.aggregator(this,[],n)),this.colTotals[r].push(e));if(n.length!==0&&p.length!==0)return this.tree[i]||(this.tree[i]={}),this.tree[i][r]||(this.tree[i][r]=t.aggregator(this,p,n)),this.tree[i][r].push(e)},getAggregator:function(e,t){var n,r,i;return i=e.join(String.fromCharCode(0)),r=t.join(String.fromCharCode(0)),e.length===0&&t.length===0?n=this.allTotal:e.length===0?n=this.colTotals[r]:t.length===0?n=this.rowTotals[i]:n=this.tree[i][r],n!=null?n:{value:function(){return null},format:function(){return""}}}},t}}),r("render/services/renderers",[],function(){"use strict";return function(){function e(){this.availableRenderers,this.availableRendererNames,this.availableRendererOptions,this.init()}return e.prototype={constructor:e,init:function(){var e=this;e.availableRenderers={},e.availableRendererNames=[],e.availableRendererOptions={}},addRenderers:function(e){var t=this;$.extend(t.availableRenderers,e),t.availableRendererNames=Object.keys(t.availableRenderers)},setRendererOptions:function(e,t){var n=this;n.availableRendererOptions[e]=t}},new e}}),r("render/services/RenderingEngine",[],function(){"use strict";return function(t,n,r,i,s,o,u,a){function f(){this.id,this.element,this.disabled,this.title,this.rendererName,this.aggregatorName,this.aggInputAttributeName,this.numInputsToProcess,this.axisValues,this.shownAttributes,this.availableAttributes,this.tblCols,this.cols,this.rows,this.attributesAvailableForRowsAndCols,this.attributeFilterExclusions,this.attributeFilterInclusions,this.tile}return f.prototype={constructor:f,init:function(e,t){var r=this;t===undefined||t===""?r.id=n.generateUUID():r.id=t,r.dataSourceConfigId=e,r.title="Untitiled",r.rendererName="Table",r.aggregatorName="Count",r.aggInputAttributeName=[],r.numInputsToProcess=[],r.axisValues={},r.shownAttributes=[],r.availableAttributes=[],r.tblCols=[],r.cols=[],r.rows=[],r.attributesAvailableForRowsAndCols=[],r.attributeFilterExclusions={},r.attributeFilterInclusions={}},setRendererName:function(e,t){var n=this;n.rendererName=e,n.draw(t)},setNumberOfAggregateInputs:function(){var n=this,r;try{r=t.availableAggregators[n.aggregatorName]([])().numInputs}catch(i){e=i,typeof console!="undefined"&&console!==null&&console.error(e.stack)}r===undefined?(n.numInputsToProcess=new Array,n.aggInputAttributeName=new Array):(n.numInputsToProcess=new Array(r),n.aggInputAttributeName.length!==r&&(n.aggInputAttributeName=new Array(r)))},setAggregatorName:function(e){var t=this;t.aggregatorName=e},isExcluded:function(e,t){var n=this;return n.attributeFilterExclusions[e]!==undefined?n.attributeFilterExclusions[e].indexOf(t)>=0?!1:!0:!0},addExclusionFilter:function(e,t){var n=this;if(n.attributeFilterExclusions[e]!==undefined){var r=this.attributeFilterExclusions[e].indexOf(t);r>=0?n.attributeFilterExclusions[e].splice(r,1):n.attributeFilterExclusions[e].push(t)}else n.attributeFilterExclusions[e]=[],n.attributeFilterExclusions[e].push(t);n.attributeFilterInclusions[e]=[],angular.forEach(n.axisValues[e],function(t,r){n.attributeFilterExclusions[e].indexOf(r)<0&&n.attributeFilterInclusions[e].push(r)})},addInclusionFilter:function(e,t){var n=this;n.attributeFilterInclusions[e]=[],n.attributeFilterExclusions[e]=[],n.addExclusionFilter(e,t);var r=n.attributeFilterInclusions[e];n.attributeFilterInclusions[e]=n.attributeFilterExclusions[e],n.attributeFilterExclusions[e]=r},draw:function(u){var f=this,l=s.defer();return a.$emit("RenderingEngine:draw:begin"),o(function(s){r.availableRendererOptions.renderingEngineId=f.id,r.availableRendererOptions.numRows=f.rows.length,r.availableRendererOptions.numCols=f.cols.length,angular.forEach(r.availableRendererOptions,function(e,t){switch(t){case"datatables":e.height=f.element.parent().parent().innerHeight()-24-40-31-31-22-(f.cols.length+1)*30+"px",e.width=f.element.parent().parent().innerWidth();break;case"gchart":e.height=f.element.parent().parent().innerHeight()-24-10,e.width=f.element.parent().parent().innerWidth();break;case"c3":e.size.height=f.element.parent().parent().innerHeight()-24-10,e.size.width=f.element.parent().parent().innerWidth();break;case"d3":e.height=function(){return f.element.parent().parent().innerHeight()},e.width=function(){return f.element.parent().parent().innerWidth()-16};break;default:}}),s!==undefined?s=n.convertToArray(s):s=[];if(s!==undefined&&s.length>0){f.availableAttributes=f.rows.concat(f.cols);var o={cols:f.cols,rows:f.rows,vals:f.aggInputAttributeName,hiddenAttributes:[],filter:function(e){var t,r;for(var i in f.attributeFilterExclusions){t=f.attributeFilterExclusions[i];if(r=""+e[i],n.indexOf.call(t,r)>=0)return!1}return!0},aggregator:t.availableAggregators[f.aggregatorName](f.aggInputAttributeName),aggregatorName:f.aggregatorName,sorters:function(){},derivedAttributes:{}};f.tblCols=[],f.tblCols=function(){var e,t;e=s[0],t=[];for(var r in e){if(!n.hasProp.call(e,r))continue;t.push(r)}return t}(),f.axisValues={};for(var u=0,c=f.tblCols.length;u<c;u++){var h=f.tblCols[u];f.axisValues[h]={}}n.forEachRecord(s,o.derivedAttributes,function(e){var t,r,i;r=[];for(var s in e){if(!n.hasProp.call(e,s))continue;i=e[s],i==null&&(i="null"),(t=f.axisValues[s])[i]==null&&(t[i]=0),r.push(f.axisValues[s][i]++)}return r}),f.shownAttributes=[],f.shownAttributes=function(){var e,t,r;r=[];for(var t=0,e=f.tblCols.length;t<e;t++){var i=f.tblCols[t];n.indexOf.call(o.hiddenAttributes,i)<0&&r.push(i)}return r}(),f.attributesAvailableForRowsAndCols.length+f.rows.length+f.cols.length!==f.shownAttributes.length&&(f.attributesAvailableForRowsAndCols=f.shownAttributes);var p=null,d=null;try{d=new i,d.init(s,o);try{p=r.availableRenderers[f.rendererName](d,r.availableRendererOptions)}catch(v){e=v,typeof console!="undefined"&&console!==null&&console.error(e.stack),p=$("<span>").html(o.localeStrings.renderError)}}catch(v){e=v,typeof console!="undefined"&&console!==null&&console.error(e.stack),p=$("<span>").html(o.localeStrings.computeError)}f.element.empty(),f.element.append(p.html),a.$emit("RenderingEngine:draw:complete"),p.postRenderFunction&&p.postRenderFunction(p.html,p.postRenderOpts)}l.resolve()},1500,!0,u),l.promise}},f}}),r("render/services/renderingEngineManager",[],function(){"use strict";return function(e,t,n,r){function i(){this.init()}return i.prototype={constructor:i,init:function(){var e=this;e.renderingEngines={},e.activeRenderingEngine=undefined},create:function(t,n){var r=this,i=new e;return i.init(t,n),r.add(i),r.activeRenderingEngine!==undefined&&(r.renderingEngines[r.activeRenderingEngine].active=!1),r.activeRenderingEngine=i.id,i},size:function(){return Object.keys(this.renderingEngines).length},add:function(e){var t=this;t.renderingEngines[e.id]=e},"delete":function(e){var t=this;delete t.renderingEngines[e]},setActiveRenderingEngine:function(e){var t=this;t.activeRenderingEngine=e,angular.forEach(t.renderingEngines,function(t){t.active=!1,t.id===e&&(t.active=!0)})},updateAllRenderingEngineTileSizeAndPosition:function(e){var t=this;angular.forEach(e,function(e){t.renderingEngines[e.id].updateTile($(e).attr("data-sizex"),$(e).attr("data-sizey"),$(e).attr("data-col"),$(e).attr("data-row"))})}},new i}}),r("render/services/dataUtils",[],function(){"use strict";return function(){function e(){}return e.prototype={constructor:e,hasProp:{}.hasOwnProperty,indexOf:[].indexOf||function(e){for(var t=0,n=this.length;t<n;t++)if(t in this&&this[t]===e)return t;return-1},generateUUID:function(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(e){var t=Math.random()*16|0,n=e=="x"?t:t&3|8;return n.toString(16)})},convertToArray:function(e){var t,n=this;return t=[],n.forEachRecord(e,{},function(e){return t.push(e)}),t},bind:function(e,t){return function(){return e.apply(t,arguments)}},forEachRecord:function(e,t,n){var r=this,i,s,o,u,a,f,l,c,h,p,d,v;$.isEmptyObject(t)?i=n:i=function(e){var r,i,s;for(r in t)s=t[r],e[r]=(i=s(e))!=null?i:e[r];return n(e)};if($.isFunction(e))return e(i);if($.isArray(e)){if($.isArray(e[0])){p=[];for(o in e){if(!r.hasProp.call(e,o))continue;s=e[o];if(!(o>0))continue;c={},h=e[0];for(u in h){if(!r.hasProp.call(h,u))continue;a=h[u],c[a]=s[u]}p.push(i(c))}return p}d=[];for(f=0,l=e.length;f<l;f++)c=e[f],d.push(i(c));return d}if(e instanceof jQuery)return v=[],$("thead > tr > th",e).each(function(e){return v.push($(this).text())}),$("tbody > tr",e).each(function(e){return c={},$("td",this).each(function(e){return c[v[e]]=$(this).html()}),i(c)});throw new Error("unknown input format")},addSeparators:function(e,t,n){var r,i,s,o;e+="",i=e.split("."),s=i[0],o=i.length>1?n+i[1]:"",r=/(\d+)(\d{3})/;while(r.test(s))s=s.replace(r,"$1"+t+"$2");return s+o},numberFormat:function(e){var t=this,n;return n={digitsAfterDecimal:2,scaler:1,thousandsSep:",",decimalSep:".",prefix:"",suffix:"",showZero:!1},e=$.extend(n,e),function(n){var r;return isNaN(n)||!isFinite(n)?"":n===0&&!e.showZero?"":(r=t.addSeparators((e.scaler*n).toFixed(e.digitsAfterDecimal),e.thousandsSep,e.decimalSep),""+e.prefix+r+e.suffix)}},sortAs:function(e){var t=this,n,r,i;r={};for(n in e)i=e[n],r[i]=n;return function(e,n){return r[e]!=null&&r[n]!=null?r[e]-r[n]:r[e]!=null?-1:r[n]!=null?1:t.naturalSort(e,n)}},naturalSort:function(e,t){var n,r,i,s,o,u,a;u=/(\d+)|(\D+)/g,o=/\d/,a=/^0/;if(typeof e=="number"||typeof t=="number")return isNaN(e)?1:isNaN(t)?-1:e-t;n=String(e).toLowerCase(),i=String(t).toLowerCase();if(n===i)return 0;if(!o.test(n)||!o.test(i))return n>i?1:-1;n=n.match(u),i=i.match(u);while(n.length&&i.length){r=n.shift(),s=i.shift();if(r!==s)return o.test(r)&&o.test(s)?r.replace(a,".0")-s.replace(a,".0"):r>s?1:-1}return n.length-i.length},getSort:function(e,t){var n,r=this;return n=e(t),$.isFunction(n)?n:r.naturalSort},usFmt:function(){var e=this;return e.numberFormat()},usFmtInt:function(){var e=this;return e.numberFormat({digitsAfterDecimal:0})},usFmtPct:function(){var e=this;return e.numberFormat({digitsAfterDecimal:1,scaler:100,suffix:"%"})}},new e}}),r("render/services/DataSourceConfiguration",[],function(){"use strict";return function(e){function t(e){this.id,this.flattenDataFunctionString,this.httpConfig,this.name=e}return t.prototype={constructor:t,init:function(){var t=this;t.id=e.generateUUID(),t.httpConfig=angular.toJson({method:"GET",url:"http://nicolas.kruchten.com/pivottable/examples/montreal_2014.csv"}),t.flattenDataFunctionString="return data;"}},t}}),r("render/services/dataSourceConfigurationManager",[],function(){"use strict";return function(e){function t(){this.init()}return t.prototype={constructor:t,init:function(){var e=this;e.dataSourceConfigurations={},e.activeDataSourceConfiguration=undefined},create:function(t){var n=this,r=new e(t);return r.init(),n.add(r),n.activeDataSourceConfiguration=r.id,r.id},add:function(e){var t=this;t.dataSourceConfigurations[e.id]=e},"delete":function(e){var t=this;delete t.dataSourceConfigurations[e]},dataSourceConfigurationsDefined:function(){var e=this;return Object.keys(e.dataSourceConfigurations).length!==0}},new t}}),r("render/services/DataSource",[],function(){"use strict";return function(e,t,n,r){function i(e,t){this.dataSourceConfigId=e,this.data,this.name=t,this.formattedData}return i.prototype={constructor:i,refresh:function(e){var n=[this.acquire(this)];t.all(n).then(function(){this.format(this)})},acquire:function(){n.$emit("dataSource:acquire:begin");var i=this,s=t.defer();return r(angular.fromJson(e.dataSourceConfigurations[this.dataSourceConfigId].httpConfig)).then(function(t){typeof t.data!="string"?i.data=JSON.stringify(t.data):i.data=t.data,s.resolve(),n.$emit("dataSource:acquire:success")},function(t){s.reject(),n.$emit("dataSource:acquire:error")}),s.promise},format:function(){var t=new Function("data",e.dataSourceConfigurations[this.dataSourceConfigId].flattenDataFunctionString);try{this.formattedData=angular.toJson(t(angular.fromJson(this.data)))}catch(n){try{this.formattedData=t(this.data)}catch(n){}}try{this.formattedData=angular.fromJson(this.formattedData)}catch(n){try{this.formattedData=$.csv.toArrays(this.formattedData)}catch(n){}}}},i}}),r("render/services/dataSourceManager",[],function(){"use strict";return function(e){function t(){this.init()}return t.prototype={constructor:t,init:function(){var e=this;e.dataSources={}},create:function(t,n){var r=this;if(t!==undefined){var i=new e(t,n);return r.add(i),i}},add:function(e){var t=this;t.dataSources[e.dataSourceConfigId]=e},"delete":function(e){var t=this;delete t.dataSources[e]},refresh:function(){angular.forEach(this.dataSources,function(e){e.refresh()})}},new t}}),r("ng-rndr",["render/directives/renderingEngineDirective","render/services/aggregators","render/services/aggregatorTemplates","render/services/PivotDataFactory","render/services/renderers","render/services/RenderingEngine","render/services/renderingEngineManager","render/services/dataUtils","render/services/DataSourceConfiguration","render/services/dataSourceConfigurationManager","render/services/DataSource","render/services/dataSourceManager"],function(e,t,n,r,i,s,o,u,a,f,l,c){var h=angular.module("ngRndr",[]);e.$inject=[],a.$inject=["dataUtils"],f.$inject=["DataSourceConfiguration"],l.$inject=["dataSourceConfigurationManager","$q","$rootScope","$http"],c.$inject=["DataSource"],t.$inject=["aggregatorTemplates","dataUtils"],n.$inject=["dataUtils"],r.$inject=["dataUtils"],i.$inject=[],s.$inject=["aggregators","dataUtils","renderers","PivotDataFactory","$q","$timeout","$window","$rootScope"],o.$inject=["RenderingEngine","dataSourceConfigurationManager","dataSourceManager","$http"],u.$inject=[],h.directive("renderingEngineDirective",e),h.service("DataSourceConfiguration",a),h.service("dataSourceConfigurationManager",f),h.service("DataSource",l),h.service("dataSourceManager",c),h.service("aggregators",t),h.service("aggregatorTemplates",n),h.service("PivotDataFactory",r),h.service("renderers",i),h.service("RenderingEngine",s),h.service("renderingEngineManager",o),h.service("dataUtils",u)}),n("ng-rndr")});
+var requirejs, require, define;
+(function (undef) {
+    var main, req, makeMap, handlers,
+        defined = {},
+        waiting = {},
+        config = {},
+        defining = {},
+        hasOwn = Object.prototype.hasOwnProperty,
+        aps = [].slice,
+        jsSuffixRegExp = /\.js$/;
+
+    function hasProp(obj, prop) {
+        return hasOwn.call(obj, prop);
+    }
+
+    /**
+     * Given a relative module name, like ./something, normalize it to
+     * a real name that can be mapped to a path.
+     * @param {String} name the relative name
+     * @param {String} baseName a real name that the name arg is relative
+     * to.
+     * @returns {String} normalized name
+     */
+    function normalize(name, baseName) {
+        var nameParts, nameSegment, mapValue, foundMap, lastIndex,
+            foundI, foundStarMap, starI, i, j, part, normalizedBaseParts,
+            baseParts = baseName && baseName.split("/"),
+            map = config.map,
+            starMap = (map && map['*']) || {};
+
+        //Adjust any relative paths.
+        if (name) {
+            name = name.split('/');
+            lastIndex = name.length - 1;
+
+            // If wanting node ID compatibility, strip .js from end
+            // of IDs. Have to do this here, and not in nameToUrl
+            // because node allows either .js or non .js to map
+            // to same file.
+            if (config.nodeIdCompat && jsSuffixRegExp.test(name[lastIndex])) {
+                name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
+            }
+
+            // Starts with a '.' so need the baseName
+            if (name[0].charAt(0) === '.' && baseParts) {
+                //Convert baseName to array, and lop off the last part,
+                //so that . matches that 'directory' and not name of the baseName's
+                //module. For instance, baseName of 'one/two/three', maps to
+                //'one/two/three.js', but we want the directory, 'one/two' for
+                //this normalization.
+                normalizedBaseParts = baseParts.slice(0, baseParts.length - 1);
+                name = normalizedBaseParts.concat(name);
+            }
+
+            //start trimDots
+            for (i = 0; i < name.length; i++) {
+                part = name[i];
+                if (part === '.') {
+                    name.splice(i, 1);
+                    i -= 1;
+                } else if (part === '..') {
+                    // If at the start, or previous value is still ..,
+                    // keep them so that when converted to a path it may
+                    // still work when converted to a path, even though
+                    // as an ID it is less than ideal. In larger point
+                    // releases, may be better to just kick out an error.
+                    if (i === 0 || (i === 1 && name[2] === '..') || name[i - 1] === '..') {
+                        continue;
+                    } else if (i > 0) {
+                        name.splice(i - 1, 2);
+                        i -= 2;
+                    }
+                }
+            }
+            //end trimDots
+
+            name = name.join('/');
+        }
+
+        //Apply map config if available.
+        if ((baseParts || starMap) && map) {
+            nameParts = name.split('/');
+
+            for (i = nameParts.length; i > 0; i -= 1) {
+                nameSegment = nameParts.slice(0, i).join("/");
+
+                if (baseParts) {
+                    //Find the longest baseName segment match in the config.
+                    //So, do joins on the biggest to smallest lengths of baseParts.
+                    for (j = baseParts.length; j > 0; j -= 1) {
+                        mapValue = map[baseParts.slice(0, j).join('/')];
+
+                        //baseName segment has  config, find if it has one for
+                        //this name.
+                        if (mapValue) {
+                            mapValue = mapValue[nameSegment];
+                            if (mapValue) {
+                                //Match, update name to the new value.
+                                foundMap = mapValue;
+                                foundI = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (foundMap) {
+                    break;
+                }
+
+                //Check for a star map match, but just hold on to it,
+                //if there is a shorter segment match later in a matching
+                //config, then favor over this star map.
+                if (!foundStarMap && starMap && starMap[nameSegment]) {
+                    foundStarMap = starMap[nameSegment];
+                    starI = i;
+                }
+            }
+
+            if (!foundMap && foundStarMap) {
+                foundMap = foundStarMap;
+                foundI = starI;
+            }
+
+            if (foundMap) {
+                nameParts.splice(0, foundI, foundMap);
+                name = nameParts.join('/');
+            }
+        }
+
+        return name;
+    }
+
+    function makeRequire(relName, forceSync) {
+        return function () {
+            //A version of a require function that passes a moduleName
+            //value for items that may need to
+            //look up paths relative to the moduleName
+            var args = aps.call(arguments, 0);
+
+            //If first arg is not require('string'), and there is only
+            //one arg, it is the array form without a callback. Insert
+            //a null so that the following concat is correct.
+            if (typeof args[0] !== 'string' && args.length === 1) {
+                args.push(null);
+            }
+            return req.apply(undef, args.concat([relName, forceSync]));
+        };
+    }
+
+    function makeNormalize(relName) {
+        return function (name) {
+            return normalize(name, relName);
+        };
+    }
+
+    function makeLoad(depName) {
+        return function (value) {
+            defined[depName] = value;
+        };
+    }
+
+    function callDep(name) {
+        if (hasProp(waiting, name)) {
+            var args = waiting[name];
+            delete waiting[name];
+            defining[name] = true;
+            main.apply(undef, args);
+        }
+
+        if (!hasProp(defined, name) && !hasProp(defining, name)) {
+            throw new Error('No ' + name);
+        }
+        return defined[name];
+    }
+
+    //Turns a plugin!resource to [plugin, resource]
+    //with the plugin being undefined if the name
+    //did not have a plugin prefix.
+    function splitPrefix(name) {
+        var prefix,
+            index = name ? name.indexOf('!') : -1;
+        if (index > -1) {
+            prefix = name.substring(0, index);
+            name = name.substring(index + 1, name.length);
+        }
+        return [prefix, name];
+    }
+
+    //Creates a parts array for a relName where first part is plugin ID,
+    //second part is resource ID. Assumes relName has already been normalized.
+    function makeRelParts(relName) {
+        return relName ? splitPrefix(relName) : [];
+    }
+
+    /**
+     * Makes a name map, normalizing the name, and using a plugin
+     * for normalization if necessary. Grabs a ref to plugin
+     * too, as an optimization.
+     */
+    makeMap = function (name, relParts) {
+        var plugin,
+            parts = splitPrefix(name),
+            prefix = parts[0],
+            relResourceName = relParts[1];
+
+        name = parts[1];
+
+        if (prefix) {
+            prefix = normalize(prefix, relResourceName);
+            plugin = callDep(prefix);
+        }
+
+        //Normalize according
+        if (prefix) {
+            if (plugin && plugin.normalize) {
+                name = plugin.normalize(name, makeNormalize(relResourceName));
+            } else {
+                name = normalize(name, relResourceName);
+            }
+        } else {
+            name = normalize(name, relResourceName);
+            parts = splitPrefix(name);
+            prefix = parts[0];
+            name = parts[1];
+            if (prefix) {
+                plugin = callDep(prefix);
+            }
+        }
+
+        //Using ridiculous property names for space reasons
+        return {
+            f: prefix ? prefix + '!' + name : name, //fullName
+            n: name,
+            pr: prefix,
+            p: plugin
+        };
+    };
+
+    function makeConfig(name) {
+        return function () {
+            return (config && config.config && config.config[name]) || {};
+        };
+    }
+
+    handlers = {
+        require: function (name) {
+            return makeRequire(name);
+        },
+        exports: function (name) {
+            var e = defined[name];
+            if (typeof e !== 'undefined') {
+                return e;
+            } else {
+                return (defined[name] = {});
+            }
+        },
+        module: function (name) {
+            return {
+                id: name,
+                uri: '',
+                exports: defined[name],
+                config: makeConfig(name)
+            };
+        }
+    };
+
+    main = function (name, deps, callback, relName) {
+        var cjsModule, depName, ret, map, i, relParts,
+            args = [],
+            callbackType = typeof callback,
+            usingExports;
+
+        //Use name if no relName
+        relName = relName || name;
+        relParts = makeRelParts(relName);
+
+        //Call the callback to define the module, if necessary.
+        if (callbackType === 'undefined' || callbackType === 'function') {
+            //Pull out the defined dependencies and pass the ordered
+            //values to the callback.
+            //Default to [require, exports, module] if no deps
+            deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
+            for (i = 0; i < deps.length; i += 1) {
+                map = makeMap(deps[i], relParts);
+                depName = map.f;
+
+                //Fast path CommonJS standard dependencies.
+                if (depName === "require") {
+                    args[i] = handlers.require(name);
+                } else if (depName === "exports") {
+                    //CommonJS module spec 1.1
+                    args[i] = handlers.exports(name);
+                    usingExports = true;
+                } else if (depName === "module") {
+                    //CommonJS module spec 1.1
+                    cjsModule = args[i] = handlers.module(name);
+                } else if (hasProp(defined, depName) ||
+                           hasProp(waiting, depName) ||
+                           hasProp(defining, depName)) {
+                    args[i] = callDep(depName);
+                } else if (map.p) {
+                    map.p.load(map.n, makeRequire(relName, true), makeLoad(depName), {});
+                    args[i] = defined[depName];
+                } else {
+                    throw new Error(name + ' missing ' + depName);
+                }
+            }
+
+            ret = callback ? callback.apply(defined[name], args) : undefined;
+
+            if (name) {
+                //If setting exports via "module" is in play,
+                //favor that over return value and exports. After that,
+                //favor a non-undefined return value over exports use.
+                if (cjsModule && cjsModule.exports !== undef &&
+                        cjsModule.exports !== defined[name]) {
+                    defined[name] = cjsModule.exports;
+                } else if (ret !== undef || !usingExports) {
+                    //Use the return value from the function.
+                    defined[name] = ret;
+                }
+            }
+        } else if (name) {
+            //May just be an object definition for the module. Only
+            //worry about defining if have a module name.
+            defined[name] = callback;
+        }
+    };
+
+    requirejs = require = req = function (deps, callback, relName, forceSync, alt) {
+        if (typeof deps === "string") {
+            if (handlers[deps]) {
+                //callback in this case is really relName
+                return handlers[deps](callback);
+            }
+            //Just return the module wanted. In this scenario, the
+            //deps arg is the module name, and second arg (if passed)
+            //is just the relName.
+            //Normalize module name, if it contains . or ..
+            return callDep(makeMap(deps, makeRelParts(callback)).f);
+        } else if (!deps.splice) {
+            //deps is a config object, not an array.
+            config = deps;
+            if (config.deps) {
+                req(config.deps, config.callback);
+            }
+            if (!callback) {
+                return;
+            }
+
+            if (callback.splice) {
+                //callback is an array, which means it is a dependency list.
+                //Adjust args if there are dependencies
+                deps = callback;
+                callback = relName;
+                relName = null;
+            } else {
+                deps = undef;
+            }
+        }
+
+        //Support require(['a'])
+        callback = callback || function () {};
+
+        //If relName is a function, it is an errback handler,
+        //so remove it.
+        if (typeof relName === 'function') {
+            relName = forceSync;
+            forceSync = alt;
+        }
+
+        //Simulate async callback;
+        if (forceSync) {
+            main(undef, deps, callback, relName);
+        } else {
+            //Using a non-zero value because of concern for what old browsers
+            //do, and latest browsers "upgrade" to 4 if lower value is used:
+            //http://www.whatwg.org/specs/web-apps/current-work/multipage/timers.html#dom-windowtimers-settimeout:
+            //If want a value immediately, use require('id') instead -- something
+            //that works in almond on the global level, but not guaranteed and
+            //unlikely to work in other AMD implementations.
+            setTimeout(function () {
+                main(undef, deps, callback, relName);
+            }, 4);
+        }
+
+        return req;
+    };
+
+    /**
+     * Just drops the config on the floor, but returns req in case
+     * the config return value is used.
+     */
+    req.config = function (cfg) {
+        return req(cfg);
+    };
+
+    /**
+     * Expose module registry for debugging and tooling
+     */
+    requirejs._defined = defined;
+
+    define = function (name, deps, callback) {
+        if (typeof name !== 'string') {
+            throw new Error('See almond README: incorrect module build, no module name');
+        }
+
+        //This module may not have dependencies
+        if (!deps.splice) {
+            //deps is not an array, so probably means
+            //an object literal or factory function for
+            //the value. Adjust args.
+            callback = deps;
+            deps = [];
+        }
+
+        if (!hasProp(defined, name) && !hasProp(waiting, name)) {
+            waiting[name] = [name, deps, callback];
+        }
+    };
+
+    define.amd = {
+        jQuery: true
+    };
+}());
+
+define("../node_modules/almond/almond", function(){});
+
+define('render/directives/renderingEngineDirective',[], function() {
+    'use strict';
+
+    return function() {
+        return {
+            restrict: 'E',
+            scope: {
+                'engine': '=',
+                'input': '='
+            },
+            link: {
+                pre: function(scope, element, attr) {
+                    scope.engine.element = $(element);
+                    scope.engine.draw(scope.input);
+                }
+            }
+        };
+    }
+});
+
+define('render/services/aggregators',[], function() {
+    'use strict';
+
+    return function(aggregatorTemplates, dataUtils) {
+        /**
+         * {@link Aggregators} constructor.
+         */
+        function Aggregators() {
+            this.add('Count', aggregatorTemplates.count(dataUtils.usFmtInt()));
+            this.add('Count Unique Values', aggregatorTemplates.countUnique(dataUtils.usFmtInt()));
+            this.add('List Unique Values', aggregatorTemplates.listUnique(', '));
+            this.add('Sum', aggregatorTemplates.sum(dataUtils.usFmt()));
+            this.add('Integer Sum', aggregatorTemplates.sum(dataUtils.usFmtInt()));
+            this.add('Average', aggregatorTemplates.average(dataUtils.usFmt()));
+            this.add('Minimum', aggregatorTemplates.min(dataUtils.usFmt()));
+            this.add('Maximum', aggregatorTemplates.max(dataUtils.usFmt()));
+            this.add('Sum over Sum', aggregatorTemplates.sumOverSum(dataUtils.usFmt()));
+            this.add('80% Upper Bound', aggregatorTemplates.sumOverSumBound80(true, dataUtils.usFmt()));
+            this.add('80% Lower Bound', aggregatorTemplates.sumOverSumBound80(false, dataUtils.usFmt()));
+            this.add('Sum as Fraction of Total', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(), 'total', dataUtils.usFmtPct()));
+            this.add('Sum as Fraction of Rows', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(), 'row', dataUtils.usFmtPct()));
+            this.add('Sum as Fraction of Columns', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(), 'col', dataUtils.usFmtPct()));
+            this.add('Count as Fraction of Total', aggregatorTemplates.fractionOf(aggregatorTemplates.count(), 'total', dataUtils.usFmtPct()));
+            this.add('Count as Fraction of Rows', aggregatorTemplates.fractionOf(aggregatorTemplates.count(), 'row', dataUtils.usFmtPct()));
+            this.add('Count as Fraction of Columns', aggregatorTemplates.fractionOf(aggregatorTemplates.count(), 'col', dataUtils.usFmtPct()));
+        }
+        Aggregators.prototype = {
+            /**
+             * @typedef Aggregators
+             * @type {object}
+             */
+            constructor: Aggregators,
+            /**
+             * Adds an aggregator function by `name` for fast lookup.
+             * 
+             * @param {string} name       The lookup name of the aggregate function.
+             * @param {function} aggregator The aggregate function.
+             */
+            add: function(name, aggregator) {
+                this[name] = {
+                    aggregate: aggregator
+                };
+            },
+            /**
+             * Lists the available aggregator plugins.
+             * 
+             * @return {Array.<string>} The lookup names.
+             */
+            list: function() {
+                return Object.keys(this);
+            }
+        };
+
+        return new Aggregators();
+    }
+});
+
+define('render/services/aggregatorTemplates',[], function() {
+    'use strict';
+
+    return function(dataUtils) {
+        /**
+         * {@link AggregatorTemplates} constructor.
+         */
+        function AggregatorTemplates() {}
+        AggregatorTemplates.prototype = {
+            /**
+             * @typedef AggregatorTemplates
+             * @type {object}
+             */
+            constructor: AggregatorTemplates,
+            count: function(formatter) {
+                if (formatter == null) {
+                    formatter = dataUtils.usFmtInt;
+                }
+                return function() {
+                    return function(data, rowKey, colKey) {
+                        return {
+                            count: 0,
+                            push: function() {
+                                return this.count++;
+                            },
+                            value: function() {
+                                return this.count;
+                            },
+                            format: formatter
+                        };
+                    };
+                };
+            },
+            countUnique: function(formatter) {
+                if (formatter == null) {
+                    formatter = dataUtils.usFmtInt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            uniq: [],
+                            push: function(record) {
+                                var ref;
+                                if (ref = record[attr], this.uniq.indexOf(ref) < 0) {
+                                    return this.uniq.push(record[attr]);
+                                }
+                            },
+                            value: function() {
+                                return this.uniq.length;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            listUnique: function(sep) {
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            uniq: [],
+                            push: function(record) {
+                                var ref;
+                                if (ref = record[attr], this.uniq.indexOf(ref) < 0) {
+                                    return this.uniq.push(record[attr]);
+                                }
+                            },
+                            value: function() {
+                                return this.uniq.join(sep);
+                            },
+                            format: function(x) {
+                                return x;
+                            },
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            sum: function(formatter) {
+                if (formatter == null) {
+                    formatter = dataUtils.usFmt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            sum: 0,
+                            push: function(record) {
+                                if (!isNaN(parseFloat(record[attr]))) {
+                                    return this.sum += parseFloat(record[attr]);
+                                }
+                            },
+                            value: function() {
+                                return this.sum;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            min: function(formatter) {
+                if (formatter == null) {
+                    formatter = dataUtils.usFmt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            val: null,
+                            push: function(record) {
+                                var ref, x;
+                                x = parseFloat(record[attr]);
+                                if (!isNaN(x)) {
+                                    return this.val = Math.min(x, (ref = this.val) != null ? ref : x);
+                                }
+                            },
+                            value: function() {
+                                return this.val;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            max: function(formatter) {
+                if (formatter == null) {
+                    formatter = dataUtils.usFmt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            val: null,
+                            push: function(record) {
+                                var ref, x;
+                                x = parseFloat(record[attr]);
+                                if (!isNaN(x)) {
+                                    return this.val = Math.max(x, (ref = this.val) != null ? ref : x);
+                                }
+                            },
+                            value: function() {
+                                return this.val;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            average: function(formatter) {
+                if (formatter == null) {
+                    formatter = dataUtils.usFmt;
+                }
+                return function(arg) {
+                    var attr;
+                    attr = arg[0];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            sum: 0,
+                            len: 0,
+                            push: function(record) {
+                                if (!isNaN(parseFloat(record[attr]))) {
+                                    this.sum += parseFloat(record[attr]);
+                                    return this.len++;
+                                }
+                            },
+                            value: function() {
+                                return this.sum / this.len;
+                            },
+                            format: formatter,
+                            numInputs: attr != null ? 0 : 1
+                        };
+                    };
+                };
+            },
+            sumOverSum: function(formatter) {
+                if (formatter == null) {
+                    formatter = dataUtils.usFmt;
+                }
+                return function(arg) {
+                    var denom, num;
+                    num = arg[0], denom = arg[1];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            sumNum: 0,
+                            sumDenom: 0,
+                            push: function(record) {
+                                if (!isNaN(parseFloat(record[num]))) {
+                                    this.sumNum += parseFloat(record[num]);
+                                }
+                                if (!isNaN(parseFloat(record[denom]))) {
+                                    return this.sumDenom += parseFloat(record[denom]);
+                                }
+                            },
+                            value: function() {
+                                return this.sumNum / this.sumDenom;
+                            },
+                            format: formatter,
+                            numInputs: (num != null) && (denom != null) ? 0 : 2
+                        };
+                    };
+                };
+            },
+            sumOverSumBound80: function(upper, formatter) {
+                if (upper == null) {
+                    upper = true;
+                }
+                if (formatter == null) {
+                    formatter = dataUtils.usFmt;
+                }
+                return function(arg) {
+                    var denom, num;
+                    num = arg[0], denom = arg[1];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            sumNum: 0,
+                            sumDenom: 0,
+                            push: function(record) {
+                                if (!isNaN(parseFloat(record[num]))) {
+                                    this.sumNum += parseFloat(record[num]);
+                                }
+                                if (!isNaN(parseFloat(record[denom]))) {
+                                    return this.sumDenom += parseFloat(record[denom]);
+                                }
+                            },
+                            value: function() {
+                                var sign;
+                                sign = upper ? 1 : -1;
+                                return (0.821187207574908 / this.sumDenom + this.sumNum / this.sumDenom + 1.2815515655446004 * sign * Math.sqrt(0.410593603787454 / (this.sumDenom * this.sumDenom) + (this.sumNum * (1 - this.sumNum / this.sumDenom)) / (this.sumDenom * this.sumDenom))) / (1 + 1.642374415149816 / this.sumDenom);
+                            },
+                            format: formatter,
+                            numInputs: (num != null) && (denom != null) ? 0 : 2
+                        };
+                    };
+                };
+            },
+            fractionOf: function(wrapped, type, formatter) {
+                if (type == null) {
+                    type = 'total';
+                }
+                if (formatter == null) {
+                    formatter = dataUtils.usFmtPct;
+                }
+                return function() {
+                    var x;
+                    x = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+                    return function(data, rowKey, colKey) {
+                        return {
+                            selector: {
+                                total: [
+                                    [],
+                                    []
+                                ],
+                                row: [rowKey, []],
+                                col: [
+                                    [], colKey
+                                ]
+                            }[type],
+                            inner: wrapped.apply(null, x)(data, rowKey, colKey),
+                            push: function(record) {
+                                return this.inner.push(record);
+                            },
+                            format: formatter,
+                            value: function() {
+                                return this.inner.value() / data.getAggregator.apply(data, this.selector).inner.value();
+                            },
+                            numInputs: wrapped.apply(null, x)().numInputs
+                        };
+                    };
+                };
+            }
+        };
+
+        return new AggregatorTemplates();
+    }
+});
+
+define('render/services/dataViews',[],
+    function() {
+        'use strict';
+
+        return function() {
+            /**
+             * {@link DataViews} constructor.
+             */
+            function DataViews() {}
+            DataViews.prototype = {
+                /**
+                 * @typedef DataViews
+                 * @type {object}
+                 */
+                constructor: DataViews,
+                /**
+                 * Adds a named `DataView` factory to the `DataViews` singleton with the defined `meta`.
+                 * 
+                 * @param {string} name     The lookup name of the `DataView`.
+                 * @param {DataView} DataView Need to figure out how to document the return type of a {@link DataView}
+                 * @param {function} meta     A function that returns the initial metadata model for the `DataView`. //TODO: figure out how to document this
+                 */
+                add: function(name, DataView, meta) {
+                    this[name] = {
+                        view: DataView,
+                        meta: meta
+                    };
+                },
+                /**
+                 * Lists the available data view plugins.
+                 * 
+                 * @return {Array.<string>} The lookup names.
+                 */
+                list: function() {
+                    return Object.keys(this);
+                }
+            };
+
+            return new DataViews();
+        }
+    });
+
+define('render/services/renderers',[],
+    function() {
+        'use strict';
+
+        return function() {
+            /**
+             * Renderers constructor
+             * @type {Renderers}
+             */
+            function Renderers() {}
+            Renderers.prototype = {
+                /**
+                 * @typedef Renderers
+                 * @type {object}
+                 * @property {string} id - The UUID for this data source configuration.
+                 * @property {string} flattenDataFunctionString - The code .
+                 * @property {object} httpConfig - Angular http config: https://docs.angularjs.org/api/ng/service/$http#usage.
+                 * @property {string} name - The human readable name for this data source configuration.
+                 */
+                constructor: Renderers,
+                /**
+                 * Adds a {@link Renderer} function by `name` for fast lookup.
+                 * 
+                 * @param {string} name     The lookup name of the renderer.
+                 * @param {Renderer} renderer Need to figure out how to document the return type of a {@link Renderer}
+                 * @param {RendererOpts} opts     Need to figure out how to document the options for the `renderer`.
+                 */
+                add: function(name, renderer, opts) {
+                    this[name] = {
+                        render: renderer,
+                        opts: opts
+                    };
+                },
+                /**
+                 * Lists the available renderer plugins.
+                 * 
+                 * @return {Array.<string>} The lookup names.
+                 */
+                list: function() {
+                    return Object.keys(this);
+                }
+            };
+
+            return new Renderers();
+        }
+    });
+
+define('render/services/RenderingEngine',[], function() {
+    'use strict';
+
+    return function(aggregators, dataUtils, renderers, dataViews, $q, $timeout, $window, $rootScope) {
+        /**
+         * {@link RenderingEngine} constructor.
+         * 
+         * @param {string} dataSourceConfigId The UUID of the data source.
+         * @param {string} [renderingEngineId]  The UUID of this `renderingEngine`.
+         * @param {string} [title]              The title of this  `renderingEngine`.
+         * @param {string} [rendererName]       The name of the renderer plugin.
+         * @param {string} [aggregatorName]     Then name of the aggregator plugin.
+         */
+        function RenderingEngine(dataSourceConfigId, renderingEngineId, title, dataViewName, rendererName) {
+            this.dataSourceConfigId = dataSourceConfigId;
+
+            if (renderingEngineId === undefined || renderingEngineId === '') {
+                this.id = dataUtils.generateUUID();
+            } else {
+                this.id = renderingEngineId;
+            }
+
+            if (title === undefined || title === '') {
+                this.title = "Untitiled";
+            } else {
+                this.title = title;
+            }
+
+            if (rendererName === undefined || rendererName === '') {
+                this.rendererName = "DT - Table";
+            } else {
+                this.rendererName = rendererName;
+            }
+
+            this.dataView = {
+                meta: dataViews[renderers[this.rendererName].opts.dataViewName].meta()
+            };
+        }
+        RenderingEngine.prototype = {
+            /**
+             * @typedef RenderingEngine
+             * @type {object}
+             * @property {string} dataSourceConfigId - The UUID of the data source.
+             * @property {string} id - The UUID of this rendering engine.
+             * @property {string} title - The title of this rendering engine.
+             * @property {string} rendererName - The name of the renderer plugin.
+             * @property {string} aggregatorName - The name of the aggregator plugin.
+             * @property {object} aggregator - The aggregator of this rendering engine.
+             * @property {string} aggregator.name - The name of the aggregator for this rendering engine.
+             * @property {function} aggregator.aggregate - The name of the aggregator for this rendering engine.
+             * @property {Array} aggregator.numInputsToProcess - The number aggregator for this rendering engine.
+             * @property {Array} aggregator.aggInputAttributeName - The name of the aggregator for this rendering engine.
+             */
+            constructor: RenderingEngine,
+            /**
+             * Intialize the 'renderingEngine''s `aggregator` object.
+             */
+            initializeAggregator: function() {
+                if (this.aggregator === undefined) {
+                    this.aggregator = {
+                        name: "Count",
+                        aggregate: function() {},
+                        numInputsToProcess: [],
+                        aggInputAttributeName: []
+                    }
+                }
+
+                var numInputs = aggregators[this.aggregator.name].aggregate([])([]).numInputs;
+                if (numInputs === undefined) {
+                    this.aggregator.numInputsToProcess = new Array();
+                    this.aggregator.aggInputAttributeName = new Array();
+                } else {
+                    this.aggregator.numInputsToProcess = new Array(numInputs);
+                    if (this.aggregator.aggInputAttributeName.length !== numInputs) {
+                        this.aggregator.aggInputAttributeName = new Array(numInputs);
+                    }
+                }
+
+                this.aggregator.aggregate = aggregators[this.aggregator.name].aggregate([this.aggregator.aggInputAttributeName]);
+            },
+            /**
+             * Creates configured `DataView` and invokes the configured `renderer` to build the DOM and
+             * attach it to the view.
+             *  
+             * @param  {object} data The `data` can be in any format that the configured `DataView` can understand.
+             * @param  {string} rendererName The name of the renderer to use.
+             * 
+             * @return {Promise}      A promise that resolves once the view is attached to the DOM. 
+             */
+            draw: function(data, rendererName) {
+                var self = this;
+
+                if (rendererName !== undefined && rendererName !== '') {
+                    self.rendererName = rendererName;
+                }
+
+                var deferred = $q.defer();
+                $rootScope.$emit('RenderingEngine:draw:begin');
+                $timeout(function(data) {
+                    var result;
+                    try {
+                        self.initializeAggregator();
+                        var opts = {
+                            id: self.id,
+                            title: self.title,
+                            aggregator: self.aggregator,
+                            dataUtils: dataUtils,
+                            meta: self.dataView.meta
+                        };
+                        self.dataView = new dataViews[renderers[self.rendererName].opts.dataViewName].view(data, opts);
+                        try {
+                            renderers[self.rendererName].opts.height = self.element.parent().parent().innerHeight();
+                            renderers[self.rendererName].opts.width = self.element.parent().parent().innerWidth();
+                            result = renderers[self.rendererName].render(self.dataView, renderers[self.rendererName].opts);
+                        } catch (_error) {
+                            e = _error;
+                            if (typeof console !== "undefined" && console !== null) {
+                                console.error(e.stack);
+                            }
+                            result = $("<span>").html(opts.localeStrings.renderError);
+                        }
+                    } catch (_error) {
+                        e = _error;
+                        if (typeof console !== "undefined" && console !== null) {
+                            console.error(e.stack);
+                        }
+                        result = $("<span>").html(opts.localeStrings.computeError);
+                    }
+                    // remove old viz
+                    self.element.empty();
+                    // append the new viz
+                    self.element.append(result.html);
+                    $rootScope.$emit('RenderingEngine:draw:complete');
+                    // run any post render functions defined by visual
+                    if (result.postRenderFunction) {
+                        result.postRenderFunction(result.html, result.postRenderOpts);
+                    }
+                    deferred.resolve();
+                }, 1500, true, data);
+                return deferred.promise;
+            }
+        };
+        return RenderingEngine;
+    }
+});
+
+define('render/services/renderingEngineManager',[], function() {
+    'use strict';
+
+    return function(RenderingEngine, dataSourceConfigurationManager, dataSourceManager, $http) {
+        /**
+         * {@link RenderingEngineManager} constructor.
+         */
+        function RenderingEngineManager() {
+            this.init();
+        }
+        RenderingEngineManager.prototype = {
+            /**
+             * @typedef RenderingEngineManager
+             * @type {object}
+             * @property {object} renderingEngines - The map of registered {@link RenderingEngine}'s.
+             * @property {string} activeRenderingEngine - The UUID of the active {@link RenderingEngine}.
+             */
+            constructor: RenderingEngineManager,
+            /**
+             * Initialize the {@link RenderingEngineManager}.
+             */
+            init: function() {
+                var self = this;
+                self.renderingEngines = {};
+                self.activeRenderingEngine = undefined;
+            },
+            /**
+             * Instantiates a {@link RenderingEngine} and adds it to the manager.
+             * 
+             * @param  {string} dataSourceConfigurationId The UUID of the {@link DataSourceConfiguration} referenced by the instaniated {@link RenderingEngine}.
+             * @param  {string} [renderingEngineId]         The UUID of the {@link RenderingEngine}
+             * @param  {string} [title]                     The title of the {@link RenderingEngine}
+             * @param  {string} [dataViewName]       The name of the data view plugin.
+             * 
+             * @return {object}      The {@link DataSource}.
+             */
+            create: function(dataSourceConfigurationId, renderingEngineId, title, dataViewName) {
+                var self = this;
+                var renderingEngine = new RenderingEngine(dataSourceConfigurationId, renderingEngineId, title, dataViewName);
+                self.add(renderingEngine);
+                //There may be an active rendering engine, if so deactivate
+                if (self.activeRenderingEngine !== undefined) {
+                    self.renderingEngines[self.activeRenderingEngine].active = false;
+                }
+                self.activeRenderingEngine = renderingEngine.id;
+                return renderingEngine;
+            },
+            /**
+             * The size of the manager.
+             * 
+             * @return {number} The number of {@link RenderingEngine}'s in the manager.
+             */
+            size: function() {
+                return Object.keys(this.renderingEngines).length;
+            },
+            /**
+             * Adds a {@link RenderingEngine} to the manager.
+             * 
+             * @param {RenderingEngine} dataSource The {@link RenderingEngine} to add.
+             */
+            add: function(renderingEngine) {
+                var self = this;
+                self.renderingEngines[renderingEngine.id] = renderingEngine;
+            },
+            /**
+             * Deletes a {@link RenderingEngine} from the manager by `id`.
+             * 
+             * @param  {string} id The UUID of the {@link RenderingEngine} to remove from the manager.
+             */
+            delete: function(id) {
+                var self = this;
+                delete self.renderingEngines[id];
+            }
+        };
+
+        return new RenderingEngineManager();
+    }
+});
+
+define('render/services/dataUtils',[], function() {
+    'use strict';
+
+    return function() {
+        /**
+         * {@link DataUtils} constructor.
+         */
+        function DataUtils() {}
+        DataUtils.prototype = {
+            /**
+             * @typedef DataUtils
+             * @type {object}
+             */
+            constructor: DataUtils,
+            hasProp: {}.hasOwnProperty,
+            indexOf: [].indexOf || function(item) {
+                for (var i = 0, l = this.length; i < l; i++) {
+                    if (i in this && this[i] === item) return i;
+                }
+                return -1;
+            },
+            generateUUID: function() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0,
+                        v = c == 'x' ? r : (r & 0x3 | 0x8);
+                    return v.toString(16);
+                })
+            },
+            convertToArray: function(input) {
+                var result;
+                var self = this;
+                result = [];
+                self.forEachRecord(input, {}, function(record) {
+                    return result.push(record);
+                });
+                return result;
+            },
+            bind: function(fn, me) {
+                return function() {
+                    return fn.apply(me, arguments);
+                };
+            },
+            forEachRecord: function(input, derivedAttributes, f) {
+                var self = this;
+                var addRecord, compactRecord, i, j, k, l, len1, record, ref, results, results1, tblCols;
+                if ($.isEmptyObject(derivedAttributes)) {
+                    addRecord = f;
+                } else {
+                    addRecord = function(record) {
+                        var k, ref, v;
+                        for (k in derivedAttributes) {
+                            v = derivedAttributes[k];
+                            record[k] = (ref = v(record)) != null ? ref : record[k];
+                        }
+                        return f(record);
+                    };
+                }
+                if ($.isFunction(input)) {
+                    return input(addRecord);
+                } else if ($.isArray(input)) {
+                    if ($.isArray(input[0])) {
+                        results = [];
+                        for (i in input) {
+                            if (!self.hasProp.call(input, i)) continue;
+                            compactRecord = input[i];
+                            if (!(i > 0)) {
+                                continue;
+                            }
+                            record = {};
+                            ref = input[0];
+                            for (j in ref) {
+                                if (!self.hasProp.call(ref, j)) continue;
+                                k = ref[j];
+                                record[k] = compactRecord[j];
+                            }
+                            results.push(addRecord(record));
+                        }
+                        return results;
+                    } else {
+                        results1 = [];
+                        for (l = 0, len1 = input.length; l < len1; l++) {
+                            record = input[l];
+                            results1.push(addRecord(record));
+                        }
+                        return results1;
+                    }
+                } else if (input instanceof jQuery) {
+                    tblCols = [];
+                    $('thead > tr > th', input).each(function(i) {
+                        return tblCols.push($(this).text());
+                    });
+                    return $('tbody > tr', input).each(function(i) {
+                        record = {};
+                        $('td', this).each(function(j) {
+                            return record[tblCols[j]] = $(this).html();
+                        });
+                        return addRecord(record);
+                    });
+                } else {
+                    throw new Error('unknown input format');
+                }
+            },
+            addSeparators: function(nStr, thousandsSep, decimalSep) {
+                var rgx, x, x1, x2;
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? decimalSep + x[1] : '';
+                rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + thousandsSep + '$2');
+                }
+                return x1 + x2;
+            },
+            numberFormat: function(opts) {
+                var self = this;
+                var defaults;
+                defaults = {
+                    digitsAfterDecimal: 2,
+                    scaler: 1,
+                    thousandsSep: ',',
+                    decimalSep: '.',
+                    prefix: '',
+                    suffix: '',
+                    showZero: false
+                };
+                opts = $.extend(defaults, opts);
+                return function(x) {
+                    var result;
+                    if (isNaN(x) || !isFinite(x)) {
+                        return '';
+                    }
+                    if (x === 0 && !opts.showZero) {
+                        return '';
+                    }
+                    result = self.addSeparators((opts.scaler * x).toFixed(opts.digitsAfterDecimal), opts.thousandsSep, opts.decimalSep);
+                    return '' + opts.prefix + result + opts.suffix;
+                };
+            },
+            sortAs: function(order) {
+                var self = this;
+                var i, mapping, x;
+                mapping = {};
+                for (i in order) {
+                    x = order[i];
+                    mapping[x] = i;
+                }
+                return function(a, b) {
+                    if ((mapping[a] != null) && (mapping[b] != null)) {
+                        return mapping[a] - mapping[b];
+                    } else if (mapping[a] != null) {
+                        return -1;
+                    } else if (mapping[b] != null) {
+                        return 1;
+                    } else {
+                        return self.naturalSort(a, b);
+                    }
+                };
+            },
+            naturalSort: function(as, bs) {
+                var a, a1, b, b1, rd, rx, rz;
+                rx = /(\d+)|(\D+)/g;
+                rd = /\d/;
+                rz = /^0/;
+                if (typeof as === 'number' || typeof bs === 'number') {
+                    if (isNaN(as)) {
+                        return 1;
+                    }
+                    if (isNaN(bs)) {
+                        return -1;
+                    }
+                    return as - bs;
+                }
+                a = String(as).toLowerCase();
+                b = String(bs).toLowerCase();
+                if (a === b) {
+                    return 0;
+                }
+                if (!(rd.test(a) && rd.test(b))) {
+                    return (a > b ? 1 : -1);
+                }
+                a = a.match(rx);
+                b = b.match(rx);
+                while (a.length && b.length) {
+                    a1 = a.shift();
+                    b1 = b.shift();
+                    if (a1 !== b1) {
+                        if (rd.test(a1) && rd.test(b1)) {
+                            return a1.replace(rz, '.0') - b1.replace(rz, '.0');
+                        } else {
+                            return (a1 > b1 ? 1 : -1);
+                        }
+                    }
+                }
+                return a.length - b.length;
+            },
+            getSort: function(sorters, attr) {
+                var sort;
+                var self = this;
+                sort = sorters(attr);
+                if ($.isFunction(sort)) {
+                    return sort;
+                } else {
+                    return self.naturalSort;
+                }
+            },
+            usFmt: function() {
+                var self = this;
+                return self.numberFormat();
+            },
+            usFmtInt: function() {
+                var self = this;
+                return self.numberFormat({
+                    digitsAfterDecimal: 0
+                });
+            },
+            usFmtPct: function() {
+                var self = this;
+                return self.numberFormat({
+                    digitsAfterDecimal: 1,
+                    scaler: 100,
+                    suffix: '%'
+                });
+            }
+        };
+
+        return new DataUtils();
+    }
+});
+
+define('render/services/DataSourceConfiguration',[], function() {
+    'use strict';
+
+    return function(dataUtils) {
+        /**
+         * {@link DataSourceConfiguration} constructor.
+         * 
+         * @param {string} name       The human readable name for this data source configuration.
+         * @param {Object} httpConfig Angular http config: https://docs.angularjs.org/api/ng/service/$http#usage.
+         */
+        function DataSourceConfiguration(name, httpConfig) {
+            this.id = dataUtils.generateUUID();
+            this.flattenDataFunctionString = 'return data;';
+            this.httpConfig = httpConfig;
+            this.name = name;
+        }
+        DataSourceConfiguration.prototype = {
+            /**
+             * @typedef DataSourceConfiguration
+             * @type {object}
+             * @property {string} id - The UUID for this data source configuration.
+             * @property {string} flattenDataFunctionString - The code .
+             * @property {object} httpConfig - Angular http config: https://docs.angularjs.org/api/ng/service/$http#usage.
+             * @property {string} name - The human readable name for this data source configuration.
+             */
+            constructor: DataSourceConfiguration
+        };
+        return DataSourceConfiguration;
+    }
+});
+
+define('render/services/dataSourceConfigurationManager',[], function() {
+    'use strict';
+
+    return function(DataSourceConfiguration) {
+        /**
+         * {@link DataSourceConfigurationManager} constructor.
+         */
+        function DataSourceConfigurationManager() {
+            this.init();
+        }
+        DataSourceConfigurationManager.prototype = {
+            /**
+             * @typedef DataSourceConfigurationManager
+             * @type {object}
+             * @property {object} dataSourceConfigurations - The map of registered {@link DataSourceConfiguration}'s.
+             * @property {string} activeDataSourceConfiguration - The UUID of the active {@link DataSourceConfiguration}.
+             */
+            constructor: DataSourceConfigurationManager,
+            /**
+             * Initialize the {@link DataSourceConfigurationManager}.
+             */
+            init: function() {
+                var self = this;
+                self.dataSourceConfigurations = {};
+                self.activeDataSourceConfiguration = undefined;
+            },
+            /**
+             * Instantiates a {@link DataSourceConfiguration} and adds it to the manager by `name` for fast lookups.
+             * 
+             * @param  {string} name The name of the {@link DataSourceConfiguration}.
+             * @param  {Object} httpConfig The configuration for a REST endpoint.
+             * 
+             * @return {string}      The UUID of the created `DataSourceConfiguration`.
+             */
+            create: function(name, httpConfig) {
+                var self = this;
+                var dataSourceConfiguration = new DataSourceConfiguration(name, httpConfig);
+                self.add(dataSourceConfiguration);
+                self.activeDataSourceConfiguration = dataSourceConfiguration.id;
+                return dataSourceConfiguration.id;
+            },
+            /**
+             * Adds a {@link DataSourceConfiguration} to the manager.
+             * 
+             * @param {DataSourceConfiguration} dataSourceConfiguration The {@link DataSourceConfiguration} to add.
+             */
+            add: function(dataSourceConfiguration) {
+                var self = this;
+                self.dataSourceConfigurations[dataSourceConfiguration.id] = dataSourceConfiguration;
+            },
+            /**
+             * Deletes a {@link DataSourceConfiguration} from the manager by `id`.
+             * 
+             * @param  {string} id The UUID of the {@link DataSourceConfiguration} to remove from the manager.
+             */
+            delete: function(id) {
+                var self = this;
+                delete self.dataSourceConfigurations[id];
+            }
+        };
+
+        return new DataSourceConfigurationManager();
+    }
+});
+
+define('render/services/DataSource',[], function() {
+    'use strict';
+
+    return function(dataSourceConfigurationManager, $q, $rootScope, $http) {
+        /**
+         * {@link DataSource} constructor.
+         * 
+         * @param {string} dataSourceConfigId The UUID of the data source configuration.
+         * @param {[type]} name               The human readable name for this data source.
+         */
+        function DataSource(dataSourceConfigId, name) {
+            this.dataSourceConfigId = dataSourceConfigId;
+            this.data;
+            this.name = name;
+            this.formattedData;
+        }
+        DataSource.prototype = {
+            /**
+             * @typedef DataSource
+             * @type {object}
+             * @property {string} dataSourceConfigId - The UUID for this data source configuration.
+             * @property {string} data - The raw data returned from the configured REST endpoint.
+             * @property {object} formattedData - The transformed data returned from the configured REST endpoint.
+             * @property {string} name - The human readable name for this data source.
+             */
+            constructor: DataSource,
+            /**
+             * Refreshes the data source.
+             */
+            refresh: function() {
+                var promises = [this.acquire(this)];
+                $q.all(promises).then(function() {
+                    this.format(this);
+                });
+            },
+            /**
+             * Acquires data from the configured REST endpoint.
+             */
+            acquire: function() {
+                $rootScope.$emit('dataSource:acquire:begin');
+                var self = this;
+                var deffered = $q.defer();
+                $http(angular.fromJson(dataSourceConfigurationManager.dataSourceConfigurations[this.dataSourceConfigId].httpConfig)).then(function successCallback(response) {
+                    if (typeof response.data !== "string") {
+                        self.data = JSON.stringify(response.data);
+                    } else {
+                        self.data = response.data;
+                    }
+                    deffered.resolve();
+                    $rootScope.$emit('dataSource:acquire:success');
+                }, function errorCallback(response) {
+                    deffered.reject();
+                    $rootScope.$emit('dataSource:acquire:error');
+                });
+                return deffered.promise;
+            },
+            /**
+             * Formats the raw data.
+             */
+            format: function() {
+                var flatten = new Function("data", dataSourceConfigurationManager.dataSourceConfigurations[this.dataSourceConfigId].flattenDataFunctionString);
+                try {
+                    this.formattedData = angular.toJson(flatten(angular.fromJson(this.data)));
+                } catch (e) {
+                    try {
+                        this.formattedData = flatten(this.data);
+                    } catch (_error) {
+                        if (typeof console !== "undefined" && console !== null) {
+                            console.error(_error.stack);
+                        }
+                    }
+                }
+                try {
+                    this.formattedData = angular.fromJson(this.formattedData);
+                } catch (e) {
+                    try {
+                        this.formattedData = $.csv.toArrays(this.formattedData);
+                    } catch (_error) {
+                        if (typeof console !== "undefined" && console !== null) {
+                            console.error(_error.stack);
+                        }
+                    }
+                }
+            }
+        };
+        return DataSource;
+    }
+});
+
+define('render/services/dataSourceManager',[], function() {
+    'use strict';
+
+    return function(DataSource) {
+        /**
+         * {@link DataSourceManager} constructor.
+         */
+        function DataSourceManager() {
+            this.init();
+        }
+        DataSourceManager.prototype = {
+            /**
+             * @typedef DataSourceManager
+             * @type {object}
+             * @property {object} dataSources - The map of registered {@link DataSource}'s.
+             */
+            constructor: DataSourceManager,
+            init: function() {
+                var self = this;
+                self.dataSources = {};
+            },
+            /**
+             * Instantiates a {@link DataSource} and adds it to the manager by `name` for fast lookups.
+             * 
+             * @param  {string} dataSourceConfigurationId The UUID of the {@link DataSourceConfiguration} reference by the instaniated {@link DataSource}.
+             * @param  {string} name The name of the {@link DataSource}.
+             * 
+             * @return {object}      The {@link DataSource}.
+             */
+            create: function(dataSourceConfigurationId, name) {
+                var self = this;
+                if (dataSourceConfigurationId !== undefined) {
+                    var dataSource = new DataSource(dataSourceConfigurationId, name);
+                    self.add(dataSource);
+                    return dataSource;
+                }
+            },
+            /**
+             * Adds a {@link DataSource} to the manager.
+             * 
+             * @param {DataSource} dataSource The {@link DataSource} to add.
+             */
+            add: function(dataSource) {
+                var self = this;
+                self.dataSources[dataSource.dataSourceConfigId] = dataSource;
+            },
+            /**
+             * Deletes a {@link DataSource} from the manager by `id`.
+             * 
+             * @param  {string} id The UUID of the {@link DataSource} to remove from the manager.
+             */
+            delete: function(dataSourceConfigId) {
+                var self = this;
+                delete self.dataSources[dataSourceConfigId];
+            },
+            /**
+             * Refreshes the data.
+             */
+            refresh: function() {
+                angular.forEach(this.dataSources, function(dataSource) {
+                    dataSource.refresh();
+                });
+            }
+        };
+
+        return new DataSourceManager();
+    }
+});
+
+define('ng-rndr',['render/directives/renderingEngineDirective',
+        'render/services/aggregators',
+        'render/services/aggregatorTemplates',
+        'render/services/dataViews',
+        'render/services/renderers',
+        'render/services/RenderingEngine',
+        'render/services/renderingEngineManager',
+        'render/services/dataUtils',
+        'render/services/DataSourceConfiguration',
+        'render/services/dataSourceConfigurationManager',
+        'render/services/DataSource',
+        'render/services/dataSourceManager'
+    ],
+    function(renderingEngineDirective,
+        aggregators,
+        aggregatorTemplates,
+        dataViews,
+        renderers,
+        RenderingEngine,
+        renderingEngineManager,
+        dataUtils,
+        DataSourceConfiguration,
+        dataSourceConfigurationManager,
+        DataSource,
+        dataSourceManager) {
+
+        // Create module
+        var app = angular.module('ngRndr', []);
+
+        // Annotate module dependencies
+        renderingEngineDirective.$inject = [];
+        DataSourceConfiguration.$inject = ['dataUtils'];
+        dataSourceConfigurationManager.$inject = ['DataSourceConfiguration'];
+        DataSource.$inject = ['dataSourceConfigurationManager', '$q', '$rootScope', '$http'];
+        dataSourceManager.$inject = ['DataSource'];
+        aggregators.$inject = ['aggregatorTemplates', 'dataUtils'];
+        aggregatorTemplates.$inject = ['dataUtils'];
+        dataViews.$inject = [];
+        renderers.$inject = [];
+        RenderingEngine.$inject = ['aggregators', 'dataUtils', 'renderers', 'dataViews', '$q', '$timeout', '$window', '$rootScope'];
+        renderingEngineManager.$inject = ['RenderingEngine', 'dataSourceConfigurationManager', 'dataSourceManager', '$http'];
+        dataUtils.$inject = [];
+
+        // Module directives
+        app.directive('renderingEngineDirective', renderingEngineDirective);
+
+        // Module services
+        app.service('DataSourceConfiguration', DataSourceConfiguration);
+        app.service('dataSourceConfigurationManager', dataSourceConfigurationManager);
+        app.service('DataSource', DataSource);
+        app.service('dataSourceManager', dataSourceManager);
+        app.service('aggregators', aggregators);
+        app.service('aggregatorTemplates', aggregatorTemplates);
+        app.service('dataViews', dataViews);
+        app.service('renderers', renderers);
+        app.service('RenderingEngine', RenderingEngine);
+        app.service('renderingEngineManager', renderingEngineManager);
+        app.service('dataUtils', dataUtils);
+    });
+
+	// Use almond's special top level synchronous require to trigger factory
+	// functions, get the final module, and export it as the public api.
+	return require('ng-rndr');
+}));

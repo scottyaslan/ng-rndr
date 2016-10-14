@@ -1,32 +1,32 @@
 {
-  "name": "ngRNDR",
-  "version": "0.0.1",
-  "description": "ngRNDR: an anglar module for visualizing data.",
-  "author": {
-    "name": "Scott Aslan",
-    "email": "astechdev@gmail.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "engines": {
-    "node": ">= 0.6.0",
-    "npm": ">= 1.0.0"
-  },
-  "dependencies": {
-    "almond": "^0.3.3",
-    "grunt": "^0.4.5",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-requirejs": "^0.4.4",
-    "grunt-contrib-uglify": "^0.6.0",
-    "grunt-html2js": "^0.3.6"
-  },
-  "devDependencies": {},
-  "bundleDependencies": [],
-  "private": true,
-  "main": "server.js",
-  "scripts": {
-    "postinstall": "bower install && grunt release && cd src/render/plugins && npm install && node node_modules/gulp/bin/gulp.js makeJs && node node_modules/gulp/bin/gulp.js makeCss"
-  }
+    "name": "ngRNDR",
+    "version": "0.0.1",
+    "description": "ngRNDR: an anglar module for visualizing data.",
+    "author": {
+        "name": "Scott Aslan",
+        "email": "astechdev@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": ""
+    },
+    "engines": {
+        "node": ">= 0.6.0",
+        "npm": ">= 1.0.0"
+    },
+    "dependencies": {
+        "almond": "^0.3.3",
+        "grunt": "^0.4.5",
+        "grunt-contrib-copy": "^1.0.0",
+        "grunt-contrib-requirejs": "^0.4.4",
+        "grunt-contrib-uglify": "^2.0",
+        "grunt-html2js": "^0.3.6"
+    },
+    "devDependencies": {},
+    "bundleDependencies": [],
+    "private": true,
+    "main": "server.js",
+    "scripts": {
+        "postinstall": "grunt release && cd src/render/plugins && npm install"
+    }
 }
