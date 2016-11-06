@@ -257,44 +257,29 @@
         /*
         Heatmap post-processing
          */
-        $.fn.heatmap = function(scope) {
-            var colorGen, heatmapper, i, j, k, l, numCols, numRows, ref, ref1;
+        $.fn.heatmap = function(scope, opts) {
+            var colorScaleGenerator, heatmapper, i, j, l, n, numCols, numRows, ref, ref1, ref2;
             if (scope == null) {
                 scope = "heatmap";
             }
             numRows = this.data("numrows");
             numCols = this.data("numcols");
-            colorGen = function(color, min, max) {
-                var hexGen;
-                hexGen = (function() {
-                    switch (color) {
-                        case "red":
-                            return function(hex) {
-                                return "ff" + hex + hex;
-                            };
-                        case "green":
-                            return function(hex) {
-                                return hex + "ff" + hex;
-                            };
-                        case "blue":
-                            return function(hex) {
-                                return "" + hex + hex + "ff";
-                            };
-                    }
-                })();
-                return function(x) {
-                    var hex, intensity;
-                    intensity = 255 - Math.round(255 * (x - min) / (max - min));
-                    hex = intensity.toString(16).split(".")[0];
-                    if (hex.length === 1) {
-                        hex = 0 + hex;
-                    }
-                    return hexGen(hex);
+            colorScaleGenerator = opts != null ? (ref = opts.heatmap) != null ? ref.colorScaleGenerator : void 0 : void 0;
+            if (colorScaleGenerator == null) {
+                colorScaleGenerator = function(values) {
+                    var max, min;
+                    min = Math.min.apply(Math, values);
+                    max = Math.max.apply(Math, values);
+                    return function(x) {
+                        var nonRed;
+                        nonRed = 255 - Math.round(255 * (x - min) / (max - min));
+                        return "rgb(255," + nonRed + "," + nonRed + ")";
+                    };
                 };
-            };
+            }
             heatmapper = (function(_this) {
-                return function(scope, color) {
-                    var colorFor, forEachCell, values;
+                return function(scope) {
+                    var colorScale, forEachCell, values;
                     forEachCell = function(f) {
                         return _this.find(scope).each(function() {
                             var x;
@@ -308,28 +293,28 @@
                     forEachCell(function(x) {
                         return values.push(x);
                     });
-                    colorFor = colorGen(color, Math.min.apply(Math, values), Math.max.apply(Math, values));
+                    colorScale = colorScaleGenerator(values);
                     return forEachCell(function(x, elem) {
-                        return elem.css("background-color", "#" + colorFor(x));
+                        return elem.css("background-color", colorScale(x));
                     });
                 };
             })(this);
             switch (scope) {
                 case "heatmap":
-                    heatmapper(".pvtVal", "red");
+                    heatmapper(".pvtVal");
                     break;
                 case "rowheatmap":
-                    for (i = k = 0, ref = numRows; 0 <= ref ? k < ref : k > ref; i = 0 <= ref ? ++k : --k) {
-                        heatmapper(".pvtVal.row" + i, "red");
+                    for (i = l = 0, ref1 = numRows; 0 <= ref1 ? l < ref1 : l > ref1; i = 0 <= ref1 ? ++l : --l) {
+                        heatmapper(".pvtVal.row" + i);
                     }
                     break;
                 case "colheatmap":
-                    for (j = l = 0, ref1 = numCols; 0 <= ref1 ? l < ref1 : l > ref1; j = 0 <= ref1 ? ++l : --l) {
-                        heatmapper(".pvtVal.col" + j, "red");
+                    for (j = n = 0, ref2 = numCols; 0 <= ref2 ? n < ref2 : n > ref2; j = 0 <= ref2 ? ++n : --n) {
+                        heatmapper(".pvtVal.col" + j);
                     }
             }
-            heatmapper(".pvtTotal.rowTotal", "red");
-            heatmapper(".pvtTotal.colTotal", "red");
+            heatmapper(".pvtTotal.rowTotal");
+            heatmapper(".pvtTotal.colTotal");
             return this;
         };
 
@@ -401,13 +386,13 @@
                 return $(datatable(pvtData, opts)).barchart().finalize(opts);
             },
             "Heatmap": function(pvtData, opts) {
-                return $(datatable(pvtData, opts)).heatmap().finalize(opts);
+                return $(datatable(pvtData, opts)).heatmap("heatmap", opts).finalize(opts);
             },
             "Row Heatmap": function(pvtData, opts) {
-                return $(datatable(pvtData, opts)).heatmap("rowheatmap").finalize(opts);
+                return $(datatable(pvtData, opts)).heatmap("rowheatmap", opts).finalize(opts);
             },
             "Col Heatmap": function(pvtData, opts) {
-                return $(datatable(pvtData, opts)).heatmap("colheatmap").finalize(opts);
+                return $(datatable(pvtData, opts)).heatmap("colheatmap", opts).finalize(opts);
             }
         };
     });

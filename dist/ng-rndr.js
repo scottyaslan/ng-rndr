@@ -1117,7 +1117,7 @@ define('render/services/renderingEngineManager',[], function() {
             }
         };
 
-        return new RenderingEngineManager();
+        return RenderingEngineManager;
     }
 });
 
