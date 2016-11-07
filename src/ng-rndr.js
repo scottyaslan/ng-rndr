@@ -4,7 +4,7 @@ define(['render/directives/renderingEngineDirective',
         'render/services/dataViews',
         'render/services/renderers',
         'render/services/RenderingEngine',
-        'render/services/renderingEngineManager',
+        'render/services/RenderingEngines',
         'render/services/dataUtils',
         'render/services/DataSourceConfiguration',
         'render/services/dataSourceConfigurationManager',
@@ -17,7 +17,7 @@ define(['render/directives/renderingEngineDirective',
         dataViews,
         renderers,
         RenderingEngine,
-        renderingEngineManager,
+        RenderingEngines,
         dataUtils,
         DataSourceConfiguration,
         dataSourceConfigurationManager,
@@ -38,7 +38,7 @@ define(['render/directives/renderingEngineDirective',
         dataViews.$inject = [];
         renderers.$inject = [];
         RenderingEngine.$inject = ['aggregators', 'dataUtils', 'renderers', 'dataViews', '$q', '$timeout', '$window', '$rootScope'];
-        renderingEngineManager.$inject = ['RenderingEngine', 'dataSourceConfigurationManager', 'dataSourceManager', '$http'];
+        RenderingEngines.$inject = ['RenderingEngine', 'dataSourceConfigurationManager', 'dataSourceManager', '$http'];
         dataUtils.$inject = [];
 
         // Module directives
@@ -54,6 +54,6 @@ define(['render/directives/renderingEngineDirective',
         app.service('dataViews', dataViews);
         app.service('renderers', renderers);
         app.service('RenderingEngine', RenderingEngine);
-        app.service('renderingEngineManager', renderingEngineManager);
+        app.service('RenderingEngines', RenderingEngines);
         app.service('dataUtils', dataUtils);
     });

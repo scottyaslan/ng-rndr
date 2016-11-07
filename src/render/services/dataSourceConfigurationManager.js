@@ -40,6 +40,14 @@ define([], function() {
                 return dataSourceConfiguration.id;
             },
             /**
+             * The size of the manager.
+             * 
+             * @return {number} The number of {@link DataSourceConfiguration}'s in the manager.
+             */
+            size: function() {
+                return Object.keys(this.dataSourceConfigurations).length;
+            },
+            /**
              * Adds a {@link DataSourceConfiguration} to the manager.
              * 
              * @param {DataSourceConfiguration} dataSourceConfiguration The {@link DataSourceConfiguration} to add.
