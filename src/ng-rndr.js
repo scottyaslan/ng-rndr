@@ -29,31 +29,31 @@ define(['render/directives/renderingEngineDirective',
 
         // Annotate module dependencies
         renderingEngineDirective.$inject = [];
-        DataSourceConfiguration.$inject = ['dataUtils'];
-        dataSourceConfigurationManager.$inject = ['DataSourceConfiguration'];
-        DataSource.$inject = ['dataSourceConfigurationManager', '$q', '$rootScope', '$http'];
-        dataSourceManager.$inject = ['DataSource'];
-        aggregators.$inject = ['aggregatorTemplates', 'dataUtils'];
-        aggregatorTemplates.$inject = ['dataUtils'];
+        DataSourceConfiguration.$inject = ['ngRndr.dataUtils'];
+        dataSourceConfigurationManager.$inject = ['ngRndr.DataSourceConfiguration'];
+        DataSource.$inject = ['ngRndr.dataSourceConfigurationManager', '$q', '$rootScope', '$http'];
+        dataSourceManager.$inject = ['ngRndr.DataSource'];
+        aggregators.$inject = ['ngRndr.aggregatorTemplates', 'ngRndr.dataUtils'];
+        aggregatorTemplates.$inject = ['ngRndr.dataUtils'];
         dataViews.$inject = [];
         renderers.$inject = [];
-        RenderingEngine.$inject = ['aggregators', 'dataUtils', 'renderers', 'dataViews', '$q', '$timeout', '$window', '$rootScope'];
-        RenderingEngines.$inject = ['RenderingEngine', 'dataSourceConfigurationManager', 'dataSourceManager', '$http'];
+        RenderingEngine.$inject = ['ngRndr.aggregators', 'ngRndr.dataUtils', 'ngRndr.renderers', 'ngRndr.dataViews', '$q', '$timeout', '$window', '$rootScope'];
+        RenderingEngines.$inject = ['ngRndr.RenderingEngine', 'ngRndr.dataSourceConfigurationManager', 'ngRndr.dataSourceManager', '$http'];
         dataUtils.$inject = [];
 
         // Module directives
         app.directive('renderingEngineDirective', renderingEngineDirective);
 
         // Module services
-        app.service('DataSourceConfiguration', DataSourceConfiguration);
-        app.service('dataSourceConfigurationManager', dataSourceConfigurationManager);
-        app.service('DataSource', DataSource);
-        app.service('dataSourceManager', dataSourceManager);
-        app.service('aggregators', aggregators);
-        app.service('aggregatorTemplates', aggregatorTemplates);
-        app.service('dataViews', dataViews);
-        app.service('renderers', renderers);
-        app.service('RenderingEngine', RenderingEngine);
-        app.service('RenderingEngines', RenderingEngines);
-        app.service('dataUtils', dataUtils);
+        app.service('ngRndr.DataSourceConfiguration', DataSourceConfiguration);
+        app.service('ngRndr.dataSourceConfigurationManager', dataSourceConfigurationManager);
+        app.service('ngRndr.DataSource', DataSource);
+        app.service('ngRndr.dataSourceManager', dataSourceManager);
+        app.service('ngRndr.aggregators', aggregators);
+        app.service('ngRndr.aggregatorTemplates', aggregatorTemplates);
+        app.service('ngRndr.dataViews', dataViews);
+        app.service('ngRndr.renderers', renderers);
+        app.service('ngRndr.RenderingEngine', RenderingEngine);
+        app.service('ngRndr.RenderingEngines', RenderingEngines);
+        app.service('ngRndr.dataUtils', dataUtils);
     });
