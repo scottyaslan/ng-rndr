@@ -14,19 +14,28 @@
         "node": ">= 0.6.0",
         "npm": ">= 1.0.0"
     },
-    "dependencies": {
+    "devDependencies": {
         "almond": "^0.3.3",
         "grunt": "^0.4.5",
         "grunt-contrib-copy": "^1.0.0",
         "grunt-contrib-requirejs": "^0.4.4",
         "grunt-contrib-uglify": "^2.0",
-        "grunt-html2js": "^0.3.6"
+        "grunt-html2js": "^0.3.6",
+        "require-dir": "^0.1.0",
+        "gulp-uglify": "^1.0.2",
+        "gulp-sourcemaps": "^1.2.8",
+        "gulp": "^3.8.10",
+        "gulp-filter": "^1.0.2",
+        "gulp-util": "^3.0.1",
+        "gulp-rename": "^1.2.0",
+        "gulp-minify-css": "^0.3.11",
+        "gulp-concat": "^2.4.2"
     },
-    "devDependencies": {},
+    "dependencies": {},
     "bundleDependencies": [],
     "private": true,
     "main": "server.js",
     "scripts": {
-        "postinstall": "grunt release && cd src/render/plugins && npm install"
+        "postinstall": "grunt release && node ./node_modules/gulp/bin/gulp.js makeJs && node ./node_modules/gulp/bin/gulp.js makeCss"
     }
 }
