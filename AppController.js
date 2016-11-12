@@ -19,6 +19,7 @@ define(['datatables_renderers',
             dataSourceManager,
             acquisitionController,
             exploreController,
+            RenderingEngines,
             renderingEngineManager,
             uiControls,
             dataSourceConfigurationManager,
@@ -127,7 +128,7 @@ define(['datatables_renderers',
                         promises.push(dataSourceManager.create(dataSourceConfiguration.id, dataSourceConfiguration.name).acquire());
                     });
                     angular.forEach(rndr.renderingEngines, function(renderingEngine) {
-                        $.extend(renderingEngineManager.renderingEngines[renderingEngineManager.create(renderingEngine.dataSourceConfigId, renderingEngine.id, renderingEngine.title).id], renderingEngine);
+                        $.extend(renderingEngineManager.dictionary[renderingEngineManager.create(renderingEngine.dataSourceConfigId, renderingEngine.id, renderingEngine.title).id], renderingEngine);
                     });
                     $q.all(promises).then(function() {
                         angular.forEach(rndr.dataSourceConfigurations, function(dataSourceConfiguration) {
@@ -194,14 +195,14 @@ define(['datatables_renderers',
                 },
                 export: function() {
                     var rndr = {
-                        renderingEngines: renderingEngineManager.renderingEngines,
+                        renderingEngines: renderingEngineManager.dictionary,
                         dataSourceConfigurations: dataSourceConfigurationManager.dataSourceConfigurations
                     }
                     downloadjs(JSON.stringify(JSON.decycle(rndr)), 'test.rndr', 'application/json');
                 },
                 deleteRenderingEngine: function(id) {
                     renderingEngineManager.delete(id);
-                    if (Object.keys(renderingEngineManager.renderingEngines).length === 0) {
+                    if (Object.keys(renderingEngineManager.dictionary).length === 0) {
                         $timeout(function() {
                             exploreController.new();
                         }, 0);
@@ -237,7 +238,7 @@ define(['datatables_renderers',
                     }
                 },
                 sandboxMenusEnabled: function() {
-                    return Object.keys(renderingEngineManager.renderingEngines).length === 0;
+                    return Object.keys(renderingEngineManager.dictionary).length === 0;
                 }
             };
 
@@ -391,33 +392,9 @@ define(['datatables_renderers',
 
             $scope.renderers = renderers;
 
-            //Extend RenderingEngineManager functionality
-            renderingEngineManager.setActiveRenderingEngine = function(id) {
-                var self = this;
-                self.activeRenderingEngine = id;
-                angular.forEach(self.renderingEngines, function(renderingEngine) {
-                    renderingEngine.active = false;
-                    if (renderingEngine.id === id) {
-                        renderingEngine.active = true;
-                    }
-                });
-            };
-
-            renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition = function($widgets) {
-                var self = this;
-                angular.forEach($widgets, function($widget) {
-                    self.renderingEngines[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'))
-                });
-            };
-
             //Singleton for tracking all renderingEngine objects
+            $.extend(renderingEngineManager, new RenderingEngines());
             $scope.renderingEngineManager = renderingEngineManager;
-
-            //Extend dataSourceConfigurationManager functionality
-            dataSourceConfigurationManager.dataSourceConfigurationsDefined = function() {
-                var self = this;
-                return Object.keys(self.dataSourceConfigurations).length !== 0;
-            };
 
             //Singleton for controlling the UI
             $scope.uiControls = uiControls;
@@ -448,7 +425,7 @@ define(['datatables_renderers',
 
             var closeDialog = function() {
                 uiControls.hideDialog();
-                if (Object.keys(renderingEngineManager.renderingEngines).length === 0) {
+                if (Object.keys(renderingEngineManager.dictionary).length === 0) {
                     //$rootScope.$emit('acquisitionController:cancel');  
                 }
             };
@@ -474,7 +451,7 @@ define(['datatables_renderers',
                     enabled: true,
                     resize: function(e, ui, $widget) {},
                     stop: function(e, ui, $widget) {
-                        renderingEngineManager.renderingEngines[$widget[0].id].draw(dataSourceManager.dataSources[renderingEngineManager.renderingEngines[$widget[0].id].dataSourceConfigId].formattedData);
+                        renderingEngineManager.dictionary[$widget[0].id].draw(dataSourceManager.dataSources[renderingEngineManager.dictionary[$widget[0].id].dataSourceConfigId].formattedData);
                         renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().parent().data('gridster').$widgets);
                     }
                 },

@@ -24,7 +24,7 @@ define([], function() {
                             //Cannot correctly update renderer until the angular digest completes which updates the RenderingEngine.rows and
                             //RenderingEngine.cols arrays. We must get on the call stack after the that cycle completes 
                             $timeout(function() {
-                                renderingEngineManager.renderingEngines[renderingEngineManager.activeRenderingEngine].draw(dataSourceManager.dataSources[renderingEngineManager.renderingEngines[renderingEngineManager.activeRenderingEngine].dataSourceConfigId].formattedData);
+                                renderingEngineManager.dictionary[renderingEngineManager.activeRenderingEngine].draw(dataSourceManager.dataSources[renderingEngineManager.dictionary[renderingEngineManager.activeRenderingEngine].dataSourceConfigId].formattedData);
                             }, 0);
                         }
                     },
@@ -70,14 +70,14 @@ define([], function() {
                     }
                 };
                 var requireDataSourceConfigSelection = false;
-                angular.forEach(renderingEngineManager.renderingEngines, function(renderingEngine, uuid) {
+                angular.forEach(renderingEngineManager.dictionary, function(renderingEngine, uuid) {
                     requireDataSourceConfigSelection = true;
                 });
                 if (!requireDataSourceConfigSelection) {
                     exploreController.new();
                 }
                 angular.element($window).on("rowLabelDrillDownEvent", function(e) {
-                    var renderingEngine = renderingEngineManager.renderingEngines[e.renderingEngineId];
+                    var renderingEngine = renderingEngineManager.dictionary[e.renderingEngineId];
                     var filterByAttributeValue = $(e.event.currentTarget).html();
                     var attributeFilterName = renderingEngine.dataView.meta.rows[$(e.event.currentTarget).parent().children().index($(e.event.currentTarget))];
                     renderingEngine.dataView.addInclusionFilter(attributeFilterName, filterByAttributeValue);
@@ -86,7 +86,7 @@ define([], function() {
                     }, 0);
                 });
                 angular.element($window).on("colLabelDrillDownEvent", function(e) {
-                    var renderingEngine = renderingEngineManager.renderingEngines[e.renderingEngineId];
+                    var renderingEngine = renderingEngineManager.dictionary[e.renderingEngineId];
                     var filterByAttributeValue = $(e.event.currentTarget).html();
                     var attributeFilterName = renderingEngine.dataView.meta.cols[$(e.event.currentTarget).parent().parent().children().index($(e.event.currentTarget).parent())];
                     renderingEngine.dataView.addInclusionFilter(attributeFilterName, filterByAttributeValue);

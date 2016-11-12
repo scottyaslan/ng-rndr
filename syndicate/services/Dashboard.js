@@ -25,7 +25,7 @@ define([], function() {
                     ul.setAttribute('class', 'gridster');
                     //Build the grid from the renderingEngineManager
                     var i = 1;
-                    angular.forEach(scope.renderingEngineManager.renderingEngines, function(renderingEngine, uuid) {
+                    angular.forEach(scope.renderingEngineManager.dictionary, function(renderingEngine, uuid) {
                         var contextMenu = 'contextMenu' + i;
                         scope[contextMenu] = {
                             callback: function(key, options) {
@@ -38,7 +38,7 @@ define([], function() {
                                         self.element.isolateScope().gridster.remove_widget(renderingEngine.element.parent().parent());
                                         scope.renderingEngineManager.delete(renderingEngine.id);
                                         var returnToExploration = true;
-                                        angular.forEach(scope.renderingEngineManager.renderingEngines, function(renderingEngine, uuid) {
+                                        angular.forEach(scope.renderingEngineManager.dictionary, function(renderingEngine, uuid) {
                                             returnToExploration = false;
                                         });
                                         if (returnToExploration) {
@@ -75,7 +75,7 @@ define([], function() {
                         $(li).append($compile("<header style='cursor:move' class='ui-dialog-titlebar ui-widget-header' context-menu='" + contextMenu + "' context-menu-selector=\"'.context-menu'\"><div class='context-menu box' ><span class='handle ui-icon ui-icon-gear' style='display:inline-block'></span>" + renderingEngine.title + "</div></header>")(scope));
                         var div = document.createElement('div');
                         div.setAttribute('class', 'gridsterWidgetContainer');
-                        var renderer = $compile("<rendering-engine-directive input='dataSourceManager.dataSources[renderingEngineManager.renderingEngines[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEngineManager.renderingEngines[\"" + uuid + "\"]'></rendering-engine-directive>")(scope);
+                        var renderer = $compile("<rendering-engine-directive input='dataSourceManager.dataSources[renderingEngineManager.dictionary[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEngineManager.dictionary[\"" + uuid + "\"]'></rendering-engine-directive>")(scope);
                         $(div).append(renderer[0]);
                         $(li).append(div);
                         i++;
