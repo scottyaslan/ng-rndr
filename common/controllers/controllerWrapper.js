@@ -1,13 +1,13 @@
 define([], function() {
     'use strict';
 
-    return function($scope, uiControls, dataSourceManager, dataSourceConfigurationManager, acquisitionController, exploreController, renderingEngineManager, aggregators) {
+    return function($scope, uiControls, dataSources, dataSourceConfigurations, acquisitionController, exploreController, renderingEnginesCollection, aggregators) {
         $scope.uiControls = uiControls;
-        $scope.dataSourceManager = dataSourceManager;
-        $scope.dataSourceConfigurationManager = dataSourceConfigurationManager;
+        $scope.dataSources = dataSources;
+        $scope.dataSourceConfigurations = dataSourceConfigurations;
         $scope.acquisitionController = acquisitionController;
         $scope.exploreController = exploreController;
-        $scope.renderingEngineManager = renderingEngineManager;
+        $scope.renderingEnginesCollection = renderingEnginesCollection;
         $scope.aggregators = aggregators;
     }
 });

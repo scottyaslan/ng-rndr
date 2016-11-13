@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    return function(renderingEngineManager, dataSourceManager, dataSourceConfigurationManager, $window, $timeout, $rootScope, $http) {
+    return function(renderingEnginesCollection, dataSources, dataSourceConfigurations, $window, $timeout, $rootScope, $http) {
         function ExploreController() {
             this.selectedDataSourceConfigId;
             this.dialogContentView;
@@ -24,7 +24,7 @@ define([], function() {
                             //Cannot correctly update renderer until the angular digest completes which updates the RenderingEngine.rows and
                             //RenderingEngine.cols arrays. We must get on the call stack after the that cycle completes 
                             $timeout(function() {
-                                renderingEngineManager.dictionary[renderingEngineManager.activeRenderingEngine].draw(dataSourceManager.dataSources[renderingEngineManager.dictionary[renderingEngineManager.activeRenderingEngine].dataSourceConfigId].formattedData);
+                                renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw(dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData);
                             }, 0);
                         }
                     },
@@ -70,28 +70,28 @@ define([], function() {
                     }
                 };
                 var requireDataSourceConfigSelection = false;
-                angular.forEach(renderingEngineManager.dictionary, function(renderingEngine, uuid) {
+                angular.forEach(renderingEnginesCollection.map, function(renderingEngine, uuid) {
                     requireDataSourceConfigSelection = true;
                 });
                 if (!requireDataSourceConfigSelection) {
                     exploreController.new();
                 }
                 angular.element($window).on("rowLabelDrillDownEvent", function(e) {
-                    var renderingEngine = renderingEngineManager.dictionary[e.renderingEngineId];
+                    var renderingEngine = renderingEnginesCollection.map[e.renderingEngineId];
                     var filterByAttributeValue = $(e.event.currentTarget).html();
                     var attributeFilterName = renderingEngine.dataView.meta.rows[$(e.event.currentTarget).parent().children().index($(e.event.currentTarget))];
                     renderingEngine.dataView.addInclusionFilter(attributeFilterName, filterByAttributeValue);
                     $timeout(function() {
-                        renderingEngine.draw(dataSourceManager.dataSources[renderingEngine.dataSourceConfigId].formattedData);
+                        renderingEngine.draw(dataSources.map[renderingEngine.dataSourceConfigId].formattedData);
                     }, 0);
                 });
                 angular.element($window).on("colLabelDrillDownEvent", function(e) {
-                    var renderingEngine = renderingEngineManager.dictionary[e.renderingEngineId];
+                    var renderingEngine = renderingEnginesCollection.map[e.renderingEngineId];
                     var filterByAttributeValue = $(e.event.currentTarget).html();
                     var attributeFilterName = renderingEngine.dataView.meta.cols[$(e.event.currentTarget).parent().parent().children().index($(e.event.currentTarget).parent())];
                     renderingEngine.dataView.addInclusionFilter(attributeFilterName, filterByAttributeValue);
                     $timeout(function() {
-                        renderingEngine.draw(dataSourceManager.dataSources[renderingEngine.dataSourceConfigId].formattedData);
+                        renderingEngine.draw(dataSources.map[renderingEngine.dataSourceConfigId].formattedData);
                     }, 0);
                 });
                 $rootScope.$emit('explore:init');
@@ -115,21 +115,21 @@ define([], function() {
 
                 var dataSourceConfigurationId = this.selectedDataSourceConfigId;
 
-                if (dataSourceManager.dataSources[dataSourceConfigurationId] === undefined) {
-                    dataSourceManager.create(dataSourceConfigurationId, dataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].name);
-                    $http(angular.fromJson(dataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].httpConfig)).then(function successCallback(response) {
+                if (dataSources.map[dataSourceConfigurationId] === undefined) {
+                    dataSources.create(dataSourceConfigurationId, dataSourceConfigurations.map[dataSourceConfigurationId].name);
+                    $http(angular.fromJson(dataSourceConfigurations.map[dataSourceConfigurationId].httpConfig)).then(function successCallback(response) {
                         // this callback will be called asynchronously
                         // when the response is available
-                        var dataSource = dataSourceManager.dataSources[dataSourceConfigurationId];
+                        var dataSource = dataSources.map[dataSourceConfigurationId];
                         dataSource.data = $.csv.toArrays(response.data);
-                        dataSource.format(dataSourceManager.dataSources[dataSourceConfigurationId]);
-                        wrapRenderingEngine(renderingEngineManager.create(dataSourceConfigurationId));
+                        dataSource.format(dataSources.map[dataSourceConfigurationId]);
+                        wrapRenderingEngine(renderingEnginesCollection.create(dataSourceConfigurationId));
                     }, function errorCallback(response) {
                         var tmp;
-                        dataSourceManager.delete(dataSourceConfigurationId);
+                        dataSources.delete(dataSourceConfigurationId);
                     });
                 } else {
-                    wrapRenderingEngine(renderingEngineManager.create(dataSourceConfigurationId));
+                    wrapRenderingEngine(renderingEnginesCollection.create(dataSourceConfigurationId));
                 }
             }
         };

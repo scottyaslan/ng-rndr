@@ -5,7 +5,7 @@
         <!-- Main Content -->
         <md-content id="mainContent" flex layout='column'>
             <md-tabs md-dynamic-height="true" md-stretch-tabs="always" md-align-tabs="top" md-border-bottom="true" md-autoselect="true" md-no-disconnect="true" md-no-pagination="true">
-                <md-tab ng-repeat="(RenderingEngineUUID, RenderingEngine) in renderingEngineManager.dictionary" ng-disabled="RenderingEngine.disabled" md-active="RenderingEngine.active" md-on-select="renderingEngineManager.activeRenderingEngine = RenderingEngine.id;RenderingEngine.active = true;" md-on-deselect="renderingEngineManager.activeRenderingEngine = undefined;RenderingEngine.active = false;" label="{{RenderingEngine.title}}">
+                <md-tab ng-repeat="(RenderingEngineUUID, RenderingEngine) in renderingEnginesCollection.map" ng-disabled="RenderingEngine.disabled" md-active="RenderingEngine.active" md-on-select="renderingEnginesCollection.activeRenderingEngine = RenderingEngine.id;RenderingEngine.active = true;" md-on-deselect="renderingEnginesCollection.activeRenderingEngine = undefined;RenderingEngine.active = false;" label="{{RenderingEngine.title}}">
                     <gridster-directive class="gridster" options=exploreController.constants.dataExplorationGrid id="DataExploration">
                         <ul>
                             <li class="md-whiteframe-z5" data-row="1" data-col="1" data-sizex="1" data-sizey="2">
@@ -61,7 +61,7 @@
                                     <md-content id="rendererProgress" flex layout="row" layout-fill layout-align="center center" style="display:none;">
                                         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                                     </md-content>
-                                    <rendering-engine-directive id="renderer" engine="RenderingEngine" input="dataSourceManager.dataSources[RenderingEngine.dataSourceConfigId].formattedData"></rendering-engine-directive>
+                                    <rndr id="renderer" engine="RenderingEngine" input="dataSources.map[RenderingEngine.dataSourceConfigId].formattedData"></rndr>
                                 </div>
                             </li>
                         </ul>

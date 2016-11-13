@@ -3,15 +3,15 @@ define([], function() {
 
     return function() {
         /**
-         * {@link RenderingEngineManager} constructor.
+         * {@link RenderingEnginesCollection} constructor.
          */
-        function RenderingEngineManager() {}
-        RenderingEngineManager.prototype = {
+        function RenderingEnginesCollection() {}
+        RenderingEnginesCollection.prototype = {
             /**
-             * @typedef RenderingEngineManager
+             * @typedef RenderingEnginesCollection
              * @type {object}
              */
-            constructor: RenderingEngineManager,
+            constructor: RenderingEnginesCollection,
             setActiveRenderingEngine: function(id) {
                 var self = this;
                 self.activeRenderingEngine = id;
@@ -30,6 +30,6 @@ define([], function() {
             }
         };
 
-        return new RenderingEngineManager();
+        return new RenderingEnginesCollection();
     }
 });

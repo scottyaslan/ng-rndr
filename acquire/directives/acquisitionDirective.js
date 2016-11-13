@@ -1,15 +1,15 @@
 define([], function() {
     'use strict';
 
-    function acquisitionDirective(acquisitionController, dataSourceConfigurationManager, dataSourceManager) {
+    function acquisitionDirective(acquisitionController, dataSourceConfigurations, dataSources) {
         return {
             restrict: 'E',
             templateUrl:'ngRNDR/acquire/views/acquire.html',
             link: function(scope, element, attrs) {
                 acquisitionController.init();
                 scope.acquisitionController = acquisitionController;
-                scope.dataSourceConfigurationManager = dataSourceConfigurationManager;
-                scope.dataSourceManager = dataSourceManager;
+                scope.dataSourceConfigurations = dataSourceConfigurations;
+                scope.dataSources = dataSources;
             }
         };
     }

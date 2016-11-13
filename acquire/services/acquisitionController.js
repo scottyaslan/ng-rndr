@@ -1,12 +1,12 @@
 define([], function() {
     'use strict';
 
-    return function(RenderingEngine, renderingEngineManager, dataSourceManager, dataSourceConfigurationManager, $rootScope, $window, $q) {
+    return function(RenderingEngine, renderingEnginesCollection, dataSources, dataSourceConfigurations, $rootScope, $window, $q) {
         function AcquisitionController() {}
         AcquisitionController.prototype = {
             constructor: AcquisitionController,
             init: function() {
-                dataSourceManager.create(dataSourceConfigurationManager.create("Untitled", angular.toJson({
+                dataSources.create(dataSourceConfigurations.create("Untitled", angular.toJson({
                     method: 'GET',
                     url: 'http://nicolas.kruchten.com/pivottable/examples/montreal_2014.csv'
                 })), "Untitled");
@@ -19,7 +19,7 @@ define([], function() {
                 acquisitionController.restClientContentView = 'HTTP Config';
             },
             save: function() {
-                var renderingEngine = renderingEngineManager.create(dataSourceConfigurationManager.activeDataSourceConfiguration, undefined, dataSourceManager.dataSources[dataSourceConfigurationManager.activeDataSourceConfiguration].name);
+                var renderingEngine = renderingEnginesCollection.create(dataSourceConfigurations.activeDataSourceConfiguration, undefined, dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].name);
                 //This is a flag that the tabs use in the Explore perspective to know which tab is active.
                 renderingEngine.disabled = false;
                 //This is an objet the `dashboard` uses in the Dashboard Designer perspective to know location and size of the widget.
@@ -30,13 +30,13 @@ define([], function() {
                     row: 1
                 };
                 //reset the active data source configuration
-                dataSourceConfigurationManager.activeDataSourceConfiguration = undefined;
+                dataSourceConfigurations.activeDataSourceConfiguration = undefined;
                 $rootScope.$emit('acquisitionController:save');
             },
             cancel: function() {
-                dataSourceManager.delete(dataSourceManager.dataSources[dataSourceConfigurationManager.activeDataSourceConfiguration].dataSourceConfigId);
-                dataSourceConfigurationManager.delete(dataSourceConfigurationManager.activeDataSourceConfiguration);
-                dataSourceConfigurationManager.activeDataSourceConfiguration = "";
+                dataSources.delete(dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].dataSourceConfigId);
+                dataSourceConfigurations.delete(dataSourceConfigurations.activeDataSourceConfiguration);
+                dataSourceConfigurations.activeDataSourceConfiguration = "";
                 $rootScope.$emit('acquisitionController:cancel');
             },
             openDocumentation: function(view) {

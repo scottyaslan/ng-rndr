@@ -444,7 +444,7 @@ var requirejs, require, define;
 
 define("../node_modules/almond/almond", function(){});
 
-define('render/directives/renderingEngineDirective',[], function() {
+define('directives/rndr',[], function() {
     'use strict';
 
     return function() {
@@ -464,7 +464,7 @@ define('render/directives/renderingEngineDirective',[], function() {
     }
 });
 
-define('render/services/aggregators',[], function() {
+define('services/aggregators',[], function() {
     'use strict';
 
     return function(aggregatorTemplates, dataUtils) {
@@ -521,7 +521,7 @@ define('render/services/aggregators',[], function() {
     }
 });
 
-define('render/services/aggregatorTemplates',[], function() {
+define('services/aggregatorTemplates',[], function() {
     'use strict';
 
     return function(dataUtils) {
@@ -807,7 +807,7 @@ define('render/services/aggregatorTemplates',[], function() {
     }
 });
 
-define('render/services/dataViews',[],
+define('services/dataViews',[],
     function() {
         'use strict';
 
@@ -849,7 +849,7 @@ define('render/services/dataViews',[],
         }
     });
 
-define('render/services/renderers',[],
+define('services/renderers',[],
     function() {
         'use strict';
 
@@ -896,7 +896,7 @@ define('render/services/renderers',[],
         }
     });
 
-define('render/services/RenderingEngine',[], function() {
+define('services/RenderingEngine',[], function() {
     'use strict';
 
     return function(aggregators, dataUtils, renderers, dataViews, $q, $timeout, $window, $rootScope) {
@@ -1042,10 +1042,10 @@ define('render/services/RenderingEngine',[], function() {
     }
 });
 
-define('render/services/RenderingEngines',[], function() {
+define('services/RenderingEngines',[], function() {
     'use strict';
 
-    return function(RenderingEngine, dataSourceConfigurationManager, dataSourceManager, $http) {
+    return function(RenderingEngine, dataSourceConfigurations, map, $http) {
         /**
          * {@link RenderingEngines} constructor.
          */
@@ -1056,7 +1056,7 @@ define('render/services/RenderingEngines',[], function() {
             /**
              * @typedef RenderingEngines
              * @type {object}
-             * @property {object} dictionary - The map of registered {@link RenderingEngine}'s.
+             * @property {object} map - The map of registered {@link RenderingEngine}'s.
              * @property {string} activeRenderingEngine - The UUID of the active {@link RenderingEngine}.
              */
             constructor: RenderingEngines,
@@ -1065,11 +1065,11 @@ define('render/services/RenderingEngines',[], function() {
              */
             init: function() {
                 var self = this;
-                self.dictionary = {};
+                self.map = {};
                 self.activeRenderingEngine = undefined;
             },
             /**
-             * Instantiates a {@link RenderingEngine} and adds it to the dictionary.
+             * Instantiates a {@link RenderingEngine} and adds it to the map.
              * 
              * @param  {string} dataSourceConfigurationId The UUID of the {@link DataSourceConfiguration} referenced by the instaniated {@link RenderingEngine}.
              * @param  {string} [renderingEngineId]         The UUID of the {@link RenderingEngine}
@@ -1084,36 +1084,36 @@ define('render/services/RenderingEngines',[], function() {
                 self.add(renderingEngine);
                 //There may be an active rendering engine, if so deactivate
                 if (self.activeRenderingEngine !== undefined) {
-                    self.dictionary[self.activeRenderingEngine].active = false;
+                    self.map[self.activeRenderingEngine].active = false;
                 }
                 self.activeRenderingEngine = renderingEngine.id;
                 return renderingEngine;
             },
             /**
-             * The size of the dictionary.
+             * The size of the map.
              * 
-             * @return {number} The number of {@link RenderingEngine}'s in the dictionary.
+             * @return {number} The number of {@link RenderingEngine}'s in the map.
              */
             size: function() {
-                return Object.keys(this.dictionary).length;
+                return Object.keys(this.map).length;
             },
             /**
-             * Adds a {@link RenderingEngine} to the dictionary.
+             * Adds a {@link RenderingEngine} to the map.
              * 
              * @param {RenderingEngine} dataSource The {@link RenderingEngine} to add.
              */
             add: function(renderingEngine) {
                 var self = this;
-                self.dictionary[renderingEngine.id] = renderingEngine;
+                self.map[renderingEngine.id] = renderingEngine;
             },
             /**
-             * Deletes a {@link RenderingEngine} from the dictionary by `id`.
+             * Deletes a {@link RenderingEngine} from the map by `id`.
              * 
-             * @param  {string} id The UUID of the {@link RenderingEngine} to remove from the dictionary.
+             * @param  {string} id The UUID of the {@link RenderingEngine} to remove from the map.
              */
             delete: function(id) {
                 var self = this;
-                delete self.dictionary[id];
+                delete self.map[id];
             }
         };
 
@@ -1121,7 +1121,7 @@ define('render/services/RenderingEngines',[], function() {
     }
 });
 
-define('render/services/dataUtils',[], function() {
+define('services/dataUtils',[], function() {
     'use strict';
 
     return function() {
@@ -1351,7 +1351,7 @@ define('render/services/dataUtils',[], function() {
     }
 });
 
-define('render/services/DataSourceConfiguration',[], function() {
+define('services/DataSourceConfiguration',[], function() {
     'use strict';
 
     return function(dataUtils) {
@@ -1382,30 +1382,30 @@ define('render/services/DataSourceConfiguration',[], function() {
     }
 });
 
-define('render/services/dataSourceConfigurationManager',[], function() {
+define('services/dataSourceConfigurations',[], function() {
     'use strict';
 
     return function(DataSourceConfiguration) {
         /**
-         * {@link DataSourceConfigurationManager} constructor.
+         * {@link DataSourceConfigurations} constructor.
          */
-        function DataSourceConfigurationManager() {
+        function DataSourceConfigurations() {
             this.init();
         }
-        DataSourceConfigurationManager.prototype = {
+        DataSourceConfigurations.prototype = {
             /**
-             * @typedef DataSourceConfigurationManager
+             * @typedef DataSourceConfigurations
              * @type {object}
-             * @property {object} dataSourceConfigurations - The map of registered {@link DataSourceConfiguration}'s.
+             * @property {object} map - The map of registered {@link DataSourceConfiguration}'s.
              * @property {string} activeDataSourceConfiguration - The UUID of the active {@link DataSourceConfiguration}.
              */
-            constructor: DataSourceConfigurationManager,
+            constructor: DataSourceConfigurations,
             /**
-             * Initialize the {@link DataSourceConfigurationManager}.
+             * Initialize the {@link DataSourceConfigurations}.
              */
             init: function() {
                 var self = this;
-                self.dataSourceConfigurations = {};
+                self.map = {};
                 self.activeDataSourceConfiguration = undefined;
             },
             /**
@@ -1429,7 +1429,7 @@ define('render/services/dataSourceConfigurationManager',[], function() {
              * @return {number} The number of {@link DataSourceConfiguration}'s in the manager.
              */
             size: function() {
-                return Object.keys(this.dataSourceConfigurations).length;
+                return Object.keys(this.map).length;
             },
             /**
              * Adds a {@link DataSourceConfiguration} to the manager.
@@ -1438,7 +1438,7 @@ define('render/services/dataSourceConfigurationManager',[], function() {
              */
             add: function(dataSourceConfiguration) {
                 var self = this;
-                self.dataSourceConfigurations[dataSourceConfiguration.id] = dataSourceConfiguration;
+                self.map[dataSourceConfiguration.id] = dataSourceConfiguration;
             },
             /**
              * Deletes a {@link DataSourceConfiguration} from the manager by `id`.
@@ -1447,18 +1447,18 @@ define('render/services/dataSourceConfigurationManager',[], function() {
              */
             delete: function(id) {
                 var self = this;
-                delete self.dataSourceConfigurations[id];
+                delete self.map[id];
             }
         };
 
-        return new DataSourceConfigurationManager();
+        return new DataSourceConfigurations();
     }
 });
 
-define('render/services/DataSource',[], function() {
+define('services/DataSource',[], function() {
     'use strict';
 
-    return function(dataSourceConfigurationManager, $q, $rootScope, $http) {
+    return function(dataSourceConfigurations, $q, $rootScope, $http) {
         /**
          * {@link DataSource} constructor.
          * 
@@ -1497,7 +1497,7 @@ define('render/services/DataSource',[], function() {
                 $rootScope.$emit('dataSource:acquire:begin');
                 var self = this;
                 var deffered = $q.defer();
-                $http(angular.fromJson(dataSourceConfigurationManager.dataSourceConfigurations[this.dataSourceConfigId].httpConfig)).then(function successCallback(response) {
+                $http(angular.fromJson(dataSourceConfigurations.map[this.dataSourceConfigId].httpConfig)).then(function successCallback(response) {
                     if (typeof response.data !== "string") {
                         self.data = JSON.stringify(response.data);
                     } else {
@@ -1515,7 +1515,7 @@ define('render/services/DataSource',[], function() {
              * Formats the raw data.
              */
             format: function() {
-                var flatten = new Function("data", dataSourceConfigurationManager.dataSourceConfigurations[this.dataSourceConfigId].flattenDataFunctionString);
+                var flatten = new Function("data", dataSourceConfigurations.map[this.dataSourceConfigId].flattenDataFunctionString);
                 try {
                     this.formattedData = angular.toJson(flatten(angular.fromJson(this.data)));
                 } catch (e) {
@@ -1544,26 +1544,26 @@ define('render/services/DataSource',[], function() {
     }
 });
 
-define('render/services/dataSourceManager',[], function() {
+define('services/dataSources',[], function() {
     'use strict';
 
     return function(DataSource) {
         /**
-         * {@link DataSourceManager} constructor.
+         * {@link DataSources} constructor.
          */
-        function DataSourceManager() {
+        function DataSources() {
             this.init();
         }
-        DataSourceManager.prototype = {
+        DataSources.prototype = {
             /**
-             * @typedef DataSourceManager
+             * @typedef DataSources
              * @type {object}
-             * @property {object} dataSources - The map of registered {@link DataSource}'s.
+             * @property {object} map - The map of registered {@link DataSource}'s.
              */
-            constructor: DataSourceManager,
+            constructor: DataSources,
             init: function() {
                 var self = this;
-                self.dataSources = {};
+                self.map = {};
             },
             /**
              * Instantiates a {@link DataSource} and adds it to the manager by `name` for fast lookups.
@@ -1588,7 +1588,7 @@ define('render/services/dataSourceManager',[], function() {
              */
             add: function(dataSource) {
                 var self = this;
-                self.dataSources[dataSource.dataSourceConfigId] = dataSource;
+                self.map[dataSource.dataSourceConfigId] = dataSource;
             },
             /**
              * Deletes a {@link DataSource} from the manager by `id`.
@@ -1597,36 +1597,36 @@ define('render/services/dataSourceManager',[], function() {
              */
             delete: function(dataSourceConfigId) {
                 var self = this;
-                delete self.dataSources[dataSourceConfigId];
+                delete self.map[dataSourceConfigId];
             },
             /**
              * Refreshes the data.
              */
             refresh: function() {
-                angular.forEach(this.dataSources, function(dataSource) {
+                angular.forEach(this.map, function(dataSource) {
                     dataSource.refresh();
                 });
             }
         };
 
-        return new DataSourceManager();
+        return new DataSources();
     }
 });
 
-define('ng-rndr',['render/directives/renderingEngineDirective',
-        'render/services/aggregators',
-        'render/services/aggregatorTemplates',
-        'render/services/dataViews',
-        'render/services/renderers',
-        'render/services/RenderingEngine',
-        'render/services/RenderingEngines',
-        'render/services/dataUtils',
-        'render/services/DataSourceConfiguration',
-        'render/services/dataSourceConfigurationManager',
-        'render/services/DataSource',
-        'render/services/dataSourceManager'
+define('ng-rndr',['directives/rndr',
+        'services/aggregators',
+        'services/aggregatorTemplates',
+        'services/dataViews',
+        'services/renderers',
+        'services/RenderingEngine',
+        'services/RenderingEngines',
+        'services/dataUtils',
+        'services/DataSourceConfiguration',
+        'services/dataSourceConfigurations',
+        'services/DataSource',
+        'services/dataSources'
     ],
-    function(renderingEngineDirective,
+    function(rndr,
         aggregators,
         aggregatorTemplates,
         dataViews,
@@ -1635,35 +1635,35 @@ define('ng-rndr',['render/directives/renderingEngineDirective',
         RenderingEngines,
         dataUtils,
         DataSourceConfiguration,
-        dataSourceConfigurationManager,
+        dataSourceConfigurations,
         DataSource,
-        dataSourceManager) {
+        dataSources) {
 
         // Create module
         var app = angular.module('ngRndr', []);
 
         // Annotate module dependencies
-        renderingEngineDirective.$inject = [];
+        rndr.$inject = [];
         DataSourceConfiguration.$inject = ['ngRndr.dataUtils'];
-        dataSourceConfigurationManager.$inject = ['ngRndr.DataSourceConfiguration'];
-        DataSource.$inject = ['ngRndr.dataSourceConfigurationManager', '$q', '$rootScope', '$http'];
-        dataSourceManager.$inject = ['ngRndr.DataSource'];
+        dataSourceConfigurations.$inject = ['ngRndr.DataSourceConfiguration'];
+        DataSource.$inject = ['ngRndr.dataSourceConfigurations', '$q', '$rootScope', '$http'];
+        dataSources.$inject = ['ngRndr.DataSource'];
         aggregators.$inject = ['ngRndr.aggregatorTemplates', 'ngRndr.dataUtils'];
         aggregatorTemplates.$inject = ['ngRndr.dataUtils'];
         dataViews.$inject = [];
         renderers.$inject = [];
         RenderingEngine.$inject = ['ngRndr.aggregators', 'ngRndr.dataUtils', 'ngRndr.renderers', 'ngRndr.dataViews', '$q', '$timeout', '$window', '$rootScope'];
-        RenderingEngines.$inject = ['ngRndr.RenderingEngine', 'ngRndr.dataSourceConfigurationManager', 'ngRndr.dataSourceManager', '$http'];
+        RenderingEngines.$inject = ['ngRndr.RenderingEngine', 'ngRndr.dataSourceConfigurations', 'ngRndr.dataSources', '$http'];
         dataUtils.$inject = [];
 
         // Module directives
-        app.directive('renderingEngineDirective', renderingEngineDirective);
+        app.directive('rndr', rndr);
 
         // Module services
         app.service('ngRndr.DataSourceConfiguration', DataSourceConfiguration);
-        app.service('ngRndr.dataSourceConfigurationManager', dataSourceConfigurationManager);
+        app.service('ngRndr.dataSourceConfigurations', dataSourceConfigurations);
         app.service('ngRndr.DataSource', DataSource);
-        app.service('ngRndr.dataSourceManager', dataSourceManager);
+        app.service('ngRndr.dataSources', dataSources);
         app.service('ngRndr.aggregators', aggregators);
         app.service('ngRndr.aggregatorTemplates', aggregatorTemplates);
         app.service('ngRndr.dataViews', dataViews);

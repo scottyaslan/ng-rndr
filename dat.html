@@ -18,20 +18,20 @@
                         </md-menu-content>
                     </md-menu>
                 </md-menu-item>
-                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEngineManager.activeRenderingEngine">
+                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEnginesCollection.activeRenderingEngine">
                     <md-button ng-click="Controller.selectFile('open');">Open</md-button>
                 </md-menu-item>
                 <md-menu-item>
                     <md-button ng-click="Controller.selectFile('import');">Import</md-button>
                 </md-menu-item>
-                <md-menu-item ng-if="renderingEngineManager.size() > 0">
+                <md-menu-item ng-if="renderingEnginesCollection.size() > 0">
                     <md-button ng-click="Controller.export();">Export</md-button>
                 </md-menu-item>
-                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEngineManager.activeRenderingEngine">
+                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEnginesCollection.activeRenderingEngine">
                     <md-button ng-click="exploreController.dialogContentView = 'Rename';uiControls.openDialog('Name')">Rename</md-button>
                 </md-menu-item>
-                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEngineManager.activeRenderingEngine">
-                    <md-button ng-click="Controller.deleteRenderingEngine(renderingEngineManager.activeRenderingEngine);">Delete</md-button>
+                <md-menu-item ng-if="Controller.mainContentView !== 'Dashboard Designer' && renderingEnginesCollection.activeRenderingEngine">
+                    <md-button ng-click="Controller.deleteRenderingEngine(renderingEnginesCollection.activeRenderingEngine);">Delete</md-button>
                 </md-menu-item>
             </md-menu-content>
         </md-menu>
@@ -56,7 +56,7 @@
             </button>
             <md-menu-content style="z-index:3;">
                 <md-menu-item ng-repeat="rendererName in renderers.list()">
-                    <md-button ng-click="renderingEngineManager.dictionary[renderingEngineManager.activeRenderingEngine].draw(dataSourceManager.dataSources[renderingEngineManager.dictionary[renderingEngineManager.activeRenderingEngine].dataSourceConfigId].formattedData, rendererName)">
+                    <md-button ng-click="renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw(dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData, rendererName)">
                         {{rendererName}}
                     </md-button>
                 </md-menu-item>
@@ -93,7 +93,7 @@
         <acquisition-directive style="height: 100%;"></acquisition-directive>
     </md-content>
     <md-content style="height: 100%; overflow-x: hidden;" layout='column' ng-switch-when="Dashboard Designer">
-        <dashboard-directive rendering-engine-manager="renderingEngineManager" options="options"></dashboard-directive>
+        <dashboard-directive rendering-engines-collection="renderingEnginesCollection" options="options"></dashboard-directive>
     </md-content>
     <md-content style="height: 100%; background-color: lightgrey" layout='row' layout-align="center center" ng-switch-default>
         <md-card flex="50" class="md-whiteframe-z5">

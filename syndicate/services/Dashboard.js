@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    return function($rootScope, $compile, $window, $q, $timeout, dataSourceManager) {
+    return function($rootScope, $compile, $window, $q, $timeout, dataSources) {
         function Dashboard(element) {
             this.id;
             this.element = element;
@@ -20,25 +20,25 @@ define([], function() {
                 var self = this;
                 var deferred = $q.defer();
                 $timeout(function(scope) {
-                    scope.dataSourceManager = dataSourceManager;
+                    scope.dataSources = dataSources;
                     var ul = document.createElement('ul');
                     ul.setAttribute('class', 'gridster');
-                    //Build the grid from the renderingEngineManager
+                    //Build the grid from the renderingEnginesCollection
                     var i = 1;
-                    angular.forEach(scope.renderingEngineManager.dictionary, function(renderingEngine, uuid) {
+                    angular.forEach(scope.renderingEnginesCollection.map, function(renderingEngine, uuid) {
                         var contextMenu = 'contextMenu' + i;
                         scope[contextMenu] = {
                             callback: function(key, options) {
                                 switch (key) {
                                     case "edit":
-                                        scope.renderingEngineManager.setActiveRenderingEngine(renderingEngine.id);
+                                        scope.renderingEnginesCollection.setActiveRenderingEngine(renderingEngine.id);
                                         $rootScope.$emit('Dashboard:edit');
                                         break;
                                     case "delete":
                                         self.element.isolateScope().gridster.remove_widget(renderingEngine.element.parent().parent());
-                                        scope.renderingEngineManager.delete(renderingEngine.id);
+                                        scope.renderingEnginesCollection.delete(renderingEngine.id);
                                         var returnToExploration = true;
-                                        angular.forEach(scope.renderingEngineManager.dictionary, function(renderingEngine, uuid) {
+                                        angular.forEach(scope.renderingEnginesCollection.map, function(renderingEngine, uuid) {
                                             returnToExploration = false;
                                         });
                                         if (returnToExploration) {
@@ -75,7 +75,7 @@ define([], function() {
                         $(li).append($compile("<header style='cursor:move' class='ui-dialog-titlebar ui-widget-header' context-menu='" + contextMenu + "' context-menu-selector=\"'.context-menu'\"><div class='context-menu box' ><span class='handle ui-icon ui-icon-gear' style='display:inline-block'></span>" + renderingEngine.title + "</div></header>")(scope));
                         var div = document.createElement('div');
                         div.setAttribute('class', 'gridsterWidgetContainer');
-                        var renderer = $compile("<rendering-engine-directive input='dataSourceManager.dataSources[renderingEngineManager.dictionary[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEngineManager.dictionary[\"" + uuid + "\"]'></rendering-engine-directive>")(scope);
+                        var renderer = $compile("<rndr input='dataSources.map[renderingEnginesCollection.map[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEnginesCollection.map[\"" + uuid + "\"]'></rndr>")(scope);
                         $(div).append(renderer[0]);
                         $(li).append(div);
                         i++;

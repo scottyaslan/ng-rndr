@@ -5,7 +5,7 @@ define([], function() {
         return {
             restrict: 'E',
             scope: {
-                'renderingEngineManager': '=',
+                'renderingEnginesCollection': '=',
                 'options': '='
             },
             link: {

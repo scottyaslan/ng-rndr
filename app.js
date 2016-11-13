@@ -1,5 +1,5 @@
 define(['../ngRNDR/AppController',
-        '../ngRNDR/renderingEngineManager',
+        '../ngRNDR/renderingEnginesCollection',
         '../ngRNDR/common/controllers/controllerWrapper',
         '../ngRNDR/common/services/uiControls',
         '../ngRNDR/acquire/services/acquisitionController',
@@ -27,7 +27,7 @@ define(['../ngRNDR/AppController',
         'ui-ace'
     ],
     function(AppController,
-        renderingEngineManager,
+        renderingEnginesCollection,
         controllerWrapper,
         uiControls,
         acquisitionController,
@@ -60,22 +60,22 @@ define(['../ngRNDR/AppController',
 
         // Annotate module dependencies
         gridsterDirective.$inject = [];
-        renderingEngineManager.$inject = [];
+        renderingEnginesCollection.$inject = [];
         datDirective.$inject = [];
-        explorationDirective.$inject = ['exploreController', 'renderingEngineManager', 'ngRndr.dataSourceManager'];
+        explorationDirective.$inject = ['exploreController', 'renderingEnginesCollection', 'ngRndr.dataSources'];
         dashboardDirective.$inject = ['Dashboard', '$window'];
-        exploreController.$inject = ['renderingEngineManager', 'ngRndr.dataSourceManager', 'ngRndr.dataSourceConfigurationManager', '$window', '$timeout', '$rootScope', '$http'];
-        Dashboard.$inject = ['$rootScope', '$compile', '$window', '$q', '$timeout', 'ngRndr.dataSourceManager'];
+        exploreController.$inject = ['renderingEnginesCollection', 'ngRndr.dataSources', 'ngRndr.dataSourceConfigurations', '$window', '$timeout', '$rootScope', '$http'];
+        Dashboard.$inject = ['$rootScope', '$compile', '$window', '$q', '$timeout', 'ngRndr.dataSources'];
         uiControls.$inject = ['$window', '$mdSidenav', '$mdUtil', '$mdBottomSheet', '$mdDialog'];
-        acquisitionController.$inject = ['ngRndr.RenderingEngine', 'renderingEngineManager', 'ngRndr.dataSourceManager', 'ngRndr.dataSourceConfigurationManager', '$rootScope', '$window', '$q'];
+        acquisitionController.$inject = ['ngRndr.RenderingEngine', 'renderingEnginesCollection', 'ngRndr.dataSources', 'ngRndr.dataSourceConfigurations', '$rootScope', '$window', '$q'];
         AppController.$inject = ['ngRndr.RenderingEngine',
-            'ngRndr.dataSourceManager',
+            'ngRndr.dataSources',
             'acquisitionController',
             'exploreController',
             'ngRndr.RenderingEngines',
-            'renderingEngineManager',
+            'renderingEnginesCollection',
             'uiControls',
-            'ngRndr.dataSourceConfigurationManager',
+            'ngRndr.dataSourceConfigurations',
             'ngRndr.dataViews',
             'ngRndr.renderers',
             '$window',
@@ -86,8 +86,8 @@ define(['../ngRNDR/AppController',
             '$scope',
             '$q'
         ];
-        controllerWrapper.$inject = ['$scope', 'uiControls', 'ngRndr.dataSourceManager', 'ngRndr.dataSourceConfigurationManager', 'acquisitionController', 'exploreController', 'renderingEngineManager', 'ngRndr.aggregators'];
-        acquisitionDirective.$inject = ['acquisitionController', 'ngRndr.dataSourceConfigurationManager', 'ngRndr.dataSourceManager'];
+        controllerWrapper.$inject = ['$scope', 'uiControls', 'ngRndr.dataSources', 'ngRndr.dataSourceConfigurations', 'acquisitionController', 'exploreController', 'renderingEnginesCollection', 'ngRndr.aggregators'];
+        acquisitionDirective.$inject = ['acquisitionController', 'ngRndr.dataSourceConfigurations', 'ngRndr.dataSources'];
 
         app.config(config);
 
@@ -96,7 +96,7 @@ define(['../ngRNDR/AppController',
         app.controller('controllerWrapper', controllerWrapper);
 
         // Module services
-        app.service('renderingEngineManager', renderingEngineManager);
+        app.service('renderingEnginesCollection', renderingEnginesCollection);
         app.service('uiControls', uiControls);
         app.service('acquisitionController', acquisitionController);
         app.service('exploreController', exploreController);

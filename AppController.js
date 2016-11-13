@@ -16,13 +16,13 @@ define(['datatables_renderers',
         'use strict';
 
         return function(RenderingEngine,
-            dataSourceManager,
+            dataSources,
             acquisitionController,
             exploreController,
             RenderingEngines,
-            renderingEngineManager,
+            renderingEnginesCollection,
             uiControls,
-            dataSourceConfigurationManager,
+            dataSourceConfigurations,
             dataViews,
             renderers,
             $window,
@@ -108,9 +108,9 @@ define(['datatables_renderers',
                             // when the response is available
                             var csvlist_arr = $.csv.toObjects(csvlist.data);
                             angular.forEach(csvlist_arr, function(dataset) {
-                                var dataSourceConfigurationId = dataSourceConfigurationManager.create(dataset.Title);
+                                var dataSourceConfigurationId = dataSourceConfigurations.create(dataset.Title);
                                 var url = "http://nicolas.kruchten.com/Rdatasets/csv/" + dataset.Package + "/" + dataset.Item + ".csv";
-                                dataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationId].httpConfig = angular.toJson({ method: 'GET', url: url });
+                                dataSourceConfigurations.map[dataSourceConfigurationId].httpConfig = angular.toJson({ method: 'GET', url: url });
                             });
                         }, function errorCallback(csvlist) {
                             // Do Nothing.
@@ -123,16 +123,16 @@ define(['datatables_renderers',
                     var self = this;
                     $rootScope.$emit('controller:hydrate:init');
                     var promises = [];
-                    $.extend(dataSourceConfigurationManager.dataSourceConfigurations, rndr.dataSourceConfigurations);
+                    $.extend(dataSourceConfigurations.map, rndr.dataSourceConfigurations);
                     angular.forEach(rndr.dataSourceConfigurations, function(dataSourceConfiguration) {
-                        promises.push(dataSourceManager.create(dataSourceConfiguration.id, dataSourceConfiguration.name).acquire());
+                        promises.push(dataSources.create(dataSourceConfiguration.id, dataSourceConfiguration.name).acquire());
                     });
                     angular.forEach(rndr.renderingEngines, function(renderingEngine) {
-                        $.extend(renderingEngineManager.dictionary[renderingEngineManager.create(renderingEngine.dataSourceConfigId, renderingEngine.id, renderingEngine.title).id], renderingEngine);
+                        $.extend(renderingEnginesCollection.map[renderingEnginesCollection.create(renderingEngine.dataSourceConfigId, renderingEngine.id, renderingEngine.title).id], renderingEngine);
                     });
                     $q.all(promises).then(function() {
                         angular.forEach(rndr.dataSourceConfigurations, function(dataSourceConfiguration) {
-                            dataSourceManager.dataSources[dataSourceConfiguration.id].format();
+                            dataSources.map[dataSourceConfiguration.id].format();
                         });
                         $rootScope.$emit('controller:hydrate:complete');
                         self.mainContentView = "Explore";
@@ -144,9 +144,9 @@ define(['datatables_renderers',
                     //add a confimation dialog to allow user to decide to merge or only view contents of .rndr
 
                     //reinitialize
-                    dataSourceManager.init();
-                    dataSourceConfigurationManager.init();
-                    renderingEngineManager.init();
+                    dataSources.init();
+                    dataSourceConfigurations.init();
+                    renderingEnginesCollection.init();
                     self.hydrate(rndr);
 
                 },
@@ -195,14 +195,14 @@ define(['datatables_renderers',
                 },
                 export: function() {
                     var rndr = {
-                        renderingEngines: renderingEngineManager.dictionary,
-                        dataSourceConfigurations: dataSourceConfigurationManager.dataSourceConfigurations
+                        renderingEngines: renderingEnginesCollection.map,
+                        dataSourceConfigurations: dataSourceConfigurations.map
                     }
                     downloadjs(JSON.stringify(JSON.decycle(rndr)), 'test.rndr', 'application/json');
                 },
                 deleteRenderingEngine: function(id) {
-                    renderingEngineManager.delete(id);
-                    if (Object.keys(renderingEngineManager.dictionary).length === 0) {
+                    renderingEnginesCollection.delete(id);
+                    if (Object.keys(renderingEnginesCollection.map).length === 0) {
                         $timeout(function() {
                             exploreController.new();
                         }, 0);
@@ -238,7 +238,7 @@ define(['datatables_renderers',
                     }
                 },
                 sandboxMenusEnabled: function() {
-                    return Object.keys(renderingEngineManager.dictionary).length === 0;
+                    return Object.keys(renderingEnginesCollection.map).length === 0;
                 }
             };
 
@@ -393,8 +393,8 @@ define(['datatables_renderers',
             $scope.renderers = renderers;
 
             //Singleton for tracking all renderingEngine objects
-            $.extend(renderingEngineManager, new RenderingEngines());
-            $scope.renderingEngineManager = renderingEngineManager;
+            $.extend(renderingEnginesCollection, new RenderingEngines());
+            $scope.renderingEnginesCollection = renderingEnginesCollection;
 
             //Singleton for controlling the UI
             $scope.uiControls = uiControls;
@@ -425,7 +425,7 @@ define(['datatables_renderers',
 
             var closeDialog = function() {
                 uiControls.hideDialog();
-                if (Object.keys(renderingEngineManager.dictionary).length === 0) {
+                if (Object.keys(renderingEnginesCollection.map).length === 0) {
                     //$rootScope.$emit('acquisitionController:cancel');  
                 }
             };
@@ -451,14 +451,14 @@ define(['datatables_renderers',
                     enabled: true,
                     resize: function(e, ui, $widget) {},
                     stop: function(e, ui, $widget) {
-                        renderingEngineManager.dictionary[$widget[0].id].draw(dataSourceManager.dataSources[renderingEngineManager.dictionary[$widget[0].id].dataSourceConfigId].formattedData);
-                        renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().parent().data('gridster').$widgets);
+                        renderingEnginesCollection.map[$widget[0].id].draw(dataSources.map[renderingEnginesCollection.map[$widget[0].id].dataSourceConfigId].formattedData);
+                        renderingEnginesCollection.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().parent().data('gridster').$widgets);
                     }
                 },
                 draggable: {
                     handle: 'div.context-menu.box',
                     stop: function(e, ui, $widget) {
-                        renderingEngineManager.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().data('gridster').$widgets);
+                        renderingEnginesCollection.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().data('gridster').$widgets);
                     }
                 },
                 //http://matthew.wagerfield.com/parallax/
@@ -471,6 +471,6 @@ define(['datatables_renderers',
             $scope.exploreController = exploreController;
 
             //Singleton for tracking all dataSources
-            $scope.dataSourceManager = dataSourceManager;
+            $scope.dataSources = dataSources;
         }
     });

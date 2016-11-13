@@ -53,24 +53,24 @@
                     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                 </md-content>
                 <md-content layout-padding ng-switch-when="HTTP Config">
-                    <div ng-model="dataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationManager.activeDataSourceConfiguration].httpConfig"
+                    <div ng-model="dataSourceConfigurations.map[dataSourceConfigurations.activeDataSourceConfiguration].httpConfig"
                          ui-ace="{ useWrapMode : true,
                                  theme:'eclipse',
                                  mode: 'javascript'}" >
                     </div>
                 </md-content>
                 <md-content layout-padding ng-switch-when="Acquire Data">
-                    {{dataSourceManager.dataSources[dataSourceConfigurationManager.activeDataSourceConfiguration].data}}
+                    {{dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].data}}
                 </md-content>
                 <md-content layout-padding ng-switch-when="Formatting">
-                    <div ng-model="dataSourceConfigurationManager.dataSourceConfigurations[dataSourceConfigurationManager.activeDataSourceConfiguration].flattenDataFunctionString"
+                    <div ng-model="dataSourceConfigurations.map[dataSourceConfigurations.activeDataSourceConfiguration].flattenDataFunctionString"
                          ui-ace="{ useWrapMode : true,
                                  theme:'eclipse',
                                  mode: 'javascript'}" >
                     </div>
                 </md-content>
                 <md-content layout-padding ng-switch-when="Formatted">
-                    {{dataSourceManager.dataSources[dataSourceConfigurationManager.activeDataSourceConfiguration].formattedData}}
+                    {{dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].formattedData}}
                 </md-content>
             </md-content>
         </md-content>
@@ -311,7 +311,7 @@
         <md-content layout='row' style="background-color: transparent;">
             <md-content ng-switch on="acquisitionController.restClientContentView" style="background-color: transparent;">
                 <md-content layout-padding ng-switch-when="HTTP Config" style="background-color: transparent;">
-                    <md-button class="md-raised md-warn" ng-disabled="acquisitionController.dataAcquisitionInProgress" ng-click="uiControls.closeLeftSideNav();uiControls.closeRightSideNav();acquisitionController.dataAcquisitionInProgress = true;dataSourceManager.dataSources[dataSourceConfigurationManager.activeDataSourceConfiguration].acquire();acquisitionController.restClientContentView = 'Loading';">
+                    <md-button class="md-raised md-warn" ng-disabled="acquisitionController.dataAcquisitionInProgress" ng-click="uiControls.closeLeftSideNav();uiControls.closeRightSideNav();acquisitionController.dataAcquisitionInProgress = true;dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].acquire();acquisitionController.restClientContentView = 'Loading';">
 <!--                         <md-tooltip>
                             Acquire Data
                         </md-tooltip> -->
@@ -327,7 +327,7 @@
                     </md-button>
                 </md-content>
                 <md-content layout-padding ng-switch-when="Formatting" style="background-color: transparent;">
-                    <md-button class="md-raised md-warn" ng-click="uiControls.closeRightSideNav();dataSourceManager.dataSources[dataSourceConfigurationManager.activeDataSourceConfiguration].format();acquisitionController.restClientContentView = 'Formatted';">
+                    <md-button class="md-raised md-warn" ng-click="uiControls.closeRightSideNav();dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].format();acquisitionController.restClientContentView = 'Formatted';">
 <!--                         <md-tooltip>
                             View Formatted Data
                         </md-tooltip> -->
