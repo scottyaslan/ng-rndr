@@ -1,5 +1,5 @@
 {
-    "name": "ngRNDR",
+    "name": "ng-rndr",
     "version": "0.0.1",
     "authors": [
         "Scott Aslan <astechdev@gmail.com>"
@@ -8,6 +8,7 @@
     "ignore": [
         "examples",
         "node_modules",
+        "gulp",
         "src",
         "test-src",
         ".bowerrc",
@@ -15,10 +16,13 @@
         ".jshintignore",
         ".jshintrc",
         "bower.json",
-        "Gruntfile.js",
+        "Gruntfile.js",,
+        "gulpFile.js",
+        "LICENSE",
         "package.json",
         "README.md",
-        "LICENSE"
+        "wrap.end",
+        "wrap.start"
     ],
     "dependencies": {
         "angular": "~1.5.0",

@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    return function(dataSourceConfigurationManager, $q, $rootScope, $http) {
+    return function(dataSourceConfigurations, $q, $rootScope, $http) {
         /**
          * {@link DataSource} constructor.
          * 
@@ -40,7 +40,7 @@ define([], function() {
                 $rootScope.$emit('dataSource:acquire:begin');
                 var self = this;
                 var deffered = $q.defer();
-                $http(angular.fromJson(dataSourceConfigurationManager.dataSourceConfigurations[this.dataSourceConfigId].httpConfig)).then(function successCallback(response) {
+                $http(angular.fromJson(dataSourceConfigurations.map[this.dataSourceConfigId].httpConfig)).then(function successCallback(response) {
                     if (typeof response.data !== "string") {
                         self.data = JSON.stringify(response.data);
                     } else {
@@ -58,7 +58,7 @@ define([], function() {
              * Formats the raw data.
              */
             format: function() {
-                var flatten = new Function("data", dataSourceConfigurationManager.dataSourceConfigurations[this.dataSourceConfigId].flattenDataFunctionString);
+                var flatten = new Function("data", dataSourceConfigurations.map[this.dataSourceConfigId].flattenDataFunctionString);
                 try {
                     this.formattedData = angular.toJson(flatten(angular.fromJson(this.data)));
                 } catch (e) {

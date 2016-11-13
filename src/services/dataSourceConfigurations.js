@@ -3,25 +3,25 @@ define([], function() {
 
     return function(DataSourceConfiguration) {
         /**
-         * {@link DataSourceConfigurationManager} constructor.
+         * {@link DataSourceConfigurations} constructor.
          */
-        function DataSourceConfigurationManager() {
+        function DataSourceConfigurations() {
             this.init();
         }
-        DataSourceConfigurationManager.prototype = {
+        DataSourceConfigurations.prototype = {
             /**
-             * @typedef DataSourceConfigurationManager
+             * @typedef DataSourceConfigurations
              * @type {object}
-             * @property {object} dataSourceConfigurations - The map of registered {@link DataSourceConfiguration}'s.
+             * @property {object} map - The map of registered {@link DataSourceConfiguration}'s.
              * @property {string} activeDataSourceConfiguration - The UUID of the active {@link DataSourceConfiguration}.
              */
-            constructor: DataSourceConfigurationManager,
+            constructor: DataSourceConfigurations,
             /**
-             * Initialize the {@link DataSourceConfigurationManager}.
+             * Initialize the {@link DataSourceConfigurations}.
              */
             init: function() {
                 var self = this;
-                self.dataSourceConfigurations = {};
+                self.map = {};
                 self.activeDataSourceConfiguration = undefined;
             },
             /**
@@ -45,7 +45,7 @@ define([], function() {
              * @return {number} The number of {@link DataSourceConfiguration}'s in the manager.
              */
             size: function() {
-                return Object.keys(this.dataSourceConfigurations).length;
+                return Object.keys(this.map).length;
             },
             /**
              * Adds a {@link DataSourceConfiguration} to the manager.
@@ -54,7 +54,7 @@ define([], function() {
              */
             add: function(dataSourceConfiguration) {
                 var self = this;
-                self.dataSourceConfigurations[dataSourceConfiguration.id] = dataSourceConfiguration;
+                self.map[dataSourceConfiguration.id] = dataSourceConfiguration;
             },
             /**
              * Deletes a {@link DataSourceConfiguration} from the manager by `id`.
@@ -63,10 +63,10 @@ define([], function() {
              */
             delete: function(id) {
                 var self = this;
-                delete self.dataSourceConfigurations[id];
+                delete self.map[id];
             }
         };
 
-        return new DataSourceConfigurationManager();
+        return new DataSourceConfigurations();
     }
 });

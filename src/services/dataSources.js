@@ -3,21 +3,21 @@ define([], function() {
 
     return function(DataSource) {
         /**
-         * {@link DataSourceManager} constructor.
+         * {@link DataSources} constructor.
          */
-        function DataSourceManager() {
+        function DataSources() {
             this.init();
         }
-        DataSourceManager.prototype = {
+        DataSources.prototype = {
             /**
-             * @typedef DataSourceManager
+             * @typedef DataSources
              * @type {object}
-             * @property {object} dataSources - The map of registered {@link DataSource}'s.
+             * @property {object} map - The map of registered {@link DataSource}'s.
              */
-            constructor: DataSourceManager,
+            constructor: DataSources,
             init: function() {
                 var self = this;
-                self.dataSources = {};
+                self.map = {};
             },
             /**
              * Instantiates a {@link DataSource} and adds it to the manager by `name` for fast lookups.
@@ -42,7 +42,7 @@ define([], function() {
              */
             add: function(dataSource) {
                 var self = this;
-                self.dataSources[dataSource.dataSourceConfigId] = dataSource;
+                self.map[dataSource.dataSourceConfigId] = dataSource;
             },
             /**
              * Deletes a {@link DataSource} from the manager by `id`.
@@ -51,18 +51,18 @@ define([], function() {
              */
             delete: function(dataSourceConfigId) {
                 var self = this;
-                delete self.dataSources[dataSourceConfigId];
+                delete self.map[dataSourceConfigId];
             },
             /**
              * Refreshes the data.
              */
             refresh: function() {
-                angular.forEach(this.dataSources, function(dataSource) {
+                angular.forEach(this.map, function(dataSource) {
                     dataSource.refresh();
                 });
             }
         };
 
-        return new DataSourceManager();
+        return new DataSources();
     }
 });

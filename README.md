@@ -1,38 +1,34 @@
-##ngRNDR
+##ngRndr
 
-ngRNDR is an pluggable and embeddable angular module for visualizing a data model.  
+ngRndr is a pluggable and embeddable angular module for formatting and visualizing data.  
 
 ##Building
 
-Developers can easily build ngRNDR using NPM.
+Developers can easily build ngRndr using NPM.
 
 First install or update your local project's **npm** tools:
 
 ```bash
 # First install all the NPM tools:
 npm install
-
-# Or update
-npm update
 ```
 
 #### Bower
 
-For developers not interested in building the ngRNDR library... use **bower** to install
-and use the ngRNDR distribution files.
+For developers not interested in building the ngRndr library you can use **bower** to install the ngRndr distribution files.
 
 Change to your project's root directory.
 
 ```bash
 # To get the latest stable version, use Bower from the command line.
-bower install ngRNDR
+bower install ng-rndr
 
 # To get the most recent, latest committed-to-master version use:
-bower install ngRNDR#master
+bower install ng-rndr#master
 ```
 
-Once you have all the necessary assets installed, add `ngRNDR` as a dependency for your app:
+Once you have all the necessary assets installed, add `ngRndr` as a dependency for your app:
 
 ```javascript
-angular.module('myApp', ['ngRNDR']);
+angular.module('myApp', ['ngRndr']);
 ```

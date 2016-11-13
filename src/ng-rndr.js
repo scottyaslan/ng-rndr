@@ -1,17 +1,17 @@
-define(['render/directives/renderingEngineDirective',
-        'render/services/aggregators',
-        'render/services/aggregatorTemplates',
-        'render/services/dataViews',
-        'render/services/renderers',
-        'render/services/RenderingEngine',
-        'render/services/RenderingEngines',
-        'render/services/dataUtils',
-        'render/services/DataSourceConfiguration',
-        'render/services/dataSourceConfigurationManager',
-        'render/services/DataSource',
-        'render/services/dataSourceManager'
+define(['directives/rndr',
+        'services/aggregators',
+        'services/aggregatorTemplates',
+        'services/dataViews',
+        'services/renderers',
+        'services/RenderingEngine',
+        'services/RenderingEngines',
+        'services/dataUtils',
+        'services/DataSourceConfiguration',
+        'services/dataSourceConfigurations',
+        'services/DataSource',
+        'services/dataSources'
     ],
-    function(renderingEngineDirective,
+    function(rndr,
         aggregators,
         aggregatorTemplates,
         dataViews,
@@ -20,35 +20,35 @@ define(['render/directives/renderingEngineDirective',
         RenderingEngines,
         dataUtils,
         DataSourceConfiguration,
-        dataSourceConfigurationManager,
+        dataSourceConfigurations,
         DataSource,
-        dataSourceManager) {
+        dataSources) {
 
         // Create module
         var app = angular.module('ngRndr', []);
 
         // Annotate module dependencies
-        renderingEngineDirective.$inject = [];
+        rndr.$inject = [];
         DataSourceConfiguration.$inject = ['ngRndr.dataUtils'];
-        dataSourceConfigurationManager.$inject = ['ngRndr.DataSourceConfiguration'];
-        DataSource.$inject = ['ngRndr.dataSourceConfigurationManager', '$q', '$rootScope', '$http'];
-        dataSourceManager.$inject = ['ngRndr.DataSource'];
+        dataSourceConfigurations.$inject = ['ngRndr.DataSourceConfiguration'];
+        DataSource.$inject = ['ngRndr.dataSourceConfigurations', '$q', '$rootScope', '$http'];
+        dataSources.$inject = ['ngRndr.DataSource'];
         aggregators.$inject = ['ngRndr.aggregatorTemplates', 'ngRndr.dataUtils'];
         aggregatorTemplates.$inject = ['ngRndr.dataUtils'];
         dataViews.$inject = [];
         renderers.$inject = [];
         RenderingEngine.$inject = ['ngRndr.aggregators', 'ngRndr.dataUtils', 'ngRndr.renderers', 'ngRndr.dataViews', '$q', '$timeout', '$window', '$rootScope'];
-        RenderingEngines.$inject = ['ngRndr.RenderingEngine', 'ngRndr.dataSourceConfigurationManager', 'ngRndr.dataSourceManager', '$http'];
+        RenderingEngines.$inject = ['ngRndr.RenderingEngine', 'ngRndr.dataSourceConfigurations', 'ngRndr.dataSources', '$http'];
         dataUtils.$inject = [];
 
         // Module directives
-        app.directive('renderingEngineDirective', renderingEngineDirective);
+        app.directive('rndr', rndr);
 
         // Module services
         app.service('ngRndr.DataSourceConfiguration', DataSourceConfiguration);
-        app.service('ngRndr.dataSourceConfigurationManager', dataSourceConfigurationManager);
+        app.service('ngRndr.dataSourceConfigurations', dataSourceConfigurations);
         app.service('ngRndr.DataSource', DataSource);
-        app.service('ngRndr.dataSourceManager', dataSourceManager);
+        app.service('ngRndr.dataSources', dataSources);
         app.service('ngRndr.aggregators', aggregators);
         app.service('ngRndr.aggregatorTemplates', aggregatorTemplates);
         app.service('ngRndr.dataViews', dataViews);

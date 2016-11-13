@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    return function(RenderingEngine, dataSourceConfigurationManager, dataSourceManager, $http) {
+    return function(RenderingEngine, dataSourceConfigurations, map, $http) {
         /**
          * {@link RenderingEngines} constructor.
          */
@@ -12,7 +12,7 @@ define([], function() {
             /**
              * @typedef RenderingEngines
              * @type {object}
-             * @property {object} dictionary - The map of registered {@link RenderingEngine}'s.
+             * @property {object} map - The map of registered {@link RenderingEngine}'s.
              * @property {string} activeRenderingEngine - The UUID of the active {@link RenderingEngine}.
              */
             constructor: RenderingEngines,
@@ -21,11 +21,11 @@ define([], function() {
              */
             init: function() {
                 var self = this;
-                self.dictionary = {};
+                self.map = {};
                 self.activeRenderingEngine = undefined;
             },
             /**
-             * Instantiates a {@link RenderingEngine} and adds it to the dictionary.
+             * Instantiates a {@link RenderingEngine} and adds it to the map.
              * 
              * @param  {string} dataSourceConfigurationId The UUID of the {@link DataSourceConfiguration} referenced by the instaniated {@link RenderingEngine}.
              * @param  {string} [renderingEngineId]         The UUID of the {@link RenderingEngine}
@@ -40,36 +40,36 @@ define([], function() {
                 self.add(renderingEngine);
                 //There may be an active rendering engine, if so deactivate
                 if (self.activeRenderingEngine !== undefined) {
-                    self.dictionary[self.activeRenderingEngine].active = false;
+                    self.map[self.activeRenderingEngine].active = false;
                 }
                 self.activeRenderingEngine = renderingEngine.id;
                 return renderingEngine;
             },
             /**
-             * The size of the dictionary.
+             * The size of the map.
              * 
-             * @return {number} The number of {@link RenderingEngine}'s in the dictionary.
+             * @return {number} The number of {@link RenderingEngine}'s in the map.
              */
             size: function() {
-                return Object.keys(this.dictionary).length;
+                return Object.keys(this.map).length;
             },
             /**
-             * Adds a {@link RenderingEngine} to the dictionary.
+             * Adds a {@link RenderingEngine} to the map.
              * 
              * @param {RenderingEngine} dataSource The {@link RenderingEngine} to add.
              */
             add: function(renderingEngine) {
                 var self = this;
-                self.dictionary[renderingEngine.id] = renderingEngine;
+                self.map[renderingEngine.id] = renderingEngine;
             },
             /**
-             * Deletes a {@link RenderingEngine} from the dictionary by `id`.
+             * Deletes a {@link RenderingEngine} from the map by `id`.
              * 
-             * @param  {string} id The UUID of the {@link RenderingEngine} to remove from the dictionary.
+             * @param  {string} id The UUID of the {@link RenderingEngine} to remove from the map.
              */
             delete: function(id) {
                 var self = this;
-                delete self.dictionary[id];
+                delete self.map[id];
             }
         };
 

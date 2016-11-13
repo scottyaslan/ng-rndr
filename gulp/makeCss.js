@@ -3,7 +3,7 @@ var gulp = require('gulp'),
     minifyCSS = require('gulp-minify-css');
 
 gulp.task('makeCss', function() {
-    gulp.src('./src/render/plugins/pivot.css')
+    gulp.src('./src/plugins/pivot.css')
         .pipe(concat('pivot.css'))//trick to output to new file
         .pipe(gulp.dest('./dist/css'))
         .pipe(minifyCSS())

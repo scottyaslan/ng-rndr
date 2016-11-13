@@ -7,7 +7,7 @@ var gulp = require('gulp'),
 
 gulp.task('makeJs', function() {
     
-    gulp.src('./src/render/plugins/renderers/*.js')
+    gulp.src('./src/plugins/renderers/*.js')
         //compile to js (and create map files)
         .pipe(sourcemaps.init())
         .pipe(sourcemaps.write('./'))
@@ -23,7 +23,7 @@ gulp.task('makeJs', function() {
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dist/plugins/renderers'));
     
-    gulp.src('./src/render/plugins/data_views/*.js')
+    gulp.src('./src/plugins/data_views/*.js')
         //compile to js (and create map files)
         .pipe(sourcemaps.init())
         .pipe(sourcemaps.write('./'))
