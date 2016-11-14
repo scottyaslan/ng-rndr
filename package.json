@@ -2,18 +2,18 @@
     "name": "@scottyaslan/ng-rndr",
     "version": "0.0.1",
     "license": "MIT",
-    "description": "ngRndr is a pluggable and embeddable angular module for formatting and visualizing data.",
+    "description": "ng-rndr is a pluggable and embeddable angular module for formatting and visualizing data.",
     "author": {
         "name": "Scott Aslan",
         "email": "astechdev@gmail.com"
     },
     "bugs": {
-        "url": "https://github.com/scottyaslan/ngRndr/issues"
+        "url": "https://github.com/scottyaslan/ng-rndr/issues"
     },
-    "homepage": "https://github.com/scottyaslan/ngRndr",
+    "homepage": "https://github.com/scottyaslan/ng-rndr",
     "repository": {
         "type": "git",
-        "url": "https://github.com/scottyaslan/ngRndr.git"
+        "url": "https://github.com/scottyaslan/ng-rndr.git"
     },
     "engines": {
         "node": ">= 0.6.0",
