@@ -42,12 +42,32 @@ module.exports = function(grunt) {
                     './dist/ng-rndr.min.js': ['./dist/ng-rndr.js']
                 }
             }
+        },
+        bump: {
+            options: {
+                files: ['package.json', 'bower.json'],
+                updateConfigs: [],
+                commit: true,
+                commitMessage: 'Release ng-rndr-%VERSION%',
+                commitFiles: ['-a'],
+                createTag: true,
+                tagName: 'ng-rndr-%VERSION%',
+                tagMessage: 'Version ng-rndr-%VERSION%',
+                push: true,
+                pushTo: 'origin',
+                gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+                globalReplace: false,
+                prereleaseName: 'RC',
+                metadata: '',
+                regExp: false
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-bump');
 
     grunt.registerTask('dev', ['requirejs:dev']);
     grunt.registerTask('release', ['requirejs:dev', 'requirejs:release', 'uglify:my_target', 'copy:main']);

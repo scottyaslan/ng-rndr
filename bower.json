@@ -1,6 +1,6 @@
 {
     "name": "ng-rndr",
-    "version": "0.0.1",
+    "version": "0.0.1-RC.0",
     "authors": [
         "Scott Aslan <astechdev@gmail.com>"
     ],
@@ -16,7 +16,7 @@
         ".jshintignore",
         ".jshintrc",
         "bower.json",
-        "Gruntfile.js",,
+        "Gruntfile.js",
         "gulpFile.js",
         "LICENSE",
         "package.json",

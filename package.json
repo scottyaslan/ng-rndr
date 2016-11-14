@@ -1,47 +1,48 @@
 {
-    "name": "@scottyaslan/ng-rndr",
-    "version": "0.0.1",
-    "license": "MIT",
-    "description": "ng-rndr is a pluggable and embeddable angular module for formatting and visualizing data.",
-    "author": {
-        "name": "Scott Aslan",
-        "email": "astechdev@gmail.com"
-    },
-    "bugs": {
-        "url": "https://github.com/scottyaslan/ng-rndr/issues"
-    },
-    "homepage": "https://github.com/scottyaslan/ng-rndr",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/scottyaslan/ng-rndr.git"
-    },
-    "engines": {
-        "node": ">= 0.6.0",
-        "npm": ">= 1.0.0"
-    },
-    "devDependencies": {
-        "almond": "^0.3.3",
-        "grunt": "^0.4.5",
-        "grunt-contrib-copy": "^1.0.0",
-        "grunt-contrib-requirejs": "^0.4.4",
-        "grunt-contrib-uglify": "^2.0",
-        "grunt-html2js": "^0.3.6",
-        "require-dir": "^0.1.0",
-        "gulp-uglify": "^1.0.2",
-        "gulp-sourcemaps": "^1.2.8",
-        "gulp": "^3.8.10",
-        "gulp-filter": "^1.0.2",
-        "gulp-util": "^3.0.1",
-        "gulp-rename": "^1.2.0",
-        "gulp-minify-css": "^0.3.11",
-        "gulp-concat": "^2.4.2"
-    },
-    "dependencies": {
-        "angular": "~1.5.0",
-        "jquery": "~2.1.1"
-    },
-    "main": "server.js",
-    "scripts": {
-        "postinstall": "grunt release && node ./node_modules/gulp/bin/gulp.js makeJs && node ./node_modules/gulp/bin/gulp.js makeCss"
-    }
+  "name": "@scottyaslan/ng-rndr",
+  "version": "0.0.1-RC.0",
+  "license": "MIT",
+  "description": "ng-rndr is a pluggable and embeddable angular module for formatting and visualizing data.",
+  "author": {
+    "name": "Scott Aslan",
+    "email": "astechdev@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/scottyaslan/ng-rndr/issues"
+  },
+  "homepage": "https://github.com/scottyaslan/ng-rndr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scottyaslan/ng-rndr.git"
+  },
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.0.0"
+  },
+  "devDependencies": {
+    "almond": "^0.3.3",
+    "grunt": "^1.0.1",
+    "grunt-bump": "^0.8.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-uglify": "^2.0",
+    "grunt-html2js": "^0.3.6",
+    "gulp": "^3.8.10",
+    "gulp-concat": "^2.4.2",
+    "gulp-filter": "^1.0.2",
+    "gulp-minify-css": "^0.3.11",
+    "gulp-rename": "^1.2.0",
+    "gulp-sourcemaps": "^1.2.8",
+    "gulp-uglify": "^1.0.2",
+    "gulp-util": "^3.0.1",
+    "require-dir": "^0.1.0"
+  },
+  "dependencies": {
+    "angular": "~1.5.0",
+    "jquery": "~2.1.1"
+  },
+  "main": "server.js",
+  "scripts": {
+    "postinstall": "grunt release && node ./node_modules/gulp/bin/gulp.js makeJs && node ./node_modules/gulp/bin/gulp.js makeCss"
+  }
 }
