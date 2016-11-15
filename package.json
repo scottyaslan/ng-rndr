@@ -1,6 +1,6 @@
 {
   "name": "@scottyaslan/ng-rndr",
-  "version": "0.0.1-RC.1",
+  "version": "0.0.1-RC.2",
   "license": "MIT",
   "description": "ng-rndr is a pluggable and embeddable angular module for formatting and visualizing data.",
   "author": {
@@ -35,7 +35,7 @@
     "gulp-sourcemaps": "^1.2.8",
     "gulp-uglify": "^1.0.2",
     "gulp-util": "^3.0.1",
-    "require-dir": "^0.1.0"
+    "require-dir": "^0.1.0",
     "angular": "~1.5.0",
     "jquery": "~2.1.1"
   },
