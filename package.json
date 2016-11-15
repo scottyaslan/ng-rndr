@@ -1,6 +1,6 @@
 {
   "name": "@scottyaslan/ng-rndr",
-  "version": "0.0.1-RC.2",
+  "version": "0.0.1-RC.3",
   "license": "MIT",
   "description": "ng-rndr is a pluggable and embeddable angular module for formatting and visualizing data.",
   "author": {
@@ -41,6 +41,6 @@
   },
   "main": "server.js",
   "scripts": {
-    "postinstall": "grunt release && node ./node_modules/gulp/bin/gulp.js makeJs && node ./node_modules/gulp/bin/gulp.js makeCss"
+    "postinstall": "./node_modules/grunt/bin/grunt release && node ./node_modules/gulp/bin/gulp.js makeJs && node ./node_modules/gulp/bin/gulp.js makeCss"
   }
 }
