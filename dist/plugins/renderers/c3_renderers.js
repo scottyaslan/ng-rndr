@@ -236,5 +236,3 @@
 }).call(this);
 
 //# sourceMappingURL=c3_renderers.js.map
-
-//# sourceMappingURL=c3_renderers.js.map

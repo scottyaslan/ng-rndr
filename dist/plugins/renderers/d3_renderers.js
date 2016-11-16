@@ -117,5 +117,3 @@
 }).call(this);
 
 //# sourceMappingURL=d3_renderers.js.map
-
-//# sourceMappingURL=d3_renderers.js.map

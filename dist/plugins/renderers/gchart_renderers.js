@@ -195,5 +195,3 @@
 }).call(this);
 
 //# sourceMappingURL=gchart_renderers.js.map
-
-//# sourceMappingURL=gchart_renderers.js.map

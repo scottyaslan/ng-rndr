@@ -261,5 +261,3 @@
 }).call(this);
 
 //# sourceMappingURL=PivotData.js.map
-
-//# sourceMappingURL=PivotData.js.map

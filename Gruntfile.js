@@ -5,6 +5,12 @@ module.exports = function(grunt) {
                 files: [
                     { expand: true, src: ['LICENSE'], dest: 'dist/', filter: 'isFile' },
                     { expand: true, src: ['README.md'], dest: 'dist/', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/data_views/PivotData.js'], dest: 'dist/plugins/data_views/PivotData.js', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/renderers/c3_renderers.js'], dest: 'dist/plugins/renderers/c3_renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/renderers/d3_renderers.js'], dest: 'dist/plugins/renderers/d3_renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/renderers/datatables_renderers.js'], dest: 'dist/plugins/renderers/datatables_renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/renderers/datatables_renderers.css'], dest: 'dist/plugins/renderers/datatables_renderers.css', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/renderers/gchart_renderers.js'], dest: 'dist/plugins/renderers/gchart_renderers.js', filter: 'isFile' }
                 ]
             }
         },
@@ -34,12 +40,28 @@ module.exports = function(grunt) {
             }
         },
         uglify: {
-            my_target: {
+            build: {
                 options: {
                     sourceMap: true
                 },
+                files: [{
+                    './dist/ng-rndr.min.js': ['./dist/ng-rndr.js'],
+                    './dist/plugins/data_views/PivotData.min.js': ['./src/plugins/data_views/PivotData.js'],
+                    './dist/plugins/renderers/c3_renderers.min.js': ['./src/plugins/renderers/c3_renderers.js'],
+                    './dist/plugins/renderers/d3_renderers.min.js': ['./src/plugins/renderers/d3_renderers.js'],
+                    './dist/plugins/renderers/datatables_renderers.min.js': ['./src/plugins/renderers/datatables_renderers.js'],
+                    './dist/plugins/renderers/gchart_renderers.min.js': ['./src/plugins/renderers/gchart_renderers.js']
+                }]
+            }
+        },
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1
+            },
+            target: {
                 files: {
-                    './dist/ng-rndr.min.js': ['./dist/ng-rndr.js']
+                    './dist/plugins/renderers/datatables_renderers.min.css': ['./src/plugins/renderers/datatables_renderers.css']
                 }
             }
         },
@@ -68,7 +90,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-bump');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
     grunt.registerTask('dev', ['requirejs:dev']);
-    grunt.registerTask('release', ['requirejs:dev', 'requirejs:release', 'uglify:my_target', 'copy:main']);
+    grunt.registerTask('release', ['requirejs:dev', 'requirejs:release', 'uglify:build', 'copy:main', 'cssmin:target']);
 };

@@ -400,5 +400,3 @@
 }).call(this);
 
 //# sourceMappingURL=datatables_renderers.js.map
-
-//# sourceMappingURL=datatables_renderers.js.map
