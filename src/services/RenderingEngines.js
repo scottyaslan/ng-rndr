@@ -27,16 +27,15 @@ define([], function() {
             /**
              * Instantiates a {@link RenderingEngine} and adds it to the map.
              * 
-             * @param  {string} dataSourceConfigurationId The UUID of the {@link DataSourceConfiguration} referenced by the instaniated {@link RenderingEngine}.
+             * @param {string} rendererName - The name of the renderer plugin.
              * @param  {string} [renderingEngineId]         The UUID of the {@link RenderingEngine}
              * @param  {string} [title]                     The title of the {@link RenderingEngine}
-             * @param  {string} [dataViewName]       The name of the data view plugin.
              * 
              * @return {object}      The {@link DataSource}.
              */
-            create: function(dataSourceConfigurationId, renderingEngineId, title, dataViewName) {
+            create: function(rendererName, title, renderingEngineId, aggregatorName) {
                 var self = this;
-                var renderingEngine = new RenderingEngine(dataSourceConfigurationId, renderingEngineId, title, dataViewName);
+                var renderingEngine = new RenderingEngine(rendererName, title, renderingEngineId, aggregatorName);
                 self.add(renderingEngine);
                 //There may be an active rendering engine, if so deactivate
                 if (self.activeRenderingEngine !== undefined) {

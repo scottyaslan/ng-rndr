@@ -40,6 +40,11 @@ define([], function() {
                     return fn.apply(me, arguments);
                 };
             },
+            zeroPad: function(number) {
+              return ("0" + number).substr(-2, 2);
+            },
+            mthNamesEn: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            dayNamesEn: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             forEachRecord: function(input, derivedAttributes, f) {
                 var self = this;
                 var addRecord, compactRecord, i, j, k, l, len1, record, ref, results, results1, tblCols;
@@ -221,6 +226,23 @@ define([], function() {
                     scaler: 100,
                     suffix: '%'
                 });
+            },
+            /**
+             * Adds a dataUtil function by `name` for fast lookup.
+             * 
+             * @param {string} name       The lookup name of the dataUtil function.
+             * @param {function} dataUtil The dataUtil function.
+             */
+            add: function(name, dataUtil) {
+                this[name] = dataUtil;
+            },
+            /**
+             * Lists the available dataUtil plugins.
+             * 
+             * @return {Array.<string>} The lookup names.
+             */
+            list: function() {
+                return Object.keys(this);
             }
         };
 

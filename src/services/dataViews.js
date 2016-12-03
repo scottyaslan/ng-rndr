@@ -18,12 +18,12 @@ define([],
                  * 
                  * @param {string} name     The lookup name of the `DataView`.
                  * @param {DataView} DataView Need to figure out how to document the return type of a {@link DataView}
-                 * @param {function} meta     A function that returns the initial metadata model for the `DataView`. //TODO: figure out how to document this
+                 * @param {function} meta     A function that returns the initial metadata model for the `DataView`.
                  */
-                add: function(name, DataView, meta) {
+                add: function(name, DataView, getMeta) {
                     this[name] = {
                         view: DataView,
-                        meta: meta
+                        meta: getMeta
                     };
                 },
                 /**

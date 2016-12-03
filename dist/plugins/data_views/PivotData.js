@@ -16,14 +16,21 @@
                     }
                 }
             }
-            window.ngRNDR.plugins.dataViews = $.extend({}, window.ngRNDR.plugins.dataViews, factory(jQuery, d3));
+            window.ngRNDR.plugins.DataViews['PivotData'] = factory(jQuery, d3);
             return window.ngRNDR.plugins.dataViews;
         }
     };
 
     callWithJQuery(function($) {
         function PivotData(data, opts) {
+            // set meta from rendering engine state
+            this.meta = opts.meta;
             this.dataUtils = opts.dataUtils;
+            this.aggregator = opts.aggregator;
+
+            //Prep the data
+            data = opts.dataUtils.convertToArray(data);
+
             this.filter = function(record) {
                 var excludedItems, ref7;
                 for (var k in this.meta.attributeFilterExclusions) {
@@ -34,31 +41,23 @@
                 }
                 return true;
             };
+            this.sorted = false; //TODO: move this to the PivotData.meta once the sorters have been refactored (like the derivedAttributes???)...right now though we need to sort each time
             this.sorters = function() {};
             this.axisValues = {};
+            this.shownAttributes = [];
+            this.attributeFilterInclusions = [];
+            this.attributesAvailableForRowsAndCols = [];
+            this.tree = {};
+            this.rowKeys = [];
+            this.colKeys = [];
+            this.rowTotals = {};
+            this.colTotals = {};
+            this.allTotal = this.aggregator(this, [], []);
 
-            this.meta = opts.meta;
-            this.meta.colAttrs = opts.meta.cols;
-            this.meta.rowAttrs = opts.meta.rows;
-            this.meta.valAttrs = opts.meta.vals;
-            this.meta.sorters = opts.meta.sorters;
-            this.meta.tree = {};
-            this.meta.rowKeys = [];
-            this.meta.colKeys = [];
-            this.meta.rowTotals = {};
-            this.meta.colTotals = {};
-            this.meta.sorted = false;
-            this.meta.aggregatorName = opts.aggregator.name;
-            this.meta.aggregator = opts.aggregator.aggregate;
-            this.meta.allTotal = this.meta.aggregator(this, [], []);
-
-            var self = this;
-
-            //Prep the data
-            data = self.dataUtils.convertToArray(data);
-
-            self.meta.availableAttributes = self.meta.rowAttrs.concat(self.meta.colAttrs);
-            self.meta.tblCols = (function() {
+            this.colAttrs = this.meta.cols;
+            this.rowAttrs = this.meta.rows;
+            this.availableAttributes = this.rowAttrs.concat(this.colAttrs);
+            this.tblCols = (function(self) {
                 var ref, results;
                 ref = data[0];
                 results = [];
@@ -67,49 +66,54 @@
                     results.push(k);
                 }
                 return results;
-            })();
-            for (var l = 0, len1 = self.meta.tblCols.length; l < len1; l++) {
-                var x = self.meta.tblCols[l];
-                self.axisValues[x] = {};
+            })(this);
+
+            for (var l = 0, len1 = this.tblCols.length; l < len1; l++) {
+                var x = this.tblCols[l];
+                this.axisValues[x] = {};
             }
-            self.meta.shownAttributes = (function() {
+
+            this.shownAttributes = (function(self) {
                 var len2, n, results;
                 results = [];
-                for (var n = 0, len2 = self.meta.tblCols.length; n < len2; n++) {
-                    var c = self.meta.tblCols[n];
+                for (var n = 0, len2 = self.tblCols.length; n < len2; n++) {
+                    var c = self.tblCols[n];
                     if (self.dataUtils.indexOf.call(self.meta.hiddenAttributes, c) < 0) {
                         results.push(c);
                     }
                 }
                 return results;
-            })();
-            if (self.meta.attributesAvailableForRowsAndCols.length + self.meta.rows.length + self.meta.cols.length !== self.meta.shownAttributes.length) {
-                self.meta.attributesAvailableForRowsAndCols = self.meta.shownAttributes;
+            })(this);
+
+            if (this.attributesAvailableForRowsAndCols.length + this.meta.rows.length + this.meta.cols.length !== this.shownAttributes.length) {
+                this.attributesAvailableForRowsAndCols = this.shownAttributes;
             }
 
-            self.dataUtils.forEachRecord(data, self.meta.derivedAttributes, function(record) {
-                var base, results, v;
-                results = [];
-                for (var k in record) {
-                    if (!self.dataUtils.hasProp.call(record, k)) continue;
-                    v = record[k];
-                    if (v == null) {
-                        v = "null";
-                    }
-                    if ((base = self.axisValues[k])[v] == null) {
-                        base[v] = 0;
-                    }
-                    results.push(self.axisValues[k][v]++);
-                }
-                return results;
-            });
-            self.dataUtils.forEachRecord(data, self.meta.derivedAttributes, (function(_this) {
+            this.dataUtils.forEachRecord(data, opts.derivedAttributes, (function(self) {
                 return function(record) {
-                    if (_this.filter(record)) {
-                        return _this.processRecord(record);
+                    var base, results, v;
+                    results = [];
+                    for (var k in record) {
+                        if (!self.dataUtils.hasProp.call(record, k)) continue;
+                        v = record[k];
+                        if (v == null) {
+                            v = "null";
+                        }
+                        if ((base = self.axisValues[k])[v] == null) {
+                            base[v] = 0;
+                        }
+                        results.push(self.axisValues[k][v]++);
+                    }
+                    return results;
+                };
+            })(this));
+            this.dataUtils.forEachRecord(data, opts.derivedAttributes, (function(self) {
+                return function(record) {
+                    if (self.filter(record)) {
+                        return self.processRecord(record);
                     }
                 };
-            })(self));
+            })(this));
         }
         PivotData.prototype = {
             constructor: PivotData,
@@ -137,59 +141,59 @@
                 };
             },
             sortKeys: function() {
-                if (!this.meta.sorted) {
-                    this.meta.sorted = true;
-                    this.meta.rowKeys.sort(this.arrSort(this.meta.rowAttrs));
-                    this.meta.colKeys.sort(this.arrSort(this.meta.colAttrs));
+                if (!this.sorted) {
+                    this.sorted = true;
+                    this.rowKeys.sort(this.arrSort(this.rowAttrs));
+                    this.colKeys.sort(this.arrSort(this.colAttrs));
                 }
             },
             getColKeys: function() {
                 this.sortKeys();
-                return this.meta.colKeys;
+                return this.colKeys;
             },
             getRowKeys: function() {
                 this.sortKeys();
-                return this.meta.rowKeys;
+                return this.rowKeys;
             },
             processRecord: function(record) {
                 var colKey, flatColKey, flatRowKey, l, len1, len2, n, ref, ref1, ref2, ref3, rowKey, x;
                 colKey = [];
                 rowKey = [];
-                ref = this.meta.colAttrs;
+                ref = this.colAttrs;
                 for (l = 0, len1 = ref.length; l < len1; l++) {
                     x = ref[l];
                     colKey.push((ref1 = record[x]) != null ? ref1 : "null");
                 }
-                ref2 = this.meta.rowAttrs;
+                ref2 = this.rowAttrs;
                 for (n = 0, len2 = ref2.length; n < len2; n++) {
                     x = ref2[n];
                     rowKey.push((ref3 = record[x]) != null ? ref3 : "null");
                 }
                 flatRowKey = rowKey.join(String.fromCharCode(0));
                 flatColKey = colKey.join(String.fromCharCode(0));
-                this.meta.allTotal.push(record);
+                this.allTotal.push(record);
                 if (rowKey.length !== 0) {
-                    if (!this.meta.rowTotals[flatRowKey]) {
-                        this.meta.rowKeys.push(rowKey);
-                        this.meta.rowTotals[flatRowKey] = this.meta.aggregator(this, rowKey, []);
+                    if (!this.rowTotals[flatRowKey]) {
+                        this.rowKeys.push(rowKey);
+                        this.rowTotals[flatRowKey] = this.aggregator(this, rowKey, []);
                     }
-                    this.meta.rowTotals[flatRowKey].push(record);
+                    this.rowTotals[flatRowKey].push(record);
                 }
                 if (colKey.length !== 0) {
-                    if (!this.meta.colTotals[flatColKey]) {
-                        this.meta.colKeys.push(colKey);
-                        this.meta.colTotals[flatColKey] = this.meta.aggregator(this, [], colKey);
+                    if (!this.colTotals[flatColKey]) {
+                        this.colKeys.push(colKey);
+                        this.colTotals[flatColKey] = this.aggregator(this, [], colKey);
                     }
-                    this.meta.colTotals[flatColKey].push(record);
+                    this.colTotals[flatColKey].push(record);
                 }
                 if (colKey.length !== 0 && rowKey.length !== 0) {
-                    if (!this.meta.tree[flatRowKey]) {
-                        this.meta.tree[flatRowKey] = {};
+                    if (!this.tree[flatRowKey]) {
+                        this.tree[flatRowKey] = {};
                     }
-                    if (!this.meta.tree[flatRowKey][flatColKey]) {
-                        this.meta.tree[flatRowKey][flatColKey] = this.meta.aggregator(this, rowKey, colKey);
+                    if (!this.tree[flatRowKey][flatColKey]) {
+                        this.tree[flatRowKey][flatColKey] = this.aggregator(this, rowKey, colKey);
                     }
-                    return this.meta.tree[flatRowKey][flatColKey].push(record);
+                    return this.tree[flatRowKey][flatColKey].push(record);
                 }
             },
             getAggregator: function(rowKey, colKey) {
@@ -197,13 +201,13 @@
                 flatRowKey = rowKey.join(String.fromCharCode(0));
                 flatColKey = colKey.join(String.fromCharCode(0));
                 if (rowKey.length === 0 && colKey.length === 0) {
-                    agg = this.meta.allTotal;
+                    agg = this.allTotal;
                 } else if (rowKey.length === 0) {
-                    agg = this.meta.colTotals[flatColKey];
+                    agg = this.colTotals[flatColKey];
                 } else if (colKey.length === 0) {
-                    agg = this.meta.rowTotals[flatRowKey];
+                    agg = this.rowTotals[flatRowKey];
                 } else {
-                    agg = this.meta.tree[flatRowKey][flatColKey];
+                    agg = this.tree[flatRowKey][flatColKey];
                 }
                 return agg != null ? agg : {
                     value: (function() {
@@ -238,21 +242,31 @@
                     self.meta.attributeFilterExclusions[attributeFilterName] = [];
                     self.meta.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
                 }
-                self.meta.attributeFilterInclusions[attributeFilterName] = [];
+                self.attributeFilterInclusions[attributeFilterName] = [];
                 angular.forEach(self.axisValues[attributeFilterName], function(value, key) {
                     if (self.meta.attributeFilterExclusions[attributeFilterName].indexOf(key) < 0) {
-                        self.meta.attributeFilterInclusions[attributeFilterName].push(key);
+                        self.attributeFilterInclusions[attributeFilterName].push(key);
                     }
                 });
             },
             addInclusionFilter: function(attributeFilterName, filterByAttributeValue) {
                 var self = this;
-                self.meta.attributeFilterInclusions[attributeFilterName] = [];
+                self.attributeFilterInclusions[attributeFilterName] = [];
                 self.meta.attributeFilterExclusions[attributeFilterName] = [];
                 self.addExclusionFilter(attributeFilterName, filterByAttributeValue);
-                var oldAttributeFilterInclusions = self.meta.attributeFilterInclusions[attributeFilterName];
-                self.meta.attributeFilterInclusions[attributeFilterName] = self.meta.attributeFilterExclusions[attributeFilterName];
+                var oldAttributeFilterInclusions = self.attributeFilterInclusions[attributeFilterName];
+                self.attributeFilterInclusions[attributeFilterName] = self.meta.attributeFilterExclusions[attributeFilterName];
                 self.meta.attributeFilterExclusions[attributeFilterName] = oldAttributeFilterInclusions;
+            },
+            initializeAggregator: function(aggregator) {
+                var numInputs = aggregator.aggregate([])([]).numInputs;
+                if (numInputs === undefined) {
+                    this.meta.aggInputAttributeName = new Array();
+                } else {
+                    if (this.meta.aggInputAttributeName.length !== numInputs) {
+                        this.meta.aggInputAttributeName = new Array(numInputs);
+                    }
+                }
             }
         };
         return PivotData;

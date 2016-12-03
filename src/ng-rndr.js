@@ -2,6 +2,7 @@ define(['directives/rndr',
         'services/aggregators',
         'services/aggregatorTemplates',
         'services/dataViews',
+        'services/derivers',
         'services/renderers',
         'services/RenderingEngine',
         'services/RenderingEngines',
@@ -15,6 +16,7 @@ define(['directives/rndr',
         aggregators,
         aggregatorTemplates,
         dataViews,
+        derivers,
         renderers,
         RenderingEngine,
         RenderingEngines,
@@ -34,10 +36,11 @@ define(['directives/rndr',
         DataSource.$inject = ['ngRndr.dataSourceConfigurations', '$q', '$rootScope', '$http'];
         dataSources.$inject = ['ngRndr.DataSource'];
         aggregators.$inject = ['ngRndr.aggregatorTemplates', 'ngRndr.dataUtils'];
+        derivers.$inject = ['ngRndr.dataUtils'];
         aggregatorTemplates.$inject = ['ngRndr.dataUtils'];
         dataViews.$inject = [];
         renderers.$inject = [];
-        RenderingEngine.$inject = ['ngRndr.aggregators', 'ngRndr.dataUtils', 'ngRndr.renderers', 'ngRndr.dataViews', '$q', '$timeout', '$window', '$rootScope'];
+        RenderingEngine.$inject = ['ngRndr.aggregators', 'ngRndr.dataUtils', 'ngRndr.renderers', 'ngRndr.dataViews', '$timeout', '$rootScope'];
         RenderingEngines.$inject = ['ngRndr.RenderingEngine', 'ngRndr.dataSourceConfigurations', 'ngRndr.dataSources', '$http'];
         dataUtils.$inject = [];
 
@@ -51,6 +54,7 @@ define(['directives/rndr',
         app.service('ngRndr.dataSources', dataSources);
         app.service('ngRndr.aggregators', aggregators);
         app.service('ngRndr.aggregatorTemplates', aggregatorTemplates);
+        app.service('ngRndr.derivers', derivers);
         app.service('ngRndr.dataViews', dataViews);
         app.service('ngRndr.renderers', renderers);
         app.service('ngRndr.RenderingEngine', RenderingEngine);

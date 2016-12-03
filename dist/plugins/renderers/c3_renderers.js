@@ -31,6 +31,8 @@
                 var agg, base, base1, base2, colKey, colKeys, columns, dataArray, datum, defaults, fullAggName, groupByTitle, h, hAxisTitle, headers, i, j, k, len, len1, len2, numCharsInHAxis, params, ref, renderArea, result, returnObject, rotationAngle, row, rowHeader, rowKey, rowKeys, title, titleText, tree2, vAxisTitle, val, x, y;
                 defaults = {
                     localeStrings: {
+                        renderError: "An error occurred rendering the results.",
+                        computeError: "An error occurred computing the results.",
                         vs: "vs",
                         by: "by"
                     },
@@ -71,14 +73,14 @@
                     return results;
                 })();
                 rotationAngle = 0;
-                fullAggName = pivotData.meta.aggregatorName;
-                if (pivotData.meta.valAttrs.length) {
-                    fullAggName += "(" + (pivotData.meta.valAttrs.join(", ")) + ")";
+                fullAggName = opts.renderingEngineRef.aggregatorName;
+                if (pivotData.meta.aggInputAttributeName.length) {
+                    fullAggName += "(" + (pivotData.meta.aggInputAttributeName.join(", ")) + ")";
                 }
                 if (chartOpts.type === "scatter") {
                     dataArray = [];
-                    hAxisTitle = pivotData.meta.colAttrs.join("-");
-                    vAxisTitle = pivotData.meta.rowAttrs.join("-");
+                    hAxisTitle = pivotData.colAttrs.join("-");
+                    vAxisTitle = pivotData.rowAttrs.join("-");
                     ref = pivotData.meta.tree;
                     for (y in ref) {
                         tree2 = ref[y];
@@ -104,7 +106,7 @@
                     for (j = 0, len1 = rowKeys.length; j < len1; j++) {
                         rowKey = rowKeys[j];
                         rowHeader = rowKey.join("-");
-                        row = [rowHeader === "" ? pivotData.meta.aggregatorName : rowHeader];
+                        row = [rowHeader === "" ? opts.renderingEngineRef.aggregatorName : rowHeader];
                         for (k = 0, len2 = colKeys.length; k < len2; k++) {
                             colKey = colKeys[k];
                             val = parseFloat(pivotData.getAggregator(rowKey, colKey).value());
@@ -120,14 +122,14 @@
                         }
                         columns.push(row);
                     }
-                    vAxisTitle = pivotData.meta.aggregatorName + (pivotData.meta.valAttrs.length ? "(" + (pivotData.meta.valAttrs.join(", ")) + ")" : "");
-                    hAxisTitle = pivotData.meta.colAttrs.join("-");
+                    vAxisTitle = opts.renderingEngineRef.aggregatorName + (pivotData.meta.aggInputAttributeName.length ? "(" + (pivotData.valAttrs.join(", ")) + ")" : "");
+                    hAxisTitle = pivotData.colAttrs.join("-");
                 }
                 titleText = fullAggName;
                 if (hAxisTitle !== "") {
                     titleText += " " + opts.localeStrings.vs + " " + hAxisTitle;
                 }
-                groupByTitle = pivotData.meta.rowAttrs.join("-");
+                groupByTitle = pivotData.rowAttrs.join("-");
                 if (groupByTitle !== "") {
                     titleText += " " + opts.localeStrings.by + " " + groupByTitle;
                 }

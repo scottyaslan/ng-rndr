@@ -28,6 +28,8 @@
                 var agg, base, base1, colKey, colKeys, dataArray, dataTable, defaults, fullAggName, groupByTitle, h, hAxisTitle, headers, i, j, len, len1, numCharsInHAxis, options, ref, result, returnObject, row, rowKey, rowKeys, title, tree2, vAxisTitle, val, wrapper, x, y;
                 defaults = {
                     localeStrings: {
+                        renderError: "An error occurred rendering the results.",
+                        computeError: "An error occurred computing the results.",
                         vs: "vs",
                         by: "by"
                     },
@@ -50,9 +52,9 @@
                 if (colKeys.length === 0) {
                     colKeys.push([]);
                 }
-                fullAggName = pivotData.meta.aggregatorName;
-                if (pivotData.meta.valAttrs.length) {
-                    fullAggName += "(" + (pivotData.meta.valAttrs.join(", ")) + ")";
+                fullAggName = opts.renderingEngineRef.aggregatorName;
+                if (pivotData.meta.aggInputAttributeName.length) {
+                    fullAggName += "(" + (pivotData.meta.aggInputAttributeName.join(", ")) + ")";
                 }
                 headers = (function() {
                     var i, len, results;
@@ -76,15 +78,15 @@
                         }
                     }
                     dataTable = new google.visualization.DataTable();
-                    dataTable.addColumn('number', pivotData.meta.colAttrs.join("-"));
-                    dataTable.addColumn('number', pivotData.meta.rowAttrs.join("-"));
+                    dataTable.addColumn('number', pivotData.colAttrs.join("-"));
+                    dataTable.addColumn('number', pivotData.rowAttrs.join("-"));
                     dataTable.addColumn({
                         type: "string",
                         role: "tooltip"
                     });
                     dataTable.addRows(dataArray);
-                    hAxisTitle = pivotData.meta.colAttrs.join("-");
-                    vAxisTitle = pivotData.meta.rowAttrs.join("-");
+                    hAxisTitle = pivotData.colAttrs.join("-");
+                    vAxisTitle = pivotData.rowAttrs.join("-");
                     title = "";
                 } else {
                     dataArray = [headers];
@@ -114,11 +116,11 @@
                     }
                     dataTable = google.visualization.arrayToDataTable(dataArray);
                     title = vAxisTitle = fullAggName;
-                    hAxisTitle = pivotData.meta.colAttrs.join("-");
+                    hAxisTitle = pivotData.colAttrs.join("-");
                     if (hAxisTitle !== "") {
                         title += " " + opts.localeStrings.vs + " " + hAxisTitle;
                     }
-                    groupByTitle = pivotData.meta.rowAttrs.join("-");
+                    groupByTitle = pivotData.rowAttrs.join("-");
                     if (groupByTitle !== "") {
                         title += " " + opts.localeStrings.by + " " + groupByTitle;
                     }

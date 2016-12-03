@@ -22,13 +22,17 @@ define([],
                  * Adds a {@link Renderer} function by `name` for fast lookup.
                  * 
                  * @param {string} name     The lookup name of the renderer.
-                 * @param {Renderer} renderer Need to figure out how to document the return type of a {@link Renderer}
-                 * @param {RendererOpts} opts     Need to figure out how to document the options for the `renderer`.
+                 * @param {function} renderer A `renderer` is a function that defines what the user will actually see. It takes as parameters a `dataView` object defined by thie `dataViewName` and the `opts` object and returns an object.
+                 * @param {string} dataViewName     The name of the `dataView` to be passed to the `renderer` function.
+                 * @param {object} opts     The options to be passed to the `renderer` function.
+                 * @param {function} finalize     The post rendering function defined for a particular visualization. It takes as parameters a `jQuery` object (which will be the "visualization" and injected into the DOM) and the `results` object returned by the `renderer` function.
                  */
-                add: function(name, renderer, opts) {
+                add: function(name, renderer, dataViewName, opts, finalize) {
                     this[name] = {
                         render: renderer,
-                        opts: opts
+                        opts: opts,
+                        dataViewName: dataViewName,
+                        finalize: finalize
                     };
                 },
                 /**

@@ -277,6 +277,23 @@ define([], function() {
                         };
                     };
                 };
+            },
+            /**
+             * Adds an aggregatorTemplate function by `name` for fast lookup.
+             * 
+             * @param {string} name       The lookup name of the aggregateTemplate function.
+             * @param {function} aggregator The aggregatorTemplate function.
+             */
+            add: function(name, aggregatorTemplate) {
+                this[name] = aggregatorTemplate;
+            },
+            /**
+             * Lists the available aggregatorTemplate plugins.
+             * 
+             * @return {Array.<string>} The lookup names.
+             */
+            list: function() {
+                return Object.keys(this);
             }
         };
 

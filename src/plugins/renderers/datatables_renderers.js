@@ -28,12 +28,14 @@
             var aggregator, c, colAttrs, colKey, colKeys, defaults, i, j, r, result, rowAttrs, rowKey, rowKeys, spanSize, tbody, td, tfoot, th, thead, totalAggregator, tr, txt, val, x;
             defaults = {
                 localeStrings: {
+                    renderError: "An error occurred rendering the results.",
+                    computeError: "An error occurred computing the results.",
                     totals: "Totals"
                 }
             };
             opts = $.extend(defaults, opts);
-            colAttrs = pivotData.meta.colAttrs;
-            rowAttrs = pivotData.meta.rowAttrs;
+            colAttrs = pivotData.colAttrs;
+            rowAttrs = pivotData.rowAttrs;
             rowKeys = pivotData.getRowKeys();
             colKeys = pivotData.getColKeys();
             result = document.createElement("table");
@@ -95,7 +97,7 @@
                             var e;
                             e = $.Event("colLabelDrillDownEvent", {
                                 event: event,
-                                renderingEngineId: opts.renderingEngineId
+                                renderingEngineId: opts.renderingEngineRef.id
                             });
                             return $(window).trigger(e);
                         });
@@ -149,7 +151,7 @@
                         var e;
                         e = $.Event("rowLabelDrillDownEvent", {
                             event: event,
-                            renderingEngineId: opts.renderingEngineId
+                            renderingEngineId: opts.renderingEngineRef.id
                         });
                         return $(window).trigger(e);
                     });
@@ -241,7 +243,6 @@
             if (numRows !== 0 || numCols !== 0) {
                 return returnObject = {
                     html: this.width('100%'),
-                    type: 'datatables',
                     postRenderOpts: postRenderOpts,
                     postRenderFunction: function(html, opts) {
                         $(html).DataTable(opts);
@@ -250,7 +251,6 @@
             }
             return returnObject = {
                 html: this,
-                type: 'datatables'
             };
         };
 

@@ -10,8 +10,7 @@ define([], function() {
             },
             link: {
                 pre: function(scope, element, attr) {
-                    scope.engine.element = $(element);
-                    scope.engine.draw(scope.input);
+                    scope.engine.draw($(element), scope.input);
                 }
             }
         };

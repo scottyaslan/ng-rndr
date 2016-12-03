@@ -456,8 +456,7 @@ define('directives/rndr',[], function() {
             },
             link: {
                 pre: function(scope, element, attr) {
-                    scope.engine.element = $(element);
-                    scope.engine.draw(scope.input);
+                    scope.engine.draw($(element), scope.input);
                 }
             }
         };
@@ -800,6 +799,23 @@ define('services/aggregatorTemplates',[], function() {
                         };
                     };
                 };
+            },
+            /**
+             * Adds an aggregatorTemplate function by `name` for fast lookup.
+             * 
+             * @param {string} name       The lookup name of the aggregateTemplate function.
+             * @param {function} aggregator The aggregatorTemplate function.
+             */
+            add: function(name, aggregatorTemplate) {
+                this[name] = aggregatorTemplate;
+            },
+            /**
+             * Lists the available aggregatorTemplate plugins.
+             * 
+             * @return {Array.<string>} The lookup names.
+             */
+            list: function() {
+                return Object.keys(this);
             }
         };
 
@@ -827,12 +843,12 @@ define('services/dataViews',[],
                  * 
                  * @param {string} name     The lookup name of the `DataView`.
                  * @param {DataView} DataView Need to figure out how to document the return type of a {@link DataView}
-                 * @param {function} meta     A function that returns the initial metadata model for the `DataView`. //TODO: figure out how to document this
+                 * @param {function} meta     A function that returns the initial metadata model for the `DataView`.
                  */
-                add: function(name, DataView, meta) {
+                add: function(name, DataView, getMeta) {
                     this[name] = {
                         view: DataView,
-                        meta: meta
+                        meta: getMeta
                     };
                 },
                 /**
@@ -848,6 +864,92 @@ define('services/dataViews',[],
             return new DataViews();
         }
     });
+
+define('services/derivers',[], function() {
+    'use strict';
+
+    return function(dataUtils) {
+        /**
+         * {@link Derivers} constructor.
+         */
+        function Derivers() {}
+        Derivers.prototype = {
+            /**
+             * @typedef Derivers
+             * @type {object}
+             */
+            constructor: Derivers,
+            bin: function(col, binWidth) {
+                return function(record) {
+                    return record[col] - record[col] % binWidth;
+                };
+            },
+            dateFormat: function(col, formatString, utcOutput, mthNames, dayNames) {
+                var utc;
+                if (utcOutput == null) {
+                    utcOutput = false;
+                }
+                if (mthNames == null) {
+                    mthNames = dataUtils.mthNamesEn;
+                }
+                if (dayNames == null) {
+                    dayNames = dataUtils.dayNamesEn;
+                }
+                utc = utcOutput ? "UTC" : "";
+                return function(record) {
+                    var date;
+                    date = new Date(Date.parse(record[col]));
+                    if (isNaN(date)) {
+                        return "";
+                    }
+                    return formatString.replace(/%(.)/g, function(m, p) {
+                        switch (p) {
+                            case "y":
+                                return date["get" + utc + "FullYear"]();
+                            case "m":
+                                return dataUtils.zeroPad(date["get" + utc + "Month"]() + 1);
+                            case "n":
+                                return mthNames[date["get" + utc + "Month"]()];
+                            case "d":
+                                return dataUtils.zeroPad(date["get" + utc + "Date"]());
+                            case "w":
+                                return dayNames[date["get" + utc + "Day"]()];
+                            case "x":
+                                return date["get" + utc + "Day"]();
+                            case "H":
+                                return dataUtils.zeroPad(date["get" + utc + "Hours"]());
+                            case "M":
+                                return dataUtils.zeroPad(date["get" + utc + "Minutes"]());
+                            case "S":
+                                return dataUtils.zeroPad(date["get" + utc + "Seconds"]());
+                            default:
+                                return "%" + p;
+                        }
+                    });
+                };
+            },
+            /**
+             * Adds a deriver generator function by `name` for fast lookup.
+             * 
+             * @param {string} name       The lookup name of the deriver function.
+             * @param {function} deriverGenerator The deriver generator function.
+             */
+            add: function(name, deriverGenerator) {
+                this[name] = deriverGenerator;
+            },
+            /**
+             * Lists the available deriver plugins.
+             * 
+             * @return {Array.<string>} The lookup names.
+             */
+            list: function() {
+                return Object.keys(this);
+            }
+        };
+
+        return new Derivers();
+    }
+});
 
 define('services/renderers',[],
     function() {
@@ -873,13 +975,17 @@ define('services/renderers',[],
                  * Adds a {@link Renderer} function by `name` for fast lookup.
                  * 
                  * @param {string} name     The lookup name of the renderer.
-                 * @param {Renderer} renderer Need to figure out how to document the return type of a {@link Renderer}
-                 * @param {RendererOpts} opts     Need to figure out how to document the options for the `renderer`.
+                 * @param {function} renderer A `renderer` is a function that defines what the user will actually see. It takes as parameters a `dataView` object defined by thie `dataViewName` and the `opts` object and returns an object.
+                 * @param {string} dataViewName     The name of the `dataView` to be passed to the `renderer` function.
+                 * @param {object} opts     The options to be passed to the `renderer` function.
+                 * @param {function} finalize     The post rendering function defined for a particular visualization. It takes as parameters a `jQuery` object (which will be the "visualization" and injected into the DOM) and the `results` object returned by the `renderer` function.
                  */
-                add: function(name, renderer, opts) {
+                add: function(name, renderer, dataViewName, opts, finalize) {
                     this[name] = {
                         render: renderer,
-                        opts: opts
+                        opts: opts,
+                        dataViewName: dataViewName,
+                        finalize: finalize
                     };
                 },
                 /**
@@ -899,143 +1005,181 @@ define('services/renderers',[],
 define('services/RenderingEngine',[], function() {
     'use strict';
 
-    return function(aggregators, dataUtils, renderers, dataViews, $q, $timeout, $window, $rootScope) {
+    return function(aggregators, dataUtils, renderers, dataViews, $timeout, $rootScope) {
         /**
          * {@link RenderingEngine} constructor.
          * 
-         * @param {string} dataSourceConfigId The UUID of the data source.
-         * @param {string} [renderingEngineId]  The UUID of this `renderingEngine`.
+         * @param {string} rendererName - The name of the renderer plugin.
          * @param {string} [title]              The title of this  `renderingEngine`.
-         * @param {string} [rendererName]       The name of the renderer plugin.
-         * @param {string} [aggregatorName]     Then name of the aggregator plugin.
+         * @param {string} [renderingEngineId]  The UUID of this `renderingEngine`.
+         * @param {string} aggregatorName - The name of the aggregator plugin.
+         * @param {string} [localeName] - The name of the locale.
+         * @param {object} [derivedAttributes] - A dictionary of "deriver generator" functions: the keys are the names of the new attributes, and the functions take an existing record and return the value of the new attribute.
          */
-        function RenderingEngine(dataSourceConfigId, renderingEngineId, title, dataViewName, rendererName) {
-            this.dataSourceConfigId = dataSourceConfigId;
-
-            if (renderingEngineId === undefined || renderingEngineId === '') {
+        function RenderingEngine(rendererName, title, renderingEngineId, aggregatorName, localeName, derivedAttributes) {
+            if (renderingEngineId === undefined || renderingEngineId === '' || renderingEngineId === null) {
                 this.id = dataUtils.generateUUID();
             } else {
                 this.id = renderingEngineId;
             }
 
-            if (title === undefined || title === '') {
+            if (title === undefined || title === '' || title === null) {
                 this.title = "Untitiled";
             } else {
                 this.title = title;
             }
 
-            if (rendererName === undefined || rendererName === '') {
-                this.rendererName = "DT - Table";
-            } else {
+            if (rendererName !== undefined && rendererName !== '' && rendererName !== null) {
                 this.rendererName = rendererName;
+            } else {
+                var e = new Error('RenderingEngine constructor: cannot instantiate a RenderingEngine object without a renderer name.');
+                if (typeof console !== "undefined" && console !== null) {
+                    console.error(e.stack);
+                }
+                throw e;
             }
 
-            this.dataView = {
-                meta: dataViews[renderers[this.rendererName].opts.dataViewName].meta()
-            };
+            if (localeName !== undefined && localeName !== '' && localeName !== null) {
+                this.localeName = localeName;
+            } else {
+                this.localeName = 'en';
+            }
+
+            this.setAggregator(aggregatorName);
+            this.setDerivedAttributes(derivedAttributes);
+
+            this.dataView = new dataViews[renderers[this.rendererName].dataViewName].view([], {
+                aggregator: aggregators[this.aggregatorName].aggregate(),
+                derivedAttributes: this.derivedAttributes,
+                dataUtils: dataUtils,
+                meta: dataViews[renderers[rendererName].dataViewName].meta()
+            });
         }
         RenderingEngine.prototype = {
             /**
              * @typedef RenderingEngine
              * @type {object}
-             * @property {string} dataSourceConfigId - The UUID of the data source.
              * @property {string} id - The UUID of this rendering engine.
              * @property {string} title - The title of this rendering engine.
              * @property {string} rendererName - The name of the renderer plugin.
-             * @property {string} aggregatorName - The name of the aggregator plugin.
-             * @property {object} aggregator - The aggregator of this rendering engine.
-             * @property {string} aggregator.name - The name of the aggregator for this rendering engine.
-             * @property {function} aggregator.aggregate - The name of the aggregator for this rendering engine.
-             * @property {Array} aggregator.numInputsToProcess - The number aggregator for this rendering engine.
-             * @property {Array} aggregator.aggInputAttributeName - The name of the aggregator for this rendering engine.
+             * @property {string} aggregatorName - The name of the aggregator for this rendering engine.
              */
             constructor: RenderingEngine,
             /**
-             * Intialize the 'renderingEngine''s `aggregator` object.
+             * [setDerivedAttributes description]
+             * @param {[type]} derivedAttributes [description]
              */
-            initializeAggregator: function() {
-                if (this.aggregator === undefined) {
-                    this.aggregator = {
-                        name: "Count",
-                        aggregate: function() {},
-                        numInputsToProcess: [],
-                        aggInputAttributeName: []
-                    }
-                }
-
-                var numInputs = aggregators[this.aggregator.name].aggregate([])([]).numInputs;
-                if (numInputs === undefined) {
-                    this.aggregator.numInputsToProcess = new Array();
-                    this.aggregator.aggInputAttributeName = new Array();
+            setDerivedAttributes: function(derivedAttributes) {
+                if (derivedAttributes !== undefined && derivedAttributes !== '' && derivedAttributes !== null) {
+                    this.derivedAttributes = derivedAttributes;
                 } else {
-                    this.aggregator.numInputsToProcess = new Array(numInputs);
-                    if (this.aggregator.aggInputAttributeName.length !== numInputs) {
-                        this.aggregator.aggInputAttributeName = new Array(numInputs);
-                    }
+                    this.derivedAttributes = {};
                 }
 
-                this.aggregator.aggregate = aggregators[this.aggregator.name].aggregate([this.aggregator.aggInputAttributeName]);
+                if (this.dataView !== undefined) {
+                    this.draw();
+                }
+            },
+            /**
+             * Intialize the 'renderingEngine''s `aggregator` object.
+             * 
+             * @param  {string} aggregatorName - The name of the aggregator plugin.
+             */
+            setAggregator: function(aggregatorName) {
+                if (aggregatorName === undefined || aggregatorName === '' || aggregatorName === null) {
+                    this.aggregatorName = "Count";
+                } else {
+                    this.aggregatorName = aggregatorName;
+                }
+
+                if (this.dataView !== undefined) {
+                    this.draw();
+                }
             },
             /**
              * Creates configured `DataView` and invokes the configured `renderer` to build the DOM and
              * attach it to the view.
              *  
+             * @param  {html} element The jQuery element that will contain the viz.
              * @param  {object} data The `data` can be in any format that the configured `DataView` can understand.
-             * @param  {string} rendererName The name of the renderer to use.
+             * @param  {string} [rendererName] The name of the renderer to use.
+             * @param  {string} [aggregatorName] - The name of the aggregator plugin.
+             * @param  {string} [localeName] - The name of the locale.
+             * @param  {object} [derivedAttributes] - A dictionary of "deriver generator" functions: the keys are the names of the new attributes, and the functions take an existing record and return the value of the new attribute.
              * 
              * @return {Promise}      A promise that resolves once the view is attached to the DOM. 
              */
-            draw: function(data, rendererName) {
+            draw: function(element, data, rendererName, aggregatorName, localeName, derivedAttributes) {
                 var self = this;
 
-                if (rendererName !== undefined && rendererName !== '') {
+                //if rendererName is set make sure to persist it
+                if (rendererName !== undefined && rendererName !== '' && rendererName !== null) {
                     self.rendererName = rendererName;
                 }
 
-                var deferred = $q.defer();
+                //if localeName is set make sure to persist it
+                if (localeName !== undefined && localeName !== '' && localeName !== null) {
+                    self.localeName = localeName;
+                }
+
+                //if element is set make sure to persist it
+                if (element !== undefined && element !== '' && element !== null) {
+                    self.element = element;
+                }
+
+                this.setAggregator(aggregatorName);
+                this.setDerivedAttributes(derivedAttributes);
+
                 $rootScope.$emit('RenderingEngine:draw:begin');
-                $timeout(function(data) {
+                return $timeout(function(dataContext) {
                     var result;
                     try {
-                        self.initializeAggregator();
-                        var opts = {
-                            id: self.id,
-                            title: self.title,
-                            aggregator: self.aggregator,
+                        var dataView_opts = {
+                            aggregator: aggregators[self.aggregatorName].aggregate(),
+                            derivedAttributes: self.derivedAttributes,
                             dataUtils: dataUtils,
                             meta: self.dataView.meta
                         };
-                        self.dataView = new dataViews[renderers[self.rendererName].opts.dataViewName].view(data, opts);
+
+                        self.dataView = new dataViews[renderers[self.rendererName].dataViewName].view(dataContext.data, dataView_opts);
+
+                        var opts = {
+                            localeStrings: renderers[self.rendererName].opts.locales[self.localeName].localeStrings,
+                            renderingEngineRef: self,
+                            height: self.element.parent().innerHeight(),
+                            width: self.element.parent().innerWidth()
+                        };
+
+                        var renderer_opts = $.extend(opts, renderers[self.rendererName].opts);
+
                         try {
-                            renderers[self.rendererName].opts.height = self.element.parent().parent().innerHeight();
-                            renderers[self.rendererName].opts.width = self.element.parent().parent().innerWidth();
-                            result = renderers[self.rendererName].render(self.dataView, renderers[self.rendererName].opts);
+                            result = renderers[self.rendererName].render(self.dataView, renderer_opts);
                         } catch (_error) {
-                            e = _error;
+                            var e = _error;
                             if (typeof console !== "undefined" && console !== null) {
-                                console.error(e.stack);
+                                console.log(e.stack);
                             }
-                            result = $("<span>").html(opts.localeStrings.renderError);
+                            // remove old viz
+                            self.element.empty();
+                            // append the new viz
+                            self.element.append($("<span>").html(renderers[self.rendererName].opts.locales[self.localeName].localeStrings.renderError));
+                            $rootScope.$emit('RenderingEngine:draw:complete');
                         }
                     } catch (_error) {
-                        e = _error;
+                        var e = _error;
                         if (typeof console !== "undefined" && console !== null) {
-                            console.error(e.stack);
+                            console.log(e.stack);
                         }
-                        result = $("<span>").html(opts.localeStrings.computeError);
+                        // remove old viz
+                        self.element.empty();
+                        // append the new viz
+                        self.element.append($("<span>").html(renderers[self.rendererName].opts.locales[self.localeName].localeStrings.computeError));
+                        $rootScope.$emit('RenderingEngine:draw:complete');
                     }
-                    // remove old viz
-                    self.element.empty();
-                    // append the new viz
-                    self.element.append(result.html);
                     $rootScope.$emit('RenderingEngine:draw:complete');
-                    // run any post render functions defined by visual
-                    if (result.postRenderFunction) {
-                        result.postRenderFunction(result.html, result.postRenderOpts);
-                    }
-                    deferred.resolve();
-                }, 1500, true, data);
-                return deferred.promise;
+                    renderers[self.rendererName].finalize(self.element, result);
+                    return result;
+                }, 1500, true, { "data": data });
             }
         };
         return RenderingEngine;
@@ -1071,16 +1215,15 @@ define('services/RenderingEngines',[], function() {
             /**
              * Instantiates a {@link RenderingEngine} and adds it to the map.
              * 
-             * @param  {string} dataSourceConfigurationId The UUID of the {@link DataSourceConfiguration} referenced by the instaniated {@link RenderingEngine}.
+             * @param {string} rendererName - The name of the renderer plugin.
              * @param  {string} [renderingEngineId]         The UUID of the {@link RenderingEngine}
              * @param  {string} [title]                     The title of the {@link RenderingEngine}
-             * @param  {string} [dataViewName]       The name of the data view plugin.
              * 
              * @return {object}      The {@link DataSource}.
              */
-            create: function(dataSourceConfigurationId, renderingEngineId, title, dataViewName) {
+            create: function(rendererName, title, renderingEngineId, aggregatorName) {
                 var self = this;
-                var renderingEngine = new RenderingEngine(dataSourceConfigurationId, renderingEngineId, title, dataViewName);
+                var renderingEngine = new RenderingEngine(rendererName, title, renderingEngineId, aggregatorName);
                 self.add(renderingEngine);
                 //There may be an active rendering engine, if so deactivate
                 if (self.activeRenderingEngine !== undefined) {
@@ -1163,6 +1306,11 @@ define('services/dataUtils',[], function() {
                     return fn.apply(me, arguments);
                 };
             },
+            zeroPad: function(number) {
+              return ("0" + number).substr(-2, 2);
+            },
+            mthNamesEn: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            dayNamesEn: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
             forEachRecord: function(input, derivedAttributes, f) {
                 var self = this;
                 var addRecord, compactRecord, i, j, k, l, len1, record, ref, results, results1, tblCols;
@@ -1344,6 +1492,23 @@ define('services/dataUtils',[], function() {
                     scaler: 100,
                     suffix: '%'
                 });
+            },
+            /**
+             * Adds a dataUtil function by `name` for fast lookup.
+             * 
+             * @param {string} name       The lookup name of the dataUtil function.
+             * @param {function} dataUtil The dataUtil function.
+             */
+            add: function(name, dataUtil) {
+                this[name] = dataUtil;
+            },
+            /**
+             * Lists the available dataUtil plugins.
+             * 
+             * @return {Array.<string>} The lookup names.
+             */
+            list: function() {
+                return Object.keys(this);
             }
         };
 
@@ -1617,6 +1782,7 @@ define('ng-rndr',['directives/rndr',
         'services/aggregators',
         'services/aggregatorTemplates',
         'services/dataViews',
+        'services/derivers',
         'services/renderers',
         'services/RenderingEngine',
         'services/RenderingEngines',
@@ -1630,6 +1796,7 @@ define('ng-rndr',['directives/rndr',
         aggregators,
         aggregatorTemplates,
         dataViews,
+        derivers,
         renderers,
         RenderingEngine,
         RenderingEngines,
@@ -1649,10 +1816,11 @@ define('ng-rndr',['directives/rndr',
         DataSource.$inject = ['ngRndr.dataSourceConfigurations', '$q', '$rootScope', '$http'];
         dataSources.$inject = ['ngRndr.DataSource'];
         aggregators.$inject = ['ngRndr.aggregatorTemplates', 'ngRndr.dataUtils'];
+        derivers.$inject = ['ngRndr.dataUtils'];
         aggregatorTemplates.$inject = ['ngRndr.dataUtils'];
         dataViews.$inject = [];
         renderers.$inject = [];
-        RenderingEngine.$inject = ['ngRndr.aggregators', 'ngRndr.dataUtils', 'ngRndr.renderers', 'ngRndr.dataViews', '$q', '$timeout', '$window', '$rootScope'];
+        RenderingEngine.$inject = ['ngRndr.aggregators', 'ngRndr.dataUtils', 'ngRndr.renderers', 'ngRndr.dataViews', '$timeout', '$rootScope'];
         RenderingEngines.$inject = ['ngRndr.RenderingEngine', 'ngRndr.dataSourceConfigurations', 'ngRndr.dataSources', '$http'];
         dataUtils.$inject = [];
 
@@ -1666,6 +1834,7 @@ define('ng-rndr',['directives/rndr',
         app.service('ngRndr.dataSources', dataSources);
         app.service('ngRndr.aggregators', aggregators);
         app.service('ngRndr.aggregatorTemplates', aggregatorTemplates);
+        app.service('ngRndr.derivers', derivers);
         app.service('ngRndr.dataViews', dataViews);
         app.service('ngRndr.renderers', renderers);
         app.service('ngRndr.RenderingEngine', RenderingEngine);

@@ -1,5 +1,5 @@
 {
-  "name": "@scottyaslan/ng-rndr",
+  "name": "ng-rndr",
   "version": "0.0.1-RC.4",
   "license": "MIT",
   "description": "ng-rndr is a pluggable and embeddable angular module for formatting and visualizing data.",
@@ -28,10 +28,5 @@
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-uglify": "^2.0",
     "grunt-html2js": "^0.3.6"
-  },
-  "dependencies": {
-    "angular": "~1.5.0",
-    "jquery": "~2.1.1"
-  },
-  "main": "server.js"
+  }
 }

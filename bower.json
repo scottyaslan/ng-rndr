@@ -8,7 +8,6 @@
     "ignore": [
         "examples",
         "node_modules",
-        "gulp",
         "src",
         "test-src",
         ".bowerrc",
@@ -17,7 +16,6 @@
         ".jshintrc",
         "bower.json",
         "Gruntfile.js",
-        "gulpFile.js",
         "LICENSE",
         "package.json",
         "README.md",
