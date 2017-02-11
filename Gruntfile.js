@@ -11,17 +11,26 @@ module.exports = function(grunt) {
                     { expand: false, src: ['src/plugins/renderers/d3_renderers.js'], dest: 'dist/plugins/renderers/d3_renderers.js', filter: 'isFile' },
                     { expand: false, src: ['src/plugins/renderers/datatables_renderers.js'], dest: 'dist/plugins/renderers/datatables_renderers.js', filter: 'isFile' },
                     { expand: false, src: ['src/plugins/renderers/datatables_renderers.css'], dest: 'dist/plugins/renderers/datatables_renderers.css', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/renderers/gchart_renderers.js'], dest: 'dist/plugins/renderers/gchart_renderers.js', filter: 'isFile' }
+                    { expand: false, src: ['src/plugins/renderers/gchart_renderers.js'], dest: 'dist/plugins/renderers/gchart_renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/templates/aggregators.js'], dest: 'dist/templates/aggregators.js', filter: 'isFile' },
+                    { expand: false, src: ['src/templates/derivers.js'], dest: 'dist/templates/derivers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/templates/formatters.js'], dest: 'dist/templates/formatters.js', filter: 'isFile' },
+                    { expand: false, src: ['src/templates/sorters.js'], dest: 'dist/templates/sorters.js', filter: 'isFile' }
                 ]
             }
         },
         requirejs: {
             options: {
-                baseUrl: "./src",
+                baseUrl: './src',
                 out: './dist/ng-rndr.js',
                 optimize: 'none',
                 mainConfigFile: './src/ng-rndr.js',
                 include: 'ng-rndr',
+                paths: {
+                    'ngRndr.dataUtils': 'empty:',
+                    'jquery': 'empty:',
+                    'angular': 'empty:'
+                },
                 name: '../node_modules/almond/almond',
                 wrap: {
                     startFile: 'wrap.start',
@@ -52,7 +61,11 @@ module.exports = function(grunt) {
                     './dist/plugins/renderers/c3_renderers.min.js': ['./src/plugins/renderers/c3_renderers.js'],
                     './dist/plugins/renderers/d3_renderers.min.js': ['./src/plugins/renderers/d3_renderers.js'],
                     './dist/plugins/renderers/datatables_renderers.min.js': ['./src/plugins/renderers/datatables_renderers.js'],
-                    './dist/plugins/renderers/gchart_renderers.min.js': ['./src/plugins/renderers/gchart_renderers.js']
+                    './dist/plugins/renderers/gchart_renderers.min.js': ['./src/plugins/renderers/gchart_renderers.js'],
+                    './dist/templates/aggregators.min.js': ['./src/templates/aggregators.js'],
+                    './dist/templates/derivers.min.js': ['./src/templates/derivers.js'],
+                    './dist/templates/formatters.min.js': ['./src/templates/formatters.js'],
+                    './dist/templates/sorters.min.js': ['./src/templates/sorters.js']
                 }]
             }
         },
