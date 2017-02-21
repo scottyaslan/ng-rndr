@@ -12,9 +12,9 @@
                                 <header class='ui-dialog-titlebar ui-widget-header'>
                                     <div class='box'>Attributes</div>
                                 </header>
-                                <div class="gridsterWidgetContainer dropzone" ui-sortable="dropzone" ng-model="RenderingEngine.dataView.meta.attributesAvailableForRowsAndCols">
-                                    <ul ui-sortable="exploreController.constants.sortableOptions" ng-model="RenderingEngine.dataView.meta.attributesAvailableForRowsAndCols" class="list">
-                                        <li class="placeholder" ng-repeat="attribute in RenderingEngine.dataView.meta.attributesAvailableForRowsAndCols">
+                                <div class="gridsterWidgetContainer dropzone" ui-sortable="dropzone" ng-model="RenderingEngine.dataView.attributesAvailableForRowsAndCols">
+                                    <ul ui-sortable="exploreController.constants.sortableOptions" ng-model="RenderingEngine.dataView.attributesAvailableForRowsAndCols" class="list">
+                                        <li class="placeholder" ng-repeat="attribute in RenderingEngine.dataView.attributesAvailableForRowsAndCols">
                                             <div class='box pvtAttr'>
                                                 <span ng-bind="attribute"></span>
                                             </div>

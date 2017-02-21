@@ -4,7 +4,7 @@ define([], function() {
     function acquisitionDirective(acquisitionController, dataSourceConfigurations, dataSources) {
         return {
             restrict: 'E',
-            templateUrl:'ngRNDR/acquire/views/acquire.html',
+            templateUrl:'ng-rndr/acquire/views/acquire.html',
             link: function(scope, element, attrs) {
                 acquisitionController.init();
                 scope.acquisitionController = acquisitionController;

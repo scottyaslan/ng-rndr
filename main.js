@@ -1,6 +1,6 @@
 require.config({
     waitSeconds: 200,
-    baseUrl: 'ngRNDR/bower_components',
+    baseUrl: 'ng-rndr/bower_components',
     paths: {
         //RequireJS plugins
         'async': 'requirejs-plugins/src/async',
@@ -28,7 +28,7 @@ require.config({
         'parallax': 'parallax/deploy/jquery.parallax.min',
         'jquery.contextMenu': 'jQuery-contextMenu/src/jquery.contextMenu',
         'gridster': 'gridster/dist/jquery.gridster',
-        'ng-rndr': 'ngRNDR/dist/ng-rndr',
+        'ng-rndr': 'ng-rndr/dist/ng-rndr',
         'c3': 'c3/c3.min',
         'd3': 'd3/d3.min',
         //Angular and any 3rd party angular modules
@@ -41,12 +41,16 @@ require.config({
         'angular-ui-sortable': 'angular-ui-sortable/sortable',
         'angular-contextMenu': 'angularContextMenu/src/angular-contextMenu',
         'ui-ace': 'angular-ui-ace/ui-ace',
-        //ngRNDR plugins
-        'c3_renderers': 'ngRNDR/dist/plugins/renderers/c3_renderers.min',
-        'd3_renderers': 'ngRNDR/dist/plugins/renderers/d3_renderers.min',
-        'datatables_renderers': 'ngRNDR/dist/plugins/renderers/datatables_renderers.min',
-        'gchart_renderers': 'ngRNDR/dist/plugins/renderers/gchart_renderers.min',
-        'PivotData': 'ngRNDR/dist/plugins/data_views/PivotData'
+        //ng-rndr plugins
+        'c3_renderers': 'ng-rndr/dist/plugins/renderers/c3_renderers',
+        'd3_renderers': 'ng-rndr/dist/plugins/renderers/d3_renderers',
+        'datatables_renderers': 'ng-rndr/dist/plugins/renderers/datatables_renderers',
+        'pivottables_renderers': 'ng-rndr/dist/plugins/renderers/pivottables_renderers',
+        'gchart_renderers': 'ng-rndr/dist/plugins/renderers/gchart_renderers',
+        'PivotData': 'ng-rndr/dist/plugins/data_views/PivotData',
+        'ngRndr.templates.aggregators': 'ng-rndr/dist/templates/aggregators.min',
+        'ngRndr.templates.derivers': 'ng-rndr/dist/templates/derivers.min',
+        'ngRndr.templates.formatters': 'ng-rndr/dist/templates/formatters.min'
     },
     shim: {
         'font': ['goog', 'propertyParser'],
@@ -58,9 +62,10 @@ require.config({
         'parallax': ['jquery'],
         'gridster': ['jquery'],
         'c3': ['d3'],
-        'c3_renderers': ['c3'],
-        'd3_renderers': ['d3'],
-        'datatables_renderers': ['datatables.net', 'datatables.net-keytable', 'datatables.net-fixedcolumns', 'datatables.net-buttons-html5', 'datatables.net-buttons-print'],
+        'c3_renderers': ['jquery', 'c3'],
+        'd3_renderers': ['jquery', 'd3'],
+        'pivottables_renderers': ['jquery'],
+        'datatables_renderers': ['jquery', 'datatables.net', 'datatables.net-keytable', 'datatables.net-fixedcolumns', 'datatables.net-buttons-html5', 'datatables.net-buttons-print'],
         'datatables.net': ['jquery'],
         'datatables.net-fixedcolumns': ['datatables.net'],
         'datatables.net-keytable': ['datatables.net'],
@@ -76,7 +81,10 @@ require.config({
         },
         'jquery.contextMenu': ['jquery', 'jquery-ui'],
         //Angular and any 3rd party angular modules
-        'angular': ['jquery'],
+        'angular': {
+            deps: ['jquery'],
+            exports: 'angular'
+        },
         'angular-resource': ['angular'],
         'angular-route': ['angular'],
         'angular-material': ['angular', 'angular-animate', 'angular-aria'],

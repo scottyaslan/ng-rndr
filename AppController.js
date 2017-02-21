@@ -1,17 +1,7 @@
-define(['datatables_renderers',
-        'c3_renderers',
-        'd3_renderers',
-        'gchart_renderers',
-        'PivotData',
-        'downloadjs',
+define(['downloadjs',
         'goog!visualization,1,packages:[corechart,geochart]'
     ],
-    function(datatables_renderers,
-        c3_renderers,
-        d3_renderers,
-        gchart_renderers,
-        PivotData,
-        downloadjs) {
+    function(downloadjs) {
 
         'use strict';
 
@@ -23,7 +13,6 @@ define(['datatables_renderers',
             renderingEnginesCollection,
             uiControls,
             dataSourceConfigurations,
-            dataViews,
             renderers,
             $window,
             $rootScope,
@@ -80,7 +69,7 @@ define(['datatables_renderers',
                         // uiControls.openDialog('Data Source');
                     });
                     $rootScope.$on('explore:init', function() {
-                        uiControls.init('ngRNDR/explore/views/bottomSheetGridTemplate.html', 'ngRNDR/explore/views/dialogTemplate.html');
+                        uiControls.init('ng-rndr/explore/views/bottomSheetGridTemplate.html', 'ng-rndr/explore/views/dialogTemplate.html');
                     });
                     $rootScope.$on('dataSource:acquire:success', function() {
                         uiControls.openLeftSideNav();
@@ -128,7 +117,10 @@ define(['datatables_renderers',
                         promises.push(dataSources.create(dataSourceConfiguration.id, dataSourceConfiguration.name).acquire());
                     });
                     angular.forEach(rndr.renderingEngines, function(renderingEngine) {
-                        $.extend(renderingEnginesCollection.map[renderingEnginesCollection.create(renderingEngine.dataSourceConfigId, renderingEngine.id, renderingEngine.title).id], renderingEngine);
+                        var eng = renderingEnginesCollection.create(renderingEngine.renderer, renderingEngine.title, renderingEngine.id, renderingEngine.aggregator.name, renderingEngine.aggregator.aggInputAttributeName, renderingEngine.dataView.meta, renderingEngine.derivedAttributes, renderingEngine.locale);
+                        eng.active = renderingEngine.active;
+                        eng.tile = renderingEngine.tile;
+                        eng.dataSourceConfigId = renderingEngine.dataSourceConfigId;
                     });
                     $q.all(promises).then(function() {
                         angular.forEach(rndr.dataSourceConfigurations, function(dataSourceConfiguration) {
@@ -195,9 +187,16 @@ define(['datatables_renderers',
                 },
                 export: function() {
                     var rndr = {
-                        renderingEngines: renderingEnginesCollection.map,
+                        renderingEngines: {},
                         dataSourceConfigurations: dataSourceConfigurations.map
                     }
+                    angular.forEach(renderingEnginesCollection.map, function(renderingEngine) {
+                        var meta = renderingEngine.meta();
+                        meta.active = renderingEngine.active;
+                        meta.dataSourceConfigId = renderingEngine.dataSourceConfigId;
+                        meta.tile = renderingEngine.tile;
+                        rndr.renderingEngines[meta.id] = meta;
+                    });
                     downloadjs(JSON.stringify(JSON.decycle(rndr)), 'test.rndr', 'application/json');
                 },
                 deleteRenderingEngine: function(id) {
@@ -212,7 +211,7 @@ define(['datatables_renderers',
                     var self = this;
                     if (self.mainContentView !== "Explore") {
                         self.mainContentView = "Explore";
-                        uiControls.init('ngRNDR/explore/views/bottomSheetGridTemplate.html', 'ngRNDR/explore/views/dialogTemplate.html');
+                        uiControls.init('ng-rndr/explore/views/bottomSheetGridTemplate.html', 'ng-rndr/explore/views/dialogTemplate.html');
                     }
                     if (createNew) {
                         //Have to get on the call stack after the exploration-directive link function is executed
@@ -226,7 +225,7 @@ define(['datatables_renderers',
                     var self = this;
                     if (self.mainContentView !== "Data Source Configuration Wizard") {
                         self.mainContentView = "Data Source Configuration Wizard";
-                        uiControls.init('ngRNDR/acquire/views/bottomSheetGridTemplate.html', 'ngRNDR/acquire/views/dialogTemplate.html');
+                        uiControls.init('ng-rndr/acquire/views/bottomSheetGridTemplate.html', 'ng-rndr/acquire/views/dialogTemplate.html');
                         uiControls.openLeftSideNav();
                         uiControls.openRightSideNav();
                     }
@@ -239,157 +238,13 @@ define(['datatables_renderers',
                 },
                 sandboxMenusEnabled: function() {
                     return Object.keys(renderingEnginesCollection.map).length === 0;
+                },
+                hideDialogAndDraw: function(rendererName) {
+                    renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].setRenderer(rendererName);
+                    renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw($('#renderer'), dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData);
                 }
             };
-
-            //Configure Data Views
-            dataViews.add('PivotData', PivotData, function() {
-                return {
-                    attributesAvailableForRowsAndCols: [],
-                    availableAttributes: [],
-                    aggregatorName: "",
-                    colAttrs: [],
-                    rowAttrs: [],
-                    valAttrs: [],
-                    tree: {},
-                    rowKeys: [],
-                    colKeys: [],
-                    rowTotals: {},
-                    colTotals: {},
-                    aggInputAttributeName: [],
-                    sorted: false,
-                    numInputsToProcess: [],
-                    hiddenAttributes: [],
-                    cols: [],
-                    rows: [],
-                    vals: [],
-                    attributeFilterExclusions: {},
-                    attributeFilterInclusions: {},
-                    shownAttributes: [],
-                    tblCols: [],
-                    derivedAttributes: {},
-                }
-            });
-
-            //Configure Renderers
-            renderers.add("DT - Table",
-                datatables_renderers["Table"], {
-                    class: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -148,
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("DT - Table Barchart",
-                datatables_renderers["Table Barchart"], {
-                    class: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -148,
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("DT - Heatmap",
-                datatables_renderers["Heatmap"], {
-                    class: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -148,
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("DT - Row Heatmap",
-                datatables_renderers["Row Heatmap"], {
-                    class: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -148,
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("DT - Col Heatmap",
-                datatables_renderers["Col Heatmap"], {
-                    class: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -148,
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("C3 - Line Chart",
-                c3_renderers["C3 - Line Chart"], {
-                    heightOffset: -34, //height - header - title?
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("C3 - Bar Chart",
-                c3_renderers["C3 - Bar Chart"], {
-                    heightOffset: -34, //height - header - title?
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("C3 - Stacked Bar Chart",
-                c3_renderers["C3 - Stacked Bar Chart"], {
-                    heightOffset: -34, //height - header - title?
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("C3 - Area Chart",
-                c3_renderers["C3 - Area Chart"], {
-                    heightOffset: -34, //height - header - title?
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("C3 - Scatter Chart",
-                c3_renderers["C3 - Scatter Chart"], {
-                    heightOffset: -34, //height - header - title?
-                    widthOffset: 0,
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("D3 - Treemap",
-                d3_renderers["Treemap"], {
-                    heightOffset: 0,
-                    widthOffset: -16, //d3 draws a little too wide???
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("Google - Line Chart",
-                gchart_renderers["Line Chart"], {
-                    heightOffset: 0,
-                    widthOffset: -16, //d3 draws a little too wide???
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("Google - Bar Chart",
-                gchart_renderers["Bar Chart"], {
-                    heightOffset: 0,
-                    widthOffset: -16, //d3 draws a little too wide???
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("Google - Stacked Bar Chart",
-                gchart_renderers["Stacked Bar Chart"], {
-                    heightOffset: 0,
-                    widthOffset: -16, //d3 draws a little too wide???
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("Google - Area Chart",
-                gchart_renderers["Area Chart"], {
-                    heightOffset: 0,
-                    widthOffset: -16, //d3 draws a little too wide???
-                    dataViewName: 'PivotData'
-                }
-            );
-            renderers.add("Google - Scatter Chart",
-                gchart_renderers["Scatter Chart"], {
-                    heightOffset: 0,
-                    widthOffset: -16, //d3 draws a little too wide???
-                    dataViewName: 'PivotData'
-                }
-            );
-
+            
             $scope.renderers = renderers;
 
             //Singleton for tracking all renderingEngine objects
@@ -403,37 +258,7 @@ define(['datatables_renderers',
             var controller = new AppController();
             $scope.Controller = controller;
 
-            //Extend RenderingEngine functionality
-            var updateTile = function(size_x, size_y, col, row) {
-                var self = this;
-                self.tile = {
-                    size_x: size_x,
-                    size_y: size_y,
-                    col: col,
-                    row: row
-                };
-            };
-
-            RenderingEngine.prototype.updateTile = updateTile;
-
-            //Extend exploreController functionality
-            var initiateDataSourceWizard = function() {
-                exploreController.dialogContentView = '';
-                uiControls.hideDialog();
-                $rootScope.$emit('exploreController:initiate data source configuration wizard');
-            };
-
-            var closeDialog = function() {
-                uiControls.hideDialog();
-                if (Object.keys(renderingEnginesCollection.map).length === 0) {
-                    //$rootScope.$emit('acquisitionController:cancel');  
-                }
-            };
-
-            exploreController.closeDialog = closeDialog;
-            exploreController.initiateDataSourceWizard = initiateDataSourceWizard;
-
-            //Options for Explore view gridster
+            //Options for Dashboard gridster
             $scope.options = {
                 enableDragging: true,
                 //                                 autogrow_cols: true,
@@ -451,7 +276,7 @@ define(['datatables_renderers',
                     enabled: true,
                     resize: function(e, ui, $widget) {},
                     stop: function(e, ui, $widget) {
-                        renderingEnginesCollection.map[$widget[0].id].draw(dataSources.map[renderingEnginesCollection.map[$widget[0].id].dataSourceConfigId].formattedData);
+                        renderingEnginesCollection.map[$widget[0].id].draw($($widget[0]).find('.gridsterWidgetContainer'), dataSources.map[renderingEnginesCollection.map[$widget[0].id].dataSourceConfigId].formattedData);
                         renderingEnginesCollection.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().parent().data('gridster').$widgets);
                     }
                 },

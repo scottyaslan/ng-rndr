@@ -1,18 +1,21 @@
-define(['../ngRNDR/AppController',
-        '../ngRNDR/renderingEnginesCollection',
-        '../ngRNDR/common/controllers/controllerWrapper',
-        '../ngRNDR/common/services/uiControls',
-        '../ngRNDR/acquire/services/acquisitionController',
-        '../ngRNDR/acquire/directives/acquisitionDirective',
-        '../ngRNDR/explore/directives/explorationDirective',
-        '../ngRNDR/explore/services/exploreController',
-        '../ngRNDR/syndicate/directives/dashboardDirective',
-        '../ngRNDR/syndicate/services/Dashboard',
-        '../ngRNDR/syndicate/directives/gridsterDirective',
-        '../ngRNDR/datDirective',
-        '../ngRNDR/config',
+define(['../ng-rndr/AppController',
+        '../ng-rndr/DataSourceConfiguration',
+        '../ng-rndr/dataSourceConfigurations',
+        '../ng-rndr/DataSource',
+        '../ng-rndr/dataSources',
+        '../ng-rndr/renderingEnginesCollection',
+        '../ng-rndr/common/controllers/controllerWrapper',
+        '../ng-rndr/common/services/uiControls',
+        '../ng-rndr/acquire/services/acquisitionController',
+        '../ng-rndr/acquire/directives/acquisitionDirective',
+        '../ng-rndr/explore/directives/explorationDirective',
+        '../ng-rndr/explore/services/exploreController',
+        '../ng-rndr/syndicate/directives/dashboardDirective',
+        '../ng-rndr/syndicate/services/Dashboard',
+        '../ng-rndr/syndicate/directives/gridsterDirective',
+        '../ng-rndr/datDirective',
+        '../ng-rndr/config',
         'downloadjs',
-        'c3',
         'cyclejs',
         'jquery-csv',
         'ng-rndr',
@@ -27,6 +30,10 @@ define(['../ngRNDR/AppController',
         'ui-ace'
     ],
     function(AppController,
+        DataSourceConfiguration,
+        dataSourceConfigurations,
+        DataSource,
+        dataSources,
         renderingEnginesCollection,
         controllerWrapper,
         uiControls,
@@ -39,12 +46,9 @@ define(['../ngRNDR/AppController',
         gridsterDirective,
         datDirective,
         config,
-        downloadjs,
-        c3) {
+        downloadjs) {
 
         'use strict';
-
-        window.c3 = c3;
 
         function createUUID() {
             var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -59,25 +63,28 @@ define(['../ngRNDR/AppController',
         var app = angular.module('sampleApp', ['ngResource', 'ngRoute', 'ngMaterial', 'ui.sortable', 'angular-contextMenu', 'ui.ace', 'ngRndr']);
 
         // Annotate module dependencies
+        DataSourceConfiguration.$inject = [];
+        dataSourceConfigurations.$inject = ['DataSourceConfiguration'];
+        DataSource.$inject = ['dataSourceConfigurations', '$q', '$rootScope', '$http'];
+        dataSources.$inject = ['DataSource'];
         gridsterDirective.$inject = [];
         renderingEnginesCollection.$inject = [];
         datDirective.$inject = [];
-        explorationDirective.$inject = ['exploreController', 'renderingEnginesCollection', 'ngRndr.dataSources'];
+        explorationDirective.$inject = ['exploreController', 'renderingEnginesCollection', 'dataSources'];
         dashboardDirective.$inject = ['Dashboard', '$window'];
-        exploreController.$inject = ['renderingEnginesCollection', 'ngRndr.dataSources', 'ngRndr.dataSourceConfigurations', '$window', '$timeout', '$rootScope', '$http'];
-        Dashboard.$inject = ['$rootScope', '$compile', '$window', '$q', '$timeout', 'ngRndr.dataSources'];
+        exploreController.$inject = ['renderingEnginesCollection', 'dataSources', 'dataSourceConfigurations', '$ngRndrAggregators', 'uiControls', '$window', '$timeout', '$rootScope', '$http'];
+        Dashboard.$inject = ['$rootScope', '$compile', '$window', '$q', '$timeout', 'dataSources'];
         uiControls.$inject = ['$window', '$mdSidenav', '$mdUtil', '$mdBottomSheet', '$mdDialog'];
-        acquisitionController.$inject = ['ngRndr.RenderingEngine', 'renderingEnginesCollection', 'ngRndr.dataSources', 'ngRndr.dataSourceConfigurations', '$rootScope', '$window', '$q'];
-        AppController.$inject = ['ngRndr.RenderingEngine',
-            'ngRndr.dataSources',
+        acquisitionController.$inject = ['$ngRndrRenderingEngine', 'renderingEnginesCollection', 'dataSources', 'dataSourceConfigurations', '$rootScope', '$window', '$q'];
+        AppController.$inject = ['$ngRndrRenderingEngine',
+            'dataSources',
             'acquisitionController',
             'exploreController',
-            'ngRndr.RenderingEngines',
+            '$ngRndrRenderingEngines',
             'renderingEnginesCollection',
             'uiControls',
-            'ngRndr.dataSourceConfigurations',
-            'ngRndr.dataViews',
-            'ngRndr.renderers',
+            'dataSourceConfigurations',
+            '$ngRndrRenderers',
             '$window',
             '$rootScope',
             '$timeout',
@@ -86,9 +93,10 @@ define(['../ngRNDR/AppController',
             '$scope',
             '$q'
         ];
-        controllerWrapper.$inject = ['$scope', 'uiControls', 'ngRndr.dataSources', 'ngRndr.dataSourceConfigurations', 'acquisitionController', 'exploreController', 'renderingEnginesCollection', 'ngRndr.aggregators'];
-        acquisitionDirective.$inject = ['acquisitionController', 'ngRndr.dataSourceConfigurations', 'ngRndr.dataSources'];
+        controllerWrapper.$inject = ['$scope', 'uiControls', 'dataSources', 'dataSourceConfigurations', 'acquisitionController', 'exploreController', 'renderingEnginesCollection', '$ngRndrAggregators'];
+        acquisitionDirective.$inject = ['acquisitionController', 'dataSourceConfigurations', 'dataSources'];
 
+        config.$inject = ['$locationProvider', '$mdThemingProvider', '$provide', '$ngRndrRenderersProvider', '$ngRndrDataViewsProvider', '$ngRndrAggregatorsProvider', '$ngRndrDerivedAttributesProvider', '$ngRndrFormattersProvider'];
         app.config(config);
 
         // Module controllers
@@ -96,6 +104,10 @@ define(['../ngRNDR/AppController',
         app.controller('controllerWrapper', controllerWrapper);
 
         // Module services
+        app.service('DataSourceConfiguration', DataSourceConfiguration);
+        app.service('dataSourceConfigurations', dataSourceConfigurations);
+        app.service('DataSource', DataSource);
+        app.service('dataSources', dataSources);
         app.service('renderingEnginesCollection', renderingEnginesCollection);
         app.service('uiControls', uiControls);
         app.service('acquisitionController', acquisitionController);
@@ -112,8 +124,8 @@ define(['../ngRNDR/AppController',
         angular.bootstrap($('#sampleApp1'), ['sampleApp']);
         $('#sampleApp1').show();
 
-        angular.bootstrap($('#sampleApp2'), ['sampleApp']);
-        $('#sampleApp2').show();
+        // angular.bootstrap($('#sampleApp2'), ['sampleApp']);
+        // $('#sampleApp2').show();
 
         //Manual Boostrap App
         // if(document.getElementById('exploreAppById')){

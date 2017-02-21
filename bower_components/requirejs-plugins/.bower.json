@@ -27,6 +27,6 @@
     "commit": "ac9de4bfae70b0630754a9faf93c42db362cb9a2"
   },
   "_source": "https://github.com/millermedeiros/requirejs-plugins.git",
-  "_target": "~1.0.3",
+  "_target": "*",
   "_originalSource": "requirejs-plugins"
 }

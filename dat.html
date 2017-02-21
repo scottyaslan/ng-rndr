@@ -56,7 +56,7 @@
             </button>
             <md-menu-content style="z-index:3;">
                 <md-menu-item ng-repeat="rendererName in renderers.list()">
-                    <md-button ng-click="renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw(dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData, rendererName)">
+                    <md-button ng-click="Controller.hideDialogAndDraw(rendererName);">
                         {{rendererName}}
                     </md-button>
                 </md-menu-item>

@@ -25,7 +25,7 @@ define([], function() {
             updateAllRenderingEngineTileSizeAndPosition: function($widgets) {
                 var self = this;
                 angular.forEach($widgets, function($widget) {
-                    self.renderingEngines[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'))
+                    self.map[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'));
                 });
             }
         };

@@ -18,8 +18,8 @@ define([], function() {
             },
             draw: function(scope) {
                 var self = this;
-                var deferred = $q.defer();
-                $timeout(function(scope) {
+                // var deferred = $q.defer();
+                // $timeout(function(scope) {
                     scope.dataSources = dataSources;
                     var ul = document.createElement('ul');
                     ul.setAttribute('class', 'gridster');
@@ -94,9 +94,9 @@ define([], function() {
                         parallaxLi.append(gridster);
                         self.element.append(parallax);
                     }
-                    deferred.resolve();
-                }, 500, true, scope);
-                return deferred.promise;
+                    // deferred.resolve();
+                // }, 500, true, scope);
+                // return deferred.promise;
             }
         };
         return Dashboard;

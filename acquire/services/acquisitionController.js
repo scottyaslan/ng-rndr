@@ -19,7 +19,7 @@ define([], function() {
                 acquisitionController.restClientContentView = 'HTTP Config';
             },
             save: function() {
-                var renderingEngine = renderingEnginesCollection.create(dataSourceConfigurations.activeDataSourceConfiguration, undefined, dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].name);
+                var renderingEngine = renderingEnginesCollection.create("DT - Table", dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].name);
                 //This is a flag that the tabs use in the Explore perspective to know which tab is active.
                 renderingEngine.disabled = false;
                 //This is an objet the `dashboard` uses in the Dashboard Designer perspective to know location and size of the widget.
@@ -29,6 +29,8 @@ define([], function() {
                     col: 1,
                     row: 1
                 };
+                //This is the dataSourceConfigId used to pass data to the rndr directive
+                renderingEngine.dataSourceConfigId = dataSourceConfigurations.activeDataSourceConfiguration;
                 //reset the active data source configuration
                 dataSourceConfigurations.activeDataSourceConfiguration = undefined;
                 $rootScope.$emit('acquisitionController:save');

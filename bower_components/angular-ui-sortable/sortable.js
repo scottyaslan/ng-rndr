@@ -1,6 +1,6 @@
 /**
  * angular-ui-sortable - This directive allows you to jQueryUI Sortable.
- * @version v0.14.0 - 2016-03-28
+ * @version v0.16.0 - 2016-12-04
  * @link http://angular-ui.github.com
  * @license MIT
  */
@@ -32,8 +32,8 @@ angular.module('ui.sortable', [])
           var savedNodes;
 
           function combineCallbacks(first, second){
-            var firstIsFunc = first && (typeof first === 'function');
-            var secondIsFunc = second && (typeof second === 'function');
+            var firstIsFunc = typeof first === 'function';
+            var secondIsFunc = typeof second === 'function';
             if(firstIsFunc && secondIsFunc) {
               return function() {
                 first.apply(this, arguments);
@@ -71,12 +71,8 @@ angular.module('ui.sortable', [])
             }
 
             // patch the options that need to have values set
-            if (!value) {
-              if (key === 'items') {
-                value = uiSortableConfig.items;
-              } else if (key === 'ui-model-items') {
-                value = uiSortableConfig.items;
-              }
+            if (!value && (key === 'items' || key === 'ui-model-items')) {
+              value = uiSortableConfig.items;
             }
 
             return value;
@@ -110,7 +106,7 @@ angular.module('ui.sortable', [])
                     }
                     return;
                   }
-                  
+
                   if (!defaultOptions) {
                     defaultOptions = angular.element.ui.sortable().options;
                   }
@@ -199,16 +195,13 @@ angular.module('ui.sortable', [])
             return (/left|right/).test(item.css('float')) || (/inline|table-cell/).test(item.css('display'));
           }
 
-          function getElementScope(elementScopes, element) {
-            var result = null;
+          function getElementContext(elementScopes, element) {
             for (var i = 0; i < elementScopes.length; i++) {
-              var x = elementScopes[i];
-              if (x.element[0] === element[0]) {
-                result = x.scope;
-                break;
+              var c = elementScopes[i];
+              if (c.element[0] === element[0]) {
+                return c;
               }
             }
-            return result;
           }
 
           function afterStop(e, ui) {
@@ -218,10 +211,10 @@ angular.module('ui.sortable', [])
           // return the index of ui.item among the items
           // we can't just do ui.item.index() because there it might have siblings
           // which are not items
-          function getItemIndex(ui) {
-            return ui.item.parent()
+          function getItemIndex(item) {
+            return item.parent()
               .find(opts['ui-model-items'])
-              .index(ui.item);
+              .index(item);
           }
 
           var opts = {};
@@ -275,11 +268,12 @@ angular.module('ui.sortable', [])
               }
 
               // Save the starting position of dragged item
-              var index = getItemIndex(ui);
+              var index = getItemIndex(ui.item);
               ui.item.sortable = {
                 model: ngModel.$modelValue[index],
                 index: index,
-                source: ui.item.parent(),
+                source: element,
+                sourceList: ui.item.parent(),
                 sourceModel: ngModel.$modelValue,
                 cancel: function () {
                   ui.item.sortable._isCanceled = true;
@@ -296,16 +290,33 @@ angular.module('ui.sortable', [])
                   angular.forEach(ui.item.sortable, function(value, key) {
                     ui.item.sortable[key] = undefined;
                   });
+                },
+                _connectedSortables: [],
+                _getElementContext: function (element) {
+                  return getElementContext(this._connectedSortables, element);
                 }
               };
             };
 
             callbacks.activate = function(e, ui) {
+              var isSourceContext = ui.item.sortable.source === element;
+              var savedNodesOrigin = isSourceContext ?
+                                     ui.item.sortable.sourceList :
+                                     element;
+              var elementContext = {
+                element: element,
+                scope: scope,
+                isSourceContext: isSourceContext,
+                savedNodesOrigin: savedNodesOrigin
+              };
+              // save the directive's scope so that it is accessible from ui.item.sortable
+              ui.item.sortable._connectedSortables.push(elementContext);
+
               // We need to make a copy of the current element's contents so
               // we can restore it after sortable has messed it up.
               // This is inside activate (instead of start) in order to save
               // both lists when dragging between connected lists.
-              savedNodes = element.contents();
+              savedNodes = savedNodesOrigin.contents();
 
               // If this list has a placeholder (the connected lists won't),
               // don't inlcude it in saved nodes.
@@ -314,16 +325,6 @@ angular.module('ui.sortable', [])
                 var excludes = getPlaceholderExcludesludes(element, placeholder);
                 savedNodes = savedNodes.not(excludes);
               }
-
-              // save the directive's scope so that it is accessible from ui.item.sortable
-              var connectedSortables = ui.item.sortable._connectedSortables || [];
-
-              connectedSortables.push({
-                element: element,
-                scope: scope
-              });
-
-              ui.item.sortable._connectedSortables = connectedSortables;
             };
 
             callbacks.update = function(e, ui) {
@@ -331,12 +332,13 @@ angular.module('ui.sortable', [])
               // update that happens when moving between lists because then
               // the value will be overwritten with the old value
               if(!ui.item.sortable.received) {
-                ui.item.sortable.dropindex = getItemIndex(ui);
-                var droptarget = ui.item.parent();
+                ui.item.sortable.dropindex = getItemIndex(ui.item);
+                var droptarget = ui.item.closest('[ui-sortable]');
                 ui.item.sortable.droptarget = droptarget;
+                ui.item.sortable.droptargetList = ui.item.parent();
 
-                var droptargetScope = getElementScope(ui.item.sortable._connectedSortables, droptarget);
-                ui.item.sortable.droptargetModel = droptargetScope.ngModel;
+                var droptargetContext = ui.item.sortable._getElementContext(droptarget);
+                ui.item.sortable.droptargetModel = droptargetContext.scope.ngModel;
 
                 // Cancel the sort (let ng-repeat do the sort for us)
                 // Don't cancel if this is the received list because it has
@@ -356,7 +358,8 @@ angular.module('ui.sortable', [])
                 // That way it will be garbage collected.
                 savedNodes = savedNodes.not(sortingHelper);
               }
-              savedNodes.appendTo(element);
+              var elementContext = ui.item.sortable._getElementContext(element);
+              savedNodes.appendTo(elementContext.savedNodesOrigin);
 
               // If this is the target connected list then
               // it's safe to clear the restored nodes since:
@@ -382,29 +385,31 @@ angular.module('ui.sortable', [])
               // If the received flag hasn't be set on the item, this is a
               // normal sort, if dropindex is set, the item was moved, so move
               // the items in the list.
-              if(!ui.item.sortable.received &&
-                 ('dropindex' in ui.item.sortable) &&
-                 !ui.item.sortable.isCanceled()) {
+              var wasMoved = ('dropindex' in ui.item.sortable) &&
+                              !ui.item.sortable.isCanceled();
+
+              if (wasMoved && !ui.item.sortable.received) {
 
                 scope.$apply(function () {
                   ngModel.$modelValue.splice(
                     ui.item.sortable.dropindex, 0,
                     ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0]);
                 });
-              } else {
-                // if the item was not moved, then restore the elements
+              } else if (!wasMoved &&
+                         !angular.equals(element.contents().toArray(), savedNodes.toArray())) {
+                // if the item was not moved
+                // and the DOM element order has changed,
+                // then restore the elements
                 // so that the ngRepeat's comment are correct.
-                if ((!('dropindex' in ui.item.sortable) || ui.item.sortable.isCanceled()) &&
-                    !angular.equals(element.contents(), savedNodes)) {
 
-                  var sortingHelper = getSortingHelper(element, ui, savedNodes);
-                  if (sortingHelper && sortingHelper.length) {
-                    // Restore all the savedNodes except from the sorting helper element.
-                    // That way it will be garbage collected.
-                    savedNodes = savedNodes.not(sortingHelper);
-                  }
-                  savedNodes.appendTo(element);
+                var sortingHelper = getSortingHelper(element, ui, savedNodes);
+                if (sortingHelper && sortingHelper.length) {
+                  // Restore all the savedNodes except from the sorting helper element.
+                  // That way it will be garbage collected.
+                  savedNodes = savedNodes.not(sortingHelper);
                 }
+                var elementContext = ui.item.sortable._getElementContext(element);
+                savedNodes.appendTo(elementContext.savedNodesOrigin);
               }
 
               // It's now safe to clear the savedNodes
@@ -440,7 +445,25 @@ angular.module('ui.sortable', [])
             wrappers.helper = function (inner) {
               if (inner && typeof inner === 'function') {
                 return function (e, item) {
+                  var oldItemSortable = item.sortable;
+                  var index = getItemIndex(item);
+                  item.sortable = {
+                    model: ngModel.$modelValue[index],
+                    index: index,
+                    source: element,
+                    sourceList: item.parent(),
+                    sourceModel: ngModel.$modelValue,
+                    _restore: function () {
+                      angular.forEach(item.sortable, function(value, key) {
+                        item.sortable[key] = undefined;
+                      });
+
+                      item.sortable = oldItemSortable;
+                    }
+                  };
+
                   var innerResult = inner.apply(this, arguments);
+                  item.sortable._restore();
                   item.sortable._isCustomHelperUsed = item !== innerResult;
                   return innerResult;
                 };
@@ -454,7 +477,7 @@ angular.module('ui.sortable', [])
               var sortableWidgetInstance = getSortableWidgetInstance(element);
               if (!!sortableWidgetInstance) {
                 var optsDiff = patchUISortableOptions(newVal, oldVal, sortableWidgetInstance);
-                
+
                 if (optsDiff) {
                   element.sortable('option', optsDiff);
                 }
@@ -470,7 +493,7 @@ angular.module('ui.sortable', [])
             } else {
               $log.info('ui.sortable: ngModel not provided!', element);
             }
-            
+
             // Create sortable
             element.sortable(opts);
           }

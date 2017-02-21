@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    return function(renderingEnginesCollection, dataSources, dataSourceConfigurations, $window, $timeout, $rootScope, $http) {
+    return function(renderingEnginesCollection, dataSources, dataSourceConfigurations, aggregators, uiControls, $window, $timeout, $rootScope, $http) {
         function ExploreController() {
             this.selectedDataSourceConfigId;
             this.dialogContentView;
@@ -24,7 +24,7 @@ define([], function() {
                             //Cannot correctly update renderer until the angular digest completes which updates the RenderingEngine.rows and
                             //RenderingEngine.cols arrays. We must get on the call stack after the that cycle completes 
                             $timeout(function() {
-                                renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw(dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData);
+                                renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw($('#renderer'), dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData);
                             }, 0);
                         }
                     },
@@ -76,24 +76,6 @@ define([], function() {
                 if (!requireDataSourceConfigSelection) {
                     exploreController.new();
                 }
-                angular.element($window).on("rowLabelDrillDownEvent", function(e) {
-                    var renderingEngine = renderingEnginesCollection.map[e.renderingEngineId];
-                    var filterByAttributeValue = $(e.event.currentTarget).html();
-                    var attributeFilterName = renderingEngine.dataView.meta.rows[$(e.event.currentTarget).parent().children().index($(e.event.currentTarget))];
-                    renderingEngine.dataView.addInclusionFilter(attributeFilterName, filterByAttributeValue);
-                    $timeout(function() {
-                        renderingEngine.draw(dataSources.map[renderingEngine.dataSourceConfigId].formattedData);
-                    }, 0);
-                });
-                angular.element($window).on("colLabelDrillDownEvent", function(e) {
-                    var renderingEngine = renderingEnginesCollection.map[e.renderingEngineId];
-                    var filterByAttributeValue = $(e.event.currentTarget).html();
-                    var attributeFilterName = renderingEngine.dataView.meta.cols[$(e.event.currentTarget).parent().parent().children().index($(e.event.currentTarget).parent())];
-                    renderingEngine.dataView.addInclusionFilter(attributeFilterName, filterByAttributeValue);
-                    $timeout(function() {
-                        renderingEngine.draw(dataSources.map[renderingEngine.dataSourceConfigId].formattedData);
-                    }, 0);
-                });
                 $rootScope.$emit('explore:init');
             },
             new: function() {
@@ -101,7 +83,7 @@ define([], function() {
                 $rootScope.$emit('explore:new');
             },
             createRenderingEngine: function() {
-                var wrapRenderingEngine = function(renderingEngine) {
+                var wrapRenderingEngine = function(renderingEngine, dataSourceConfigurationId) {
                     //This is a flag that the tabs use in the Explore perspective to know which tab is active.
                     renderingEngine.disabled = false;
                     //This is an objet the `dashboard` uses in the Dashboard Designer perspective to know location and size of the widget.
@@ -111,6 +93,9 @@ define([], function() {
                         col: 1,
                         row: 1
                     };
+                
+                    //This is the dataSourceConfigId used to pass data to the rndr directive
+                    renderingEngine.dataSourceConfigId = dataSourceConfigurationId;
                 };
 
                 var dataSourceConfigurationId = this.selectedDataSourceConfigId;
@@ -123,13 +108,27 @@ define([], function() {
                         var dataSource = dataSources.map[dataSourceConfigurationId];
                         dataSource.data = $.csv.toArrays(response.data);
                         dataSource.format(dataSources.map[dataSourceConfigurationId]);
-                        wrapRenderingEngine(renderingEnginesCollection.create(dataSourceConfigurationId));
+                        wrapRenderingEngine(renderingEnginesCollection.create("DT - Table"), dataSourceConfigurationId);
                     }, function errorCallback(response) {
                         var tmp;
                         dataSources.delete(dataSourceConfigurationId);
                     });
                 } else {
-                    wrapRenderingEngine(renderingEnginesCollection.create(dataSourceConfigurationId));
+                    wrapRenderingEngine(renderingEnginesCollection.create("DT - Table"), dataSourceConfigurationId);
+                }
+            },
+            hideDialogAndDraw: function() {
+               uiControls.hideDialog(); renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw($('#renderer'), dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData);
+            },
+            initiateDataSourceWizard: function() {
+                exploreController.dialogContentView = '';
+                uiControls.hideDialog();
+                $rootScope.$emit('exploreController:initiate data source configuration wizard');
+            },
+            closeDialog: function() {
+                uiControls.hideDialog();
+                if (Object.keys(renderingEnginesCollection.map).length === 0) {
+                    //$rootScope.$emit('acquisitionController:cancel');  
                 }
             }
         };
