@@ -223,7 +223,7 @@
         return result;
     };
 
-    var finalize = function(pivottable, opts, initDataTable) {
+    var finalize = function(pivottable, opts) {
         // remove old viz
         opts.element.empty();
         // append the new viz
@@ -360,20 +360,20 @@
         return $(pivottable);
     };
     return {
-        'PivotTable': function(pvtData, opts) {
-            return finalize(pivottable(pvtData, opts), opts);
+        'PivotTable': function(renderingEngine, opts) {
+            return finalize(pivottable(renderingEngine, opts), opts);
         },
-        'PivotTable Barchart': function(pvtData, opts) {
-            return finalize(barchart(pivottable(pvtData, opts)), opts);
+        'PivotTable Barchart': function(renderingEngine, opts) {
+            return finalize(barchart(pivottable(renderingEngine, opts)), opts);
         },
-        'PivotTable Heatmap': function(pvtData, opts) {
-            return finalize(heatmap(pivottable(pvtData, opts), 'heatmap', opts), opts);
+        'PivotTable Heatmap': function(renderingEngine, opts) {
+            return finalize(heatmap(pivottable(renderingEngine, opts), 'heatmap', opts), opts);
         },
-        'PivotTable Row Heatmap': function(pvtData, opts) {
-            return finalize(heatmap(pivottable(pvtData, opts), 'rowheatmap', opts), opts);
+        'PivotTable Row Heatmap': function(renderingEngine, opts) {
+            return finalize(heatmap(pivottable(renderingEngine, opts), 'rowheatmap', opts), opts);
         },
-        'PivotTable Col Heatmap': function(pvtData, opts) {
-            return finalize(heatmap(pivottable(pvtData, opts), 'colheatmap', opts), opts);
+        'PivotTable Col Heatmap': function(renderingEngine, opts) {
+            return finalize(heatmap(pivottable(renderingEngine, opts), 'colheatmap', opts), opts);
         }
     };
 }));
