@@ -19,15 +19,11 @@ define(['jquery'],
              *                                `result` | object | The object returned from the renderer.
              *                                `opts` | object | The `opts` object passed to the render function.
              */
-            this.add = function(name, renderer, dataViewName, opts, finalize) {
-                if (finalize === undefined || finalize === '' || finalize === null) {
-                    finalize = function(element, result, opts) {};
-                }
+            this.add = function(name, renderer, dataViewName, opts) {
                 renderers[name] = {
                     render: renderer,
                     opts: opts,
-                    dataViewName: dataViewName,
-                    finalize: finalize
+                    dataViewName: dataViewName
                 };
             };
 

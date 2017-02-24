@@ -92,12 +92,10 @@
                 if (x !== -1) {
                     th = document.createElement('th');
                     $(th).off('dblclick').on('dblclick', function(event) {
-                        var e;
-                        e = $.Event('colLabelDrillDownEvent', {
-                            event: event,
-                            renderingEngineId: renderingEngine.id
-                        });
-                        return $(window).trigger(e);
+                        var filterByAttributeValue = $(event.currentTarget).html();
+                        var attributeFilterName = renderingEngine.dataView.meta.cols[$(event.currentTarget).parent().parent().children().index($(event.currentTarget).parent())];
+                        renderingEngine.dataView.addInclusionFilter(attributeFilterName, filterByAttributeValue);
+                        renderingEngine.draw(opts.element, renderingEngine.dataView.data);
                     });
                     th.className = 'pvtColLabel';
                     th.innerHTML = colKey[j];
@@ -111,7 +109,7 @@
             if (parseInt(j) === 0) {
                 th = document.createElement('th');
                 th.className = 'pvtTotalLabel';
-                th.innerHTML = opts.locales[renderingEngine.localeName].localeStrings.totals;
+                th.innerHTML = opts.locales[renderingEngine.locale].localeStrings.totals;
                 th.setAttribute('rowspan', colAttrs.length + (rowAttrs.length === 0 ? 0 : 1));
                 tr.appendChild(th);
             }
@@ -131,7 +129,7 @@
             th = document.createElement('th');
             if (colAttrs.length === 0) {
                 th.className = 'pvtTotalLabel';
-                th.innerHTML = opts.locales[renderingEngine.localeName].localeStrings.totals;
+                th.innerHTML = opts.locales[renderingEngine.locale].localeStrings.totals;
             }
             tr.appendChild(th);
             thead.appendChild(tr);
@@ -146,12 +144,16 @@
                 th = document.createElement('th');
                 $(th).css('white-space', 'nowrap');
                 $(th).off('dblclick').on('dblclick', function(event) {
-                    var e;
-                    e = $.Event('rowLabelDrillDownEvent', {
-                        event: event,
-                        renderingEngineId: renderingEngine.id
+                    var attrValue = $(event.currentTarget).html();
+                    var name = renderingEngine.dataView.meta.rows[$(event.currentTarget).parent().children().index($(event.currentTarget))];
+
+                    $.each(renderingEngine.dataView.axisValues[name], function(value, key) {
+                        if (value != attrValue) {
+                            renderingEngine.dataView.addExclusionFilter(name, value);
+                        }
                     });
-                    return $(window).trigger(e);
+
+                    renderingEngine.draw(opts.element, renderingEngine.dataView.data);
                 });
                 th.className = 'pvtRowLabel';
                 th.innerHTML = txt;
@@ -170,12 +172,7 @@
                 td.innerHTML = aggregator.format(val);
                 td.setAttribute('data-value', val);
                 $(td).off('dblclick').on('dblclick', function(event) {
-                    var e;
-                    e = $.Event('pvtValueDrillDownEvent', {
-                        event: event,
-                        renderingEngineId: renderingEngine.id
-                    });
-                    return $(window).trigger(e);
+                    // filter by row and col...
                 });
                 tr.appendChild(td);
             }
@@ -192,7 +189,7 @@
         tr = document.createElement('tr');
         th = document.createElement('th');
         th.className = 'pvtTotalLabel';
-        th.innerHTML = opts.locales[renderingEngine.localeName].localeStrings.totals;
+        th.innerHTML = opts.locales[renderingEngine.locale].localeStrings.totals;
         th.setAttribute('colspan', rowAttrs.length + (colAttrs.length === 0 ? 0 : 1));
         tr.appendChild(th);
         for (j in colKeys) {
@@ -225,22 +222,51 @@
 
         return result;
     };
-    $.fn.finalize = function(opts) {
-        return {
-            html: this,
-        };
+
+    var finalize = function(pivottable, opts, initDataTable) {
+        // remove old viz
+        opts.element.empty();
+        // append the new viz
+        opts.element.append(pivottable);
+
+        var numRows = $(pivottable).data("numrowattrs");
+        var numCols = $(pivottable).data("numcolattrs");
+        var numFixedLeftCols = numRows;
+
+        if (numCols > 0) {
+            numFixedLeftCols = numFixedLeftCols + 1;
+        }
+
+        if (numRows > 0 && numCols > 0) {
+            var datatable = $(pivottable).DataTable({
+                scrollY: opts.height + opts.heightOffset - ((numCols + 1) * 30),
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                keys: true,
+                dom: 'Bfrtip',
+                buttons: ['csvHtml5', 'pdfHtml5', 'print']
+            });
+
+            new $.fn.dataTable.FixedColumns(datatable, {
+                leftColumns: numFixedLeftCols,
+                rightColumns: 1
+            });
+        }
+        
+        return $(pivottable);
     };
 
     /*
     Heatmap post-processing
      */
-    $.fn.heatmap = function(scope, opts) {
+    var heatmap = function(pivottable, scope, opts) {
         var colorScaleGenerator, heatmapper, i, j, l, n, numCols, numRows, ref, ref1, ref2;
         if (scope == null) {
             scope = 'heatmap';
         }
-        numRows = this.data('numrows');
-        numCols = this.data('numcols');
+        numRows = $(pivottable).data('numrows');
+        numCols = $(pivottable).data('numcols');
         colorScaleGenerator = opts != null ? (ref = opts.heatmap) != null ? ref.colorScaleGenerator : void 0 : void 0;
         if (colorScaleGenerator == null) {
             colorScaleGenerator = function(values) {
@@ -279,7 +305,7 @@
                     return elem.css('background-color', colorScale(x));
                 });
             };
-        })(this);
+        })($(pivottable));
         switch (scope) {
             case 'heatmap':
                 heatmapper('.pvtVal');
@@ -296,16 +322,16 @@
         }
         heatmapper('.pvtTotal.rowTotal');
         heatmapper('.pvtTotal.colTotal');
-        return this;
+        return $(pivottable);
     };
 
     /*
     Barchart post-processing
      */
-    $.fn.barchart = function() {
+    var barchart = function(pivottable) {
         var barcharter, i, k, numCols, numRows, ref;
-        numRows = this.data('numrows');
-        numCols = this.data('numcols');
+        numRows = $(pivottable).data('numrows');
+        numCols = $(pivottable).data('numcols');
         barcharter = (function(_this) {
             return function(scope) {
                 var forEachCell, max, scaler, values;
@@ -352,28 +378,28 @@
                     }).html(wrapper);
                 });
             };
-        })(this);
+        })($(pivottable));
         for (i = k = 0, ref = numRows; 0 <= ref ? k < ref : k > ref; i = 0 <= ref ? ++k : --k) {
             barcharter('.pvtVal.row' + i);
         }
         barcharter('.pvtTotal.colTotal');
-        return this;
+        return $(pivottable);
     };
     return {
-        'Table': function(pvtData, opts) {
-            return $(datatable(pvtData, opts)).finalize(opts);
+        'DataTable': function(pvtData, opts) {
+            return finalize(datatable(pvtData, opts), opts);
         },
-        'Table Barchart': function(pvtData, opts) {
-            return $(datatable(pvtData, opts)).barchart().finalize(opts);
+        'DataTable Barchart': function(pvtData, opts) {
+            return finalize(barchart(datatable(pvtData, opts)), opts);
         },
-        'Heatmap': function(pvtData, opts) {
-            return $(datatable(pvtData, opts)).heatmap('heatmap', opts).finalize(opts);
+        'DataTable Heatmap': function(pvtData, opts) {
+            return finalize(heatmap(datatable(pvtData, opts), 'heatmap', opts), opts);
         },
-        'Row Heatmap': function(pvtData, opts) {
-            return $(datatable(pvtData, opts)).heatmap('rowheatmap', opts).finalize(opts);
+        'DataTable Row Heatmap': function(pvtData, opts) {
+            return finalize(heatmap(datatable(pvtData, opts), 'rowheatmap', opts), opts);
         },
-        'Col Heatmap': function(pvtData, opts) {
-            return $(datatable(pvtData, opts)).heatmap('colheatmap', opts).finalize(opts);
+        'DataTable Col Heatmap': function(pvtData, opts) {
+            return finalize(heatmap(datatable(pvtData, opts), 'colheatmap', opts), opts);
         }
     };
 }));

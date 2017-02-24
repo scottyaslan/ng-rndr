@@ -124,11 +124,11 @@
             }
             titleText = fullAggName;
             if (hAxisTitle !== '') {
-                titleText += ' ' + opts.locales[renderingEngine.localeName].localeStrings.vs + ' ' + hAxisTitle;
+                titleText += ' ' + opts.locales[renderingEngine.locale].localeStrings.vs + ' ' + hAxisTitle;
             }
             groupByTitle = renderingEngine.dataView.rowAttrs.join('-');
             if (groupByTitle !== '') {
-                titleText += ' ' + opts.locales[renderingEngine.localeName].localeStrings.by + ' ' + groupByTitle;
+                titleText += ' ' + opts.locales[renderingEngine.locale].localeStrings.by + ' ' + groupByTitle;
             }
             title = $('<p>', {
                 style: 'text-align: center; font-weight: bold'
@@ -208,9 +208,11 @@
             result.detach();
             renderArea.remove();
             $('<div>').append(title, result);
-            return returnObject = {
-                html: result
-            };
+            // remove old viz
+            opts.element.empty();
+            // append the new viz
+            opts.element.append(result);
+            return result;
         };
     };
     return {

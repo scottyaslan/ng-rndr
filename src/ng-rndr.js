@@ -28,7 +28,7 @@ define(['directives/rndr',
         DerivedAttributesProvider.$inject = [];
         DataViewsProvider.$inject = [];
         RenderersProvider.$inject = [];
-        RenderingEngine.$inject = ['$ngRndrAggregators', '$ngRndrRenderers', '$ngRndrDerivedAttributes', '$ngRndrSorters', '$ngRndrFormatters', '$ngRndrDataViews', '$timeout', '$rootScope'];
+        RenderingEngine.$inject = ['$ngRndrAggregators', '$ngRndrRenderers', '$ngRndrDerivedAttributes', '$ngRndrSorters', '$ngRndrFormatters', '$ngRndrDataViews'];
         RenderingEngines.$inject = ['$ngRndrRenderingEngine'];
 
         // Module providers

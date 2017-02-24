@@ -14,35 +14,28 @@ define(['jquery', 'angular'],
             })
         };
 
-        return function($ngRndrAggregators, $ngRndrRenderers, $ngRndrDerivedAttributes, $ngRndrSorters, $ngRndrFormatters, $ngRndrDataViews, $timeout, $rootScope) {
+        return function($ngRndrAggregators, $ngRndrRenderers, $ngRndrDerivedAttributes, $ngRndrSorters, $ngRndrFormatters, $ngRndrDataViews) {
             /**
              * {@link RenderingEngine} constructor.
              * 
-             * @param {string} rendererName                 The name of the renderer plugin.
-             * @param {string} [title]                      The title.
-             * @param {string} [renderingEngineId]          The UUID.
-             * @param {string} [aggregatorName] -           The name of the aggregator plugin.
+             * @param {string} renderer                     The name of the renderer plugin.
+             * @param {string} [id]                         The UUID.
+             * @param {string} [aggregator] -               The name of the aggregator plugin.
              * @param {object} [aggInputAttributeName] -    The array of attribute names to input into the `aggregate`.
-             * @param {object} [dataViewMeta] -             The meta object used to initialze the .
-             * @param {object} [derivedAttrs] -             An array of string names of the derived attributes.
-             * @param {string} [localeName] -               The name of the locale.
-             * @param {object} [sorters] -                  An array of string names of the derived attributes.
+             * @param {object} [dv_meta] -                  The meta object used to initialze the .
+             * @param {object} [derivedAttrs] -             An array of string names of new data attributes the derived attributes.
+             * @param {string} [locale] -                   The name of the locale.
+             * @param {object} [sorters] -                  An array of string names of data attributes for which the corresponding $ngRndrSorters sorting function will be applied.
              */
-            function RenderingEngine(rendererName, title, renderingEngineId, aggregatorName, aggInputAttributeName, dataViewMeta, derivedAttrs, localeName, sorters) {
-                if (renderingEngineId === undefined || renderingEngineId === '' || renderingEngineId === null) {
+            function RenderingEngine(renderer, id, aggregator, aggInputAttributeName, dv_meta, derivedAttrs, locale, sorters) {
+                if (id === undefined || id === '' || id === null) {
                     this.id = generateUUID();
                 } else {
-                    this.id = renderingEngineId;
+                    this.id = id;
                 }
 
-                if (title === undefined || title === '' || title === null) {
-                    this.title = 'Untitled';
-                } else {
-                    this.title = title;
-                }
-
-                if (rendererName !== undefined && rendererName !== '' && rendererName !== null) {
-                    this.rendererName = rendererName;
+                if (renderer !== undefined && renderer !== '' && renderer !== null) {
+                    this.renderer = renderer;
                 } else {
                     var e = new Error('RenderingEngine constructor: cannot instantiate a RenderingEngine object without a renderer name.');
                     if (typeof console !== 'undefined' && console !== null) {
@@ -51,26 +44,30 @@ define(['jquery', 'angular'],
                     throw e;
                 }
 
-                if (localeName !== undefined && localeName !== '' && localeName !== null) {
-                    this.localeName = localeName;
+                if (locale !== undefined && locale !== '' && locale !== null) {
+                    this.locale = locale;
                 } else {
-                    this.localeName = 'en';
+                    this.locale = 'en';
                 }
 
-                this.setAggregator(aggregatorName, aggInputAttributeName);
+                this.setAggregator(aggregator, aggInputAttributeName);
                 this.setDerivedAttributes(derivedAttrs);
                 this.setSorters(sorters);
 
-                if (dataViewMeta !== undefined && dataViewMeta !== '' && dataViewMeta !== null) {
-                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.rendererName].dataViewName].view([], {
+                if (dv_meta !== undefined && dv_meta !== '' && dv_meta !== null) {
+                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view([], {
                         aggregator: this.aggregator,
                         derivedAttributes: this.derivedAttributes,
-                        meta: dataViewMeta
+                        sorters: this.sorters,
+                        formatters: $ngRndrFormatters,
+                        meta: dv_meta
                     });
                 } else {
-                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.rendererName].dataViewName].view([], {
+                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view([], {
                         aggregator: this.aggregator,
-                        derivedAttributes: this.derivedAttributes
+                        derivedAttributes: this.derivedAttributes,
+                        sorters: this.sorters,
+                        formatters: $ngRndrFormatters,
                     });
                 }
                 this.dirty = false;
@@ -81,9 +78,8 @@ define(['jquery', 'angular'],
                  * @type {object}
                  * @property {string} id - The UUID of this rendering engine.
                  * @property {string} dirty - The state of this rendering engine. True implies that something in this rendering engine's metadata has been changed and a draw() is required to display the latest visualization.
-                 * @property {string} title - The title of this rendering engine.
-                 * @property {string} rendererName - The name of the `renderer` plugin.
-                 * @property {string} localeName - The name of the locale to use with the `renderer` plugin.
+                 * @property {string} renderer - The name of the `renderer` plugin.
+                 * @property {string} locale - The name of the locale to use with the `renderer` plugin.
                  * @property {string} dataView - The `dataView` to pass to the `renderer` plugin.
                  * @property {string} derivedAttributes - The dictionary of 'attribute generator' functions: the keys are the names of the new attributes, and the functions take an existing record and return the value of the new attribute.
                  * @property {object} aggregator - The meta object for the `aggregator` of this rendering engine described as follows:
@@ -94,9 +90,9 @@ define(['jquery', 'angular'],
                  *                       `aggInputAttributeName`  | array | [] | The array of attribute names to input into the `aggregator.aggregate`.
                  */
                 constructor: RenderingEngine,
-                setRendererName: function(rendererName) {
-                    if (rendererName !== undefined && rendererName !== '' && rendererName !== null) {
-                        this.rendererName = rendererName;
+                setRenderer: function(renderer) {
+                    if (renderer !== undefined && renderer !== '' && renderer !== null) {
+                        this.renderer = renderer;
                     } else {
                         var e = new Error('Cannot configure a rendering engine without a renderer name.');
                         if (typeof console !== 'undefined' && console !== null) {
@@ -106,19 +102,11 @@ define(['jquery', 'angular'],
                     }
                     this.dirty = true;
                 },
-                setLocaleName: function(localeName) {
-                    if (localeName !== undefined && localeName !== '' && localeName !== null) {
-                        this.localeName = localeName;
+                setLocale: function(locale) {
+                    if (locale !== undefined && locale !== '' && locale !== null) {
+                        this.locale = locale;
                     } else {
-                        this.localeName = 'en';
-                    }
-                    this.dirty = true;
-                },
-                setTitle: function(title) {
-                    if (title !== undefined && title !== '' && title !== null) {
-                        this.title = title;
-                    } else {
-                        this.title = 'Untitiled';
+                        this.locale = 'en';
                     }
                     this.dirty = true;
                 },
@@ -161,9 +149,9 @@ define(['jquery', 'angular'],
                 /**
                  * Sets the `aggregator`.
                  * 
-                 * @param  {string} aggregatorName - The name of the aggregator plugin.
+                 * @param  {string} aggregator - The name of the aggregator plugin.
                  */
-                setAggregator: function(aggregatorName, aggInputAttributeName) {
+                setAggregator: function(aggregator, aggInputAttributeName) {
                     try {
                         if (this.aggregator === undefined) {
                             this.aggregator = {
@@ -179,7 +167,7 @@ define(['jquery', 'angular'],
                         }
                     }
 
-                    if (aggregatorName === undefined || aggregatorName === '' || aggregatorName === null) {
+                    if (aggregator === undefined || aggregator === '' || aggregator === null) {
                         this.aggregator.name = 'Count';
                         try {
                             this.aggregator.aggregate = $ngRndrAggregators['Count'].aggregate;
@@ -191,9 +179,9 @@ define(['jquery', 'angular'],
                         }
                         this.aggregator.aggInputAttributeName = [];
                     } else {
-                        this.aggregator.name = aggregatorName;
+                        this.aggregator.name = aggregator;
                         try {
-                            this.aggregator.aggregate = $ngRndrAggregators[aggregatorName].aggregate;
+                            this.aggregator.aggregate = $ngRndrAggregators[aggregator].aggregate;
                         } catch (_error) {
                             var e = _error;
                             if (typeof console !== 'undefined' && console !== null) {
@@ -229,8 +217,12 @@ define(['jquery', 'angular'],
                  */
                 draw: function(element, data) {
                     var self = this;
-                    $rootScope.$emit('RenderingEngine:draw:begin');
-                    return $timeout(function(dataContext) {
+                    //remove old viz
+                    element.empty();
+                    var spinner = $('<div>').addClass('rndr-loader').css({'top':(element.parent().innerHeight() - 60)/2, 'left': (element.parent().innerWidth() - 60)/2}); // .loader css has 60px height and 60 px width
+                    element.append(spinner);
+                    // using setTimeout starategy ensures containing DOM element is visible so that height and width info is available to renderer
+                    return setTimeout(function(dataContext) {
                         var result;
                         try {
                             var dataView_opts = {
@@ -241,9 +233,12 @@ define(['jquery', 'angular'],
                                 meta: self.dataView.meta
                             };
 
-                            self.dataView = new $ngRndrDataViews[$ngRndrRenderers[self.rendererName].dataViewName].view(dataContext.data, $.extend(dataView_opts, $ngRndrDataViews[$ngRndrRenderers[self.rendererName].dataViewName].opts));
+                            self.dataView = new $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].opts));
 
                             var opts = {
+                                element: element,
+                                renderers: $ngRndrRenderers,
+                                dataViews: $ngRndrDataViews,
                                 heightOffset: 0,
                                 widthOffset: 0,
                                 locales: {
@@ -254,22 +249,22 @@ define(['jquery', 'angular'],
                                         }
                                     }
                                 },
-                                height: dataContext.element.parent().innerHeight(),
-                                width: dataContext.element.parent().innerWidth()
+                                height: element.parent().innerHeight(),
+                                width: element.parent().innerWidth()
                             };
 
                             try {
-                                result = $ngRndrRenderers[self.rendererName].render(self, $.extend(opts, $ngRndrRenderers[self.rendererName].opts));
+                                //render and attach new viz
+                                result = $ngRndrRenderers[self.renderer].render(self, $.extend(opts, $ngRndrRenderers[self.renderer].opts));
                             } catch (_error) {
                                 var e = _error;
                                 if (typeof console !== 'undefined' && console !== null) {
                                     console.log(e.stack);
                                 }
                                 // remove old viz
-                                dataContext.element.empty();
+                                element.empty();
                                 // append error message
-                                dataContext.element.append($('<span>').html(opts.locales[self.localeName].localeStrings.renderError));
-                                $rootScope.$emit('RenderingEngine:draw:complete');
+                                element.append($('<span>').html(opts.locales[self.locale].localeStrings.renderError));
                             }
                         } catch (_error) {
                             var e = _error;
@@ -277,24 +272,14 @@ define(['jquery', 'angular'],
                                 console.log(e.stack);
                             }
                             // remove old viz
-                            dataContext.element.empty();
+                            element.empty();
                             // append error messagez
-                            dataContext.element.append($('<span>').html(opts.locales[self.localeName].localeStrings.computeError));
-                            $rootScope.$emit('RenderingEngine:draw:complete');
+                            element.append($('<span>').html(opts.locales[self.locale].localeStrings.computeError));
                         }
-                        $rootScope.$emit('RenderingEngine:draw:complete');
-
-                        //remove old viz
-                        dataContext.element.empty();
-
-                        // append the new viz
-                        dataContext.element.append(result.html);
-
-                        $ngRndrRenderers[self.rendererName].finalize(dataContext.element, result, opts);
                         self.dirty = false;
                         console.log(self.meta());
                         return result;
-                    }, 1500, true, { 'data': data, 'element': element });
+                    }, 0, true, { 'data': data, 'element': element });
                 },
                 /**
                  * The state of this rendering engine. True implies that something in this rendering engine's metadata has been changed and a `draw()` is required to display the latest visualization.
@@ -305,10 +290,9 @@ define(['jquery', 'angular'],
                 },
                 meta: function() {
                     var meta = {};
-                    meta.rendererName = this.rendererName;
+                    meta.renderer = this.renderer;
                     meta.id = this.id;
-                    meta.title = this.title;
-                    meta.localeName = this.localeName;
+                    meta.locale = this.locale;
                     meta.dataView = {};
                     meta.dataView.meta = this.dataView.meta;
                     meta.aggregator = {

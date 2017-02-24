@@ -2,7 +2,7 @@
   "name": "ng-rndr",
   "version": "0.0.1-RC.4",
   "license": "MIT",
-  "description": "ng-rndr is a pluggable and embeddable angular module for formatting and visualizing data.",
+  "description": "ng-rndr is a pluggable and embeddable angular module for visualizing data.",
   "author": {
     "name": "Scott Aslan",
     "email": "astechdev@gmail.com"

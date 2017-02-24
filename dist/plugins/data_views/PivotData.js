@@ -67,7 +67,7 @@
 
     function PivotData(data, opts) {
         //Prep the data
-        data = this.convertToArray(data);
+        this.data = this.convertToArray(data);
 
         // set meta from previous state or initialize
         this.meta = opts.meta || {
@@ -96,7 +96,7 @@
         //determine the tblCols
         this.tblCols = (function(self) {
             var ref, results;
-            ref = data[0];
+            ref = self.data[0];
             results = [];
             for (var k in ref) {
                 if (!ref.hasOwnProperty(k)) continue;
@@ -129,7 +129,7 @@
         this.attributesAvailableForRowsAndCols = $(this.shownAttributes).not(this.meta.rows).not(this.meta.cols).get();
 
         // construct axisValues and process records (for shown/non-hidden attributes)
-        this.forEachRecord(data, opts.derivedAttributes, (function(self) {
+        this.forEachRecord(this.data, opts.derivedAttributes, (function(self) {
             return function(record) {
                 var base, results, v;
                 results = [];
@@ -262,46 +262,50 @@
                 }
             };
         },
-        isExcluded: function(property, key) {
-            var self = this;
-            if (self.meta.attributeFilterExclusions[property] !== undefined) {
-                if (self.meta.attributeFilterExclusions[property].indexOf(key) >= 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-            return true;
-        },
+        // isExcluded: function(property, key) {
+        //     var self = this;
+        //     if (self.meta.attributeFilterExclusions[property] !== undefined) {
+        //         if (self.meta.attributeFilterExclusions[property].indexOf(key) >= 0) {
+        //             return false;
+        //         } else {
+        //             return true;
+        //         }
+        //     }
+        //     return true;
+        // },
         addExclusionFilter: function(attributeFilterName, filterByAttributeValue) {
             var self = this;
             if (self.meta.attributeFilterExclusions[attributeFilterName] !== undefined) {
                 var index = self.meta.attributeFilterExclusions[attributeFilterName].indexOf(filterByAttributeValue);
-                if (index >= 0) {
-                    self.meta.attributeFilterExclusions[attributeFilterName].splice(index, 1);
-                } else {
+                if (index < 0) {
                     self.meta.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
                 }
             } else {
                 self.meta.attributeFilterExclusions[attributeFilterName] = [];
                 self.meta.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
             }
-            self.attributeFilterInclusions[attributeFilterName] = [];
-            $.each(self.axisValues[attributeFilterName], function(value, key) {
-                if (self.meta.attributeFilterExclusions[attributeFilterName].indexOf(key) < 0) {
-                    self.attributeFilterInclusions[attributeFilterName].push(key);
-                }
-            });
+
             self.dirty = true;
         },
-        addInclusionFilter: function(attributeFilterName, filterByAttributeValue) {
+        removeExclusionFilter: function(attributeFilterName, filterByAttributeValue) {
             var self = this;
-            self.attributeFilterInclusions[attributeFilterName] = [];
-            self.meta.attributeFilterExclusions[attributeFilterName] = [];
-            self.addExclusionFilter(attributeFilterName, filterByAttributeValue);
-            var oldAttributeFilterInclusions = self.attributeFilterInclusions[attributeFilterName];
-            self.attributeFilterInclusions[attributeFilterName] = self.meta.attributeFilterExclusions[attributeFilterName];
-            self.meta.attributeFilterExclusions[attributeFilterName] = oldAttributeFilterInclusions;
+            if (self.meta.attributeFilterExclusions[attributeFilterName] !== undefined) {
+                var index = self.meta.attributeFilterExclusions[attributeFilterName].indexOf(filterByAttributeValue);
+                if (index >= 0) {
+                    self.meta.attributeFilterExclusions[attributeFilterName].splice(index, 1);
+                }
+            }
+
+            self.dirty = true;
+        },
+        resetExclusionFilter: function(attributeFilterName) {
+            var self = this;
+            if (self.meta.attributeFilterExclusions[attributeFilterName] !== undefined) {
+                self.meta.attributeFilterExclusions[attributeFilterName] = [];
+            } else {
+                self.meta.attributeFilterExclusions = [];
+            }
+
             self.dirty = true;
         },
         convertToArray: function(input) {

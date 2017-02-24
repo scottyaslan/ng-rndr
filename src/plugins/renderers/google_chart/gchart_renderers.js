@@ -116,11 +116,11 @@
                 title = vAxisTitle = fullAggName;
                 hAxisTitle = renderingEngine.dataView.colAttrs.join('-');
                 if (hAxisTitle !== '') {
-                    title += ' ' + opts.locales[renderingEngine.localeName].localeStrings.vs + ' ' + hAxisTitle;
+                    title += ' ' + opts.locales[renderingEngine.locale].localeStrings.vs + ' ' + hAxisTitle;
                 }
                 groupByTitle = renderingEngine.dataView.rowAttrs.join('-');
                 if (groupByTitle !== '') {
-                    title += ' ' + opts.locales[renderingEngine.localeName].localeStrings.by + ' ' + groupByTitle;
+                    title += ' ' + opts.locales[renderingEngine.locale].localeStrings.by + ' ' + groupByTitle;
                 }
             }
             options = {
@@ -174,9 +174,11 @@
                 });
                 return editor.openDialog(wrapper);
             });
-            return returnObject = {
-                html: result
-            };
+            // remove old viz
+            opts.element.empty();
+            // append the new viz
+            opts.element.append(result);
+            return result;
         };
     };
     return {

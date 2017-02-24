@@ -105,9 +105,11 @@
                     return Math.max(0, d.dy - 1) + 'px';
                 });
             });
-            return returnObject = {
-                html: result
-            };
+            // remove old viz
+            opts.element.empty();
+            // append the new viz
+            opts.element.append(result);
+            return result;
         }
     };
 }));

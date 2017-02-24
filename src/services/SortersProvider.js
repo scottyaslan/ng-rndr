@@ -8,8 +8,8 @@ define(['jquery'],
             /**
              * Adds a sorter.
              * 
-             * @param {string} name       The lookup name of the sorter.
-             * @param {function} sorter The function which sorts data.
+             * @param {string} name         The name of the data attribute for which the `sorter` function will be applied.
+             * @param {function} sorter     The function which sorts the values of a data attribute.
              */
             this.add = function(name, sorter) {
                 sorters[name] = sorter;
@@ -17,7 +17,10 @@ define(['jquery'],
 
             this.$get = [function SortersFactory() {
                 /**
-                 * A dictionary of functions which sort data.
+                 * A dictionary of functions which sort data. The keys
+                 * are the names of the data attribute for which the `sorter`
+                 * function will be applied, and the functions take the values
+                 * of the data attribute and sorts them.
                  */
                 function Sorters(sorters) {
                     $.extend(this, sorters);
@@ -25,16 +28,16 @@ define(['jquery'],
                 Sorters.prototype = {
                     constructor: Sorters,
                     /**
-                     * Adds an formatter.
+                     * Adds a sorter.
                      * 
-                     * @param {string} name       The lookup name of the sorting function.
-                     * @param {function} sorter The function which *generates* a function that defines how data is aggregated.
+                     * @param {string} name         The name of the data attribute for which the `sorter` function will be applied.
+                     * @param {function} sorter     The function which sorts the values of a data attribute.
                      */
                     add: function(name, sorter) {
                         this[name] = sorter;
                     },
                     /**
-                     * Lists the available formatters.
+                     * Lists the available sorters.
                      * 
                      * @return {Array.<string>} The lookup names.
                      */

@@ -5,8 +5,11 @@ define([],
         return function DerivedAttributesProvider() {
             var derivedAttributes = {};
 
-            /*
-             * Adds an attribute deriving function.
+            /**
+             * Adds a data attribute deriving function.
+             * 
+             * @param {string} name    The 
+             * @param {[type]} deriver The name of the new data attribute created by the `deriver` function.
              */
             this.add = function(name, deriver) {
                 derivedAttributes[name] = deriver;
@@ -14,9 +17,9 @@ define([],
 
             this.$get = [function DerivedAttributesFactory() {
                 /**
-                 * A dictionary of attribute deriving functions. The keys
+                 * A dictionary of data attribute deriving functions. The keys
                  * are the names of the new derived attribute, and the 
-                 * functions take an existing record and return the value
+                 * functions take an existing attribute(s) and return the value
                  * of the new attribute.
                  */
                 function DerivedAttributes(derivedAttributes) {
@@ -24,14 +27,17 @@ define([],
                 }
                 DerivedAttributes.prototype = {
                     constructor: DerivedAttributes,
-                    /*
-                     * Adds an attribute deriving function.
+                    /**
+                     * Adds a data attribute deriving function.
+                     * 
+                     * @param {string} name    The 
+                     * @param {[type]} deriver The name of the new data attribute created by the `deriver` function.
                      */
                     add: function(name, deriver) {
                         this[name] = deriver;
                     },
                     /**
-                     * Lists the derived attributes.
+                     * Lists the available derived attributes.
                      * 
                      * @return {Array.<string>} The lookup names.
                      */

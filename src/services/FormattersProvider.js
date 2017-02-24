@@ -8,8 +8,8 @@ define(['jquery'],
             /**
              * Adds a formatter.
              * 
-             * @param {string} name       The lookup name of the formatter.
-             * @param {function} formatter The function which formats data.
+             * @param {string} name         The lookup name of the formatter.
+             * @param {function} formatter  The function which formats data.
              */
             this.add = function(name, formatter) {
                 formatters[name] = formatter;
@@ -27,8 +27,8 @@ define(['jquery'],
                     /**
                      * Adds an formatter.
                      * 
-                     * @param {string} name       The lookup name of the aggregate function.
-                     * @param {function} aggregator The function which *generates* a function that defines how data is aggregated.
+                     * @param {string} name             The lookup name of the formatter function.
+                     * @param {function} aggregator     The function which formats data.
                      */
                     add: function(name, formatter) {
                         this[name] = formatter;
