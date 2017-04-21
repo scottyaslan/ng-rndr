@@ -1,0 +1,96 @@
+<md-content flex ng-controller="pivotDataUIController" flex layout-fill layout="column" tabIndex="-1" role="main" style="overflow: hidden;">
+    <md-menu-bar class="md-whiteframe-z3" style="z-index:3;">
+        <md-menu>
+            <button ng-click="$mdOpenMenu()">
+                View
+            </button>
+            <md-menu-content style="z-index:3;">
+                <md-menu-item ng-repeat="rendererName in renderers.list()">
+                    <md-button ng-click="exploreController.embeddedRenderingEngine.dataView.meta.renderer = rendererName;
+                    exploreController.embeddedRenderingEngine.setRenderer(rendererName);
+                    exploreController.embeddedRenderingEngine.draw(exploreController.embeddedRenderingEngine.dataView.data);">
+                        {{rendererName}}
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+        <md-menu>
+            <button ng-click="$mdOpenMenu()">
+                Options
+            </button>
+            <md-menu-content>
+                <md-menu-item>
+                    <md-button ng-click="dialogControllerService.openDialog('Aggregate')">
+                        Aggregate
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="dialogControllerService.openDialog('Filters')">
+                        Filter
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
+    </md-menu-bar>
+    <md-content id="explore" flex layout="column" tabIndex="-1" role="main" style="height: 100%;">
+        <!-- Main Container -->
+        <md-content layout="row" flex id="content" class="md-primary md-hue-1">
+            <!-- Main Content -->
+            <md-content id="mainContent" flex layout='column'>
+                <div class="md-whiteframe-z3" id="attributes-container">
+                    <header class='titlebar'>
+                        <div>Attributes</div>
+                    </header>
+                    <div class="dropzone" ui-sortable="dropzone" ng-model="exploreController.renderingEngine.dataView.attributesAvailableForRowsAndCols">
+                        <ul ui-sortable="exploreController.constants.sortableOptions" ng-model="exploreController.renderingEngine.dataView.attributesAvailableForRowsAndCols" class="list">
+                            <li class="placeholder" ng-repeat="attribute in exploreController.renderingEngine.dataView.attributesAvailableForRowsAndCols">
+                                <div class='pvtAttr'>
+                                    <span ng-bind="attribute"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="md-whiteframe-z3" id="rows-container">
+                    <header class='titlebar'>
+                        <div>Rows
+                        </div>
+                    </header>
+                    <div class="dropzone" ui-sortable="dropzone" ng-model="exploreController.renderingEngine.dataView.meta.rows">
+                        <ul ui-sortable="exploreController.constants.sortableOptions" ng-model="exploreController.renderingEngine.dataView.meta.rows" class="list">
+                            <li class="placeholder" ng-repeat="attribute in exploreController.renderingEngine.dataView.meta.rows">
+                                <div class='pvtAttr'>
+                                    <span ng-bind="attribute"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="md-whiteframe-z3" id="columns-container">
+                    <header class='titlebar'>
+                        <div>Columns
+                        </div>
+                    </header>
+                    <div class="dropzone" ui-sortable="dropzone" ng-model="exploreController.renderingEngine.dataView.meta.cols">
+                        <ul ui-sortable="exploreController.constants.sortableOptions" ng-model="exploreController.renderingEngine.dataView.meta.cols" class="list">
+                            <li class="placeholder" ng-repeat="attribute in exploreController.renderingEngine.dataView.meta.cols">
+                                <div class='pvtAttr'>
+                                    <span ng-bind="attribute"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="md-whiteframe-z3" id="pivot-data-viz-container">
+                    <header class='titlebar'>
+                        <div>Explore
+                        </div>
+                    </header>
+                    <div>
+                        <rndr class="pivot-data-ui-rndr" id="pivot-data-ui-rndr" engine="exploreController.embeddedRenderingEngine" input="exploreController.embeddedRenderingEngine.dataView.data"></rndr>
+                    </div>
+                </div>
+            </md-content>
+        </md-content>
+    </md-content>
+</md-content>

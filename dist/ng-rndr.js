@@ -1,14 +1,14 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-  	define(["jquery", "angular"], function($, angular) {
-            factory($, angular);
+  	define(['jquery', 'angular', '$ngRndrFormatters', '$ngRndrSorters', '$ngRndrDerivedAttributes'], function($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes) {
+            factory($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes);
         });
-  } else if (typeof exports === 'object' && typeof module === "object") {
-    module.exports = factory(require("jquery"), require("angular"));
+  } else if (typeof exports === 'object' && typeof module === 'object') {
+    module.exports = factory(require('jquery'), require('angular'), root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes);
   } else {
-    factory(root.$, root.angular);
+    factory(root.$, root.angular, root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes);
   }
-}(this, function ($, angular) {/**
+}(this, function ($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes) {/**
  * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
  * Released under MIT license, http://github.com/requirejs/almond/LICENSE
  */
@@ -458,7 +458,15 @@ define('directives/rndr',['jquery'],
                 },
                 link: {
                     pre: function(scope, element, attr) {
-                        scope.engine.draw($(element), scope.input);
+                        $(element).css({
+                            'position': 'absolute',
+                            'top': '0px',
+                            'bottom': '0px',
+                            'left': '0px',
+                            'right': '0px'
+                        });
+                        scope.engine.setElement($(element));
+                        scope.engine.draw(scope.input);
                     }
                 }
             };
@@ -522,59 +530,6 @@ define('services/AggregatorsProvider',['jquery'],
         }
     });
 
-define('services/SortersProvider',['jquery'],
-    function($) {
-        'use strict';
-
-        return function SortersProvider() {
-            var sorters = {};
-
-            /**
-             * Adds a sorter.
-             * 
-             * @param {string} name         The name of the data attribute for which the `sorter` function will be applied.
-             * @param {function} sorter     The function which sorts the values of a data attribute.
-             */
-            this.add = function(name, sorter) {
-                sorters[name] = sorter;
-            };
-
-            this.$get = [function SortersFactory() {
-                /**
-                 * A dictionary of functions which sort data. The keys
-                 * are the names of the data attribute for which the `sorter`
-                 * function will be applied, and the functions take the values
-                 * of the data attribute and sorts them.
-                 */
-                function Sorters(sorters) {
-                    $.extend(this, sorters);
-                }
-                Sorters.prototype = {
-                    constructor: Sorters,
-                    /**
-                     * Adds a sorter.
-                     * 
-                     * @param {string} name         The name of the data attribute for which the `sorter` function will be applied.
-                     * @param {function} sorter     The function which sorts the values of a data attribute.
-                     */
-                    add: function(name, sorter) {
-                        this[name] = sorter;
-                    },
-                    /**
-                     * Lists the available sorters.
-                     * 
-                     * @return {Array.<string>} The lookup names.
-                     */
-                    list: function() {
-                        return Object.keys(this);
-                    }
-                };
-
-                return new Sorters(sorters);
-            }];
-        }
-    });
-
 define('services/DataViewsProvider',['jquery'],
     function($) {
         'use strict';
@@ -627,109 +582,6 @@ define('services/DataViewsProvider',['jquery'],
                 };
 
                 return new DataViews(dataViews);
-            }];
-        }
-    });
-
-define('services/DerivedAttributesProvider',[],
-    function() {
-        'use strict';
-
-        return function DerivedAttributesProvider() {
-            var derivedAttributes = {};
-
-            /**
-             * Adds a data attribute deriving function.
-             * 
-             * @param {string} name    The 
-             * @param {[type]} deriver The name of the new data attribute created by the `deriver` function.
-             */
-            this.add = function(name, deriver) {
-                derivedAttributes[name] = deriver;
-            };
-
-            this.$get = [function DerivedAttributesFactory() {
-                /**
-                 * A dictionary of data attribute deriving functions. The keys
-                 * are the names of the new derived attribute, and the 
-                 * functions take an existing attribute(s) and return the value
-                 * of the new attribute.
-                 */
-                function DerivedAttributes(derivedAttributes) {
-                    $.extend(this, derivedAttributes);
-                }
-                DerivedAttributes.prototype = {
-                    constructor: DerivedAttributes,
-                    /**
-                     * Adds a data attribute deriving function.
-                     * 
-                     * @param {string} name    The 
-                     * @param {[type]} deriver The name of the new data attribute created by the `deriver` function.
-                     */
-                    add: function(name, deriver) {
-                        this[name] = deriver;
-                    },
-                    /**
-                     * Lists the available derived attributes.
-                     * 
-                     * @return {Array.<string>} The lookup names.
-                     */
-                    list: function() {
-                        return Object.keys(this);
-                    }
-                };
-
-                return new DerivedAttributes(derivedAttributes);
-            }];
-        }
-    });
-
-define('services/FormattersProvider',['jquery'],
-    function($) {
-        'use strict';
-
-        return function FormattersProvider() {
-            var formatters = {};
-
-            /**
-             * Adds a formatter.
-             * 
-             * @param {string} name         The lookup name of the formatter.
-             * @param {function} formatter  The function which formats data.
-             */
-            this.add = function(name, formatter) {
-                formatters[name] = formatter;
-            };
-
-            this.$get = [function FormattersFactory() {
-                /**
-                 * A dictionary of functions which format data.
-                 */
-                function Formatters(aggregators) {
-                    $.extend(this, aggregators);
-                }
-                Formatters.prototype = {
-                    constructor: Formatters,
-                    /**
-                     * Adds an formatter.
-                     * 
-                     * @param {string} name             The lookup name of the formatter function.
-                     * @param {function} aggregator     The function which formats data.
-                     */
-                    add: function(name, formatter) {
-                        this[name] = formatter;
-                    },
-                    /**
-                     * Lists the available formatters.
-                     * 
-                     * @return {Array.<string>} The lookup names.
-                     */
-                    list: function() {
-                        return Object.keys(this);
-                    }
-                };
-
-                return new Formatters(formatters);
             }];
         }
     });
@@ -812,8 +664,8 @@ define('services/RenderersProvider',['jquery'],
         }
     });
 
-define('services/RenderingEngine',['jquery', 'angular'],
-    function($, angular) {
+define('services/RenderingEngine',['jquery', 'angular', '$ngRndrFormatters', '$ngRndrSorters', '$ngRndrDerivedAttributes'],
+    function($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes) {
         'use strict';
 
         /**
@@ -828,7 +680,7 @@ define('services/RenderingEngine',['jquery', 'angular'],
             })
         };
 
-        return function($ngRndrAggregators, $ngRndrRenderers, $ngRndrDerivedAttributes, $ngRndrSorters, $ngRndrFormatters, $ngRndrDataViews) {
+        return function($ngRndrAggregators, $ngRndrRenderers, $ngRndrDataViews) {
             /**
              * {@link RenderingEngine} constructor.
              * 
@@ -840,8 +692,17 @@ define('services/RenderingEngine',['jquery', 'angular'],
              * @param {object} [derivedAttrs] -             An array of string names of new data attributes the derived attributes.
              * @param {string} [locale] -                   The name of the locale.
              * @param {object} [sorters] -                  An array of string names of data attributes for which the corresponding $ngRndrSorters sorting function will be applied.
+             * @param {object} element                      The jQuery wrapped DOM element that contains the visualization.
              */
-            function RenderingEngine(renderer, id, aggregator, aggInputAttributeName, dv_meta, derivedAttrs, locale, sorters) {
+            function RenderingEngine(renderer, id, aggregator, aggInputAttributeName, dv_meta, derivedAttrs, locale, sorters, element, data) {
+                if (element !== undefined || element !== '' || element !== null) {
+                    this.element = element;
+                }
+
+                if (data === undefined || data === '' || data === null) {
+                    data = [];
+                }
+
                 if (id === undefined || id === '' || id === null) {
                     this.id = generateUUID();
                 } else {
@@ -869,7 +730,7 @@ define('services/RenderingEngine',['jquery', 'angular'],
                 this.setSorters(sorters);
 
                 if (dv_meta !== undefined && dv_meta !== '' && dv_meta !== null) {
-                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view([], {
+                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view(data, {
                         aggregator: this.aggregator,
                         derivedAttributes: this.derivedAttributes,
                         sorters: this.sorters,
@@ -877,7 +738,7 @@ define('services/RenderingEngine',['jquery', 'angular'],
                         meta: dv_meta
                     });
                 } else {
-                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view([], {
+                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view(data, {
                         aggregator: this.aggregator,
                         derivedAttributes: this.derivedAttributes,
                         sorters: this.sorters,
@@ -921,6 +782,12 @@ define('services/RenderingEngine',['jquery', 'angular'],
                         this.locale = locale;
                     } else {
                         this.locale = 'en';
+                    }
+                    this.dirty = true;
+                },
+                setElement: function(element) {
+                    if (element !== undefined && element !== '' && element !== null) {
+                        this.element = element;
                     }
                     this.dirty = true;
                 },
@@ -1024,35 +891,45 @@ define('services/RenderingEngine',['jquery', 'angular'],
                  * Creates configured `DataView` and invokes the configured `renderer` to build the DOM and
                  * attach it to the view.
                  *  
-                 * @param  {html} element The jQuery element that will contain the viz.
                  * @param  {object} data The `data` can be in any format that the configured `DataView` can understand.
                  * 
                  * @return {Promise}      A promise that resolves once the view is attached to the DOM. 
                  */
-                draw: function(element, data) {
+                draw: function(data) {
                     var self = this;
+
+                    if (self.element === undefined && self.element === '' && self.element === null) {
+                        var e = new Error('RenderingEngine draw: cannot draw a RenderingEngine object without an HTML element container defined.');
+                        if (typeof console !== 'undefined' && console !== null) {
+                            console.error(e.stack);
+                        }
+                        throw e;
+                    }
+
                     //remove old viz
-                    element.empty();
-                    var spinner = $('<div>').addClass('rndr-loader').css({'top':(element.parent().innerHeight() - 60)/2, 'left': (element.parent().innerWidth() - 60)/2}); // .loader css has 60px height and 60 px width
-                    element.append(spinner);
+                    self.element.empty();
+                    var spinner = $('<div>').addClass('rndr-loader').css({'top':(self.element.innerHeight() - 60)/2, 'left': (self.element.innerWidth() - 60)/2}); // .loader css has 60px height and 60 px width
+                    self.element.append(spinner);
                     // using setTimeout starategy ensures containing DOM element is visible so that height and width info is available to renderer
                     return setTimeout(function(dataContext) {
                         var result;
-                        try {
-                            var dataView_opts = {
-                                aggregator: self.aggregator,
-                                derivedAttributes: self.derivedAttributes,
-                                sorters: self.sorters,
-                                formatters: $ngRndrFormatters,
-                                meta: self.dataView.meta
-                            };
 
-                            self.dataView = new $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].opts));
+                        var dataView_opts = {
+                            aggregator: self.aggregator,
+                            derivedAttributes: self.derivedAttributes,
+                            sorters: self.sorters,
+                            formatters: $ngRndrFormatters,
+                            meta: self.dataView.meta
+                        };
 
-                            var opts = {
-                                element: element,
+                        var opts = {
+                                element: self.element,
                                 renderers: $ngRndrRenderers,
                                 dataViews: $ngRndrDataViews,
+                                sorters: $ngRndrSorters,
+                                aggregators: $ngRndrAggregators,
+                                derivedAttributes: $ngRndrDerivedAttributes,
+                                formatters: $ngRndrFormatters,
                                 heightOffset: 0,
                                 widthOffset: 0,
                                 locales: {
@@ -1063,10 +940,13 @@ define('services/RenderingEngine',['jquery', 'angular'],
                                         }
                                     }
                                 },
-                                height: element.parent().innerHeight(),
-                                width: element.parent().innerWidth()
+                                height: self.element.innerHeight(),
+                                width: self.element.innerWidth()
                             };
 
+                        try {
+                            self.dataView = new $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].opts));
+                            
                             try {
                                 //render and attach new viz
                                 result = $ngRndrRenderers[self.renderer].render(self, $.extend(opts, $ngRndrRenderers[self.renderer].opts));
@@ -1076,9 +956,9 @@ define('services/RenderingEngine',['jquery', 'angular'],
                                     console.log(e.stack);
                                 }
                                 // remove old viz
-                                element.empty();
+                                self.element.empty();
                                 // append error message
-                                element.append($('<span>').html(opts.locales[self.locale].localeStrings.renderError));
+                                self.element.append($('<span>').html(opts.locales[self.locale].localeStrings.renderError));
                             }
                         } catch (_error) {
                             var e = _error;
@@ -1086,14 +966,14 @@ define('services/RenderingEngine',['jquery', 'angular'],
                                 console.log(e.stack);
                             }
                             // remove old viz
-                            element.empty();
+                            self.element.empty();
                             // append error messagez
-                            element.append($('<span>').html(opts.locales[self.locale].localeStrings.computeError));
+                            self.element.append($('<span>').html(opts.locales[self.locale].localeStrings.computeError));
                         }
                         self.dirty = false;
                         console.log(self.meta());
                         return result;
-                    }, 0, true, { 'data': data, 'element': element });
+                    }, 0, true, { 'data': data });
                 },
                 /**
                  * The state of this rendering engine. True implies that something in this rendering engine's metadata has been changed and a `draw()` is required to display the latest visualization.
@@ -1184,25 +1064,172 @@ define('services/RenderingEngines',[],
         }
     });
 
+define('plugins/pivot-data/renderers/pivot-data-ui/directives/pivot-data-ui-directive',[], function() {
+    'use strict';
+
+    return function() {
+        return {
+            restrict: 'E',
+            templateUrl: 'plugins/pivot-data/renderers/pivot-data-ui/views/pivot-data-ui-directive-view.html',
+            link: function(scope, element, attrs) {}
+        };
+    };
+});
+
+define('plugins/pivot-data/renderers/pivot-data-ui/services/pivot-data-ui-explore-controller',[], function() {
+    'use strict';
+
+    return function($window, $timeout) {
+        function ExploreController() {
+            this.constants = {
+                sortableOptions: {
+                    placeholder: "placeholder",
+                    connectWith: ".dropzone",
+                    update: function(e, ui) {
+                        //Cannot correctly update renderer until the angular digest completes which updates the RenderingEngine.rows and
+                        //RenderingEngine.cols arrays. We must get on the call stack after the that cycle completes 
+                        $timeout(function() {
+                            exploreController.embeddedRenderingEngine.draw(exploreController.embeddedRenderingEngine.dataView.data);
+                        }, 0);
+                    }
+                }
+            };
+            this.renderingEngine;
+            this.embeddedRenderingEngine;
+        }
+        ExploreController.prototype = {
+            constructor: ExploreController,
+            init: function(renderingEngine, embeddedRenderingEngine) {
+                exploreController.renderingEngine = renderingEngine;
+                exploreController.embeddedRenderingEngine = embeddedRenderingEngine;
+            },
+            isExcluded: function(property, key) {
+                if (exploreController.renderingEngine.dataView.meta.attributeFilterExclusions[property] !== undefined) {
+                    if (exploreController.renderingEngine.dataView.meta.attributeFilterExclusions[property].indexOf(key) >= 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                return true;
+            }
+        };
+        var exploreController = new ExploreController();
+        return exploreController;
+    };
+});
+
+define('plugins/pivot-data/renderers/pivot-data-ui/services/pivot-data-ui-dialog-controller-service',[], function() {
+    'use strict';
+
+    return function($mdDialog) {
+        function DialogControllerService() {
+            this.dialogWidth;
+            this.dialogAriaLabel;
+            this.dialogTitle = 'Untitled';
+        };
+        DialogControllerService.prototype = {
+            constructor: DialogControllerService,
+            init: function(dialogWidth, dialogAriaLabel, dialogTitle) {
+                if (dialogWidth) {
+                    dialogControllerService.dialogWidth = dialogWidth;
+                }
+                if (dialogAriaLabel) {
+                    dialogControllerService.dialogAriaLabel = dialogAriaLabel;
+                }
+                if (dialogTitle) {
+                    dialogControllerService.dialogTitle = dialogTitle;
+                }
+            },
+            openDialog: function(dialogTitle, dialogWidth) {
+                dialogControllerService.dialogTitle = dialogTitle;
+                dialogControllerService.dialogWidth = dialogWidth;
+                var dialogTemplateUrl;
+                if (dialogTitle === 'Filters') {
+                    dialogTemplateUrl = 'plugins/pivot-data/renderers/pivot-data-ui/views/pivot-data-ui-filter-dialog-template-view.html'
+                } else if(dialogTitle === 'Aggregate') {
+                    dialogTemplateUrl = 'plugins/pivot-data/renderers/pivot-data-ui/views/pivot-data-ui-aggregator-dialog-template-view.html'
+                }
+                $mdDialog.show({
+                    controller: 'pivotDataUIDialogController',
+                    templateUrl: dialogTemplateUrl,
+                    parent: angular.element(document.body),
+                    escapeToClose: false,
+                    multiple: true
+                }).then(function(answer) {}, function() {});
+            },
+            hideDialog: function() {
+                $mdDialog.hide();
+            },
+            cancelDialog: function() {
+                $mdDialog.cancel();
+            },
+            answerDialog: function(answer) {
+                $mdDialog.hide(answer);
+            }
+        };
+        var dialogControllerService = new DialogControllerService();
+        return dialogControllerService;
+    };
+});
+
+define('plugins/pivot-data/renderers/pivot-data-ui/controllers/pivot-data-ui-controller',[],
+    function() {
+        'use strict';
+
+        return function(exploreController, dialogControllerService, $ngRndrRenderers, $scope) {
+            function AppController() {
+                this.init();
+            };
+            AppController.prototype = {
+                constructor: AppController,
+                init: function() {
+                    dialogControllerService.init();
+                }
+            };
+            
+            $scope.renderers = $ngRndrRenderers;
+            $scope.dialogControllerService = dialogControllerService;
+            $scope.exploreController = exploreController;
+
+            var controller = new AppController();
+            $scope.Controller = controller;
+        };
+    });
+
+define('plugins/pivot-data/renderers/pivot-data-ui/controllers/pivot-data-ui-dialog-controller',[], function() {
+    'use strict';
+
+    return function($scope, dialogControllerService, exploreController, aggregators) {
+        $scope.dialogControllerService = dialogControllerService;
+        $scope.exploreController = exploreController;
+        $scope.aggregators = aggregators;
+    };
+});
+
 define('ng-rndr',['directives/rndr',
         'services/AggregatorsProvider',
-        'services/SortersProvider',
         'services/DataViewsProvider',
-        'services/DerivedAttributesProvider',
-        'services/FormattersProvider',
         'services/RenderersProvider',
         'services/RenderingEngine',
-        'services/RenderingEngines'
+        'services/RenderingEngines',
+        'plugins/pivot-data/renderers/pivot-data-ui/directives/pivot-data-ui-directive',
+        'plugins/pivot-data/renderers/pivot-data-ui/services/pivot-data-ui-explore-controller',
+        'plugins/pivot-data/renderers/pivot-data-ui/services/pivot-data-ui-dialog-controller-service',
+        'plugins/pivot-data/renderers/pivot-data-ui/controllers/pivot-data-ui-controller',
+        'plugins/pivot-data/renderers/pivot-data-ui/controllers/pivot-data-ui-dialog-controller'
     ],
     function(rndr,
         AggregatorsProvider,
-        SortersProvider,
         DataViewsProvider,
-        DerivedAttributesProvider,
-        FormattersProvider,
         RenderersProvider,
         RenderingEngine,
-        RenderingEngines) {
+        RenderingEngines,
+        pivotDataUIDirective,
+        pivotDataUIExploreController,
+        pivotDataUIDialogControllerService,
+        pivotDataUIController,
+        pivotDataUIDialogController) {
 
         // Create module
         var app = angular.module('ngRndr', []);
@@ -1210,27 +1237,38 @@ define('ng-rndr',['directives/rndr',
         // Annotate module dependencies
         rndr.$inject = [];
         AggregatorsProvider.$inject = [];
-        SortersProvider.$inject = [];
-        DerivedAttributesProvider.$inject = [];
         DataViewsProvider.$inject = [];
         RenderersProvider.$inject = [];
-        RenderingEngine.$inject = ['$ngRndrAggregators', '$ngRndrRenderers', '$ngRndrDerivedAttributes', '$ngRndrSorters', '$ngRndrFormatters', '$ngRndrDataViews'];
+        RenderingEngine.$inject = ['$ngRndrAggregators', '$ngRndrRenderers', '$ngRndrDataViews'];
         RenderingEngines.$inject = ['$ngRndrRenderingEngine'];
+        pivotDataUIDirective.$inject = [];
+        pivotDataUIExploreController.$inject = ['$window', '$timeout'];
+        pivotDataUIDialogControllerService.$inject = ['$mdDialog'];
+        pivotDataUIController.$inject = ['pivotDataUIExploreController',
+            'pivotDataUIDialogControllerService',
+            '$ngRndrRenderers',
+            '$scope'
+        ];
+        pivotDataUIDialogController.$inject = ['$scope', 'pivotDataUIDialogControllerService', 'pivotDataUIExploreController', '$ngRndrAggregators'];
+
+        // Module controllers
+        app.controller('pivotDataUIController', pivotDataUIController);
+        app.controller('pivotDataUIDialogController', pivotDataUIDialogController);
 
         // Module providers
         app.provider('$ngRndrRenderers', RenderersProvider);
         app.provider('$ngRndrDataViews', DataViewsProvider);
         app.provider('$ngRndrAggregators', AggregatorsProvider);
-        app.provider('$ngRndrSorters', SortersProvider);
-        app.provider('$ngRndrDerivedAttributes', DerivedAttributesProvider);
-        app.provider('$ngRndrFormatters', FormattersProvider);
 
         // Module directives
         app.directive('rndr', rndr);
+        app.directive('pivotDataUiDirective', pivotDataUIDirective);
 
         // Module services
         app.service('$ngRndrRenderingEngine', RenderingEngine);
         app.service('$ngRndrRenderingEngines', RenderingEngines);
+        app.service('pivotDataUIDialogControllerService', pivotDataUIDialogControllerService);
+        app.service('pivotDataUIExploreController', pivotDataUIExploreController);
     });
 
 	
@@ -1246,6 +1284,27 @@ define('ng-rndr',['directives/rndr',
         'use strict';
 
         return angular;
+    });
+
+    // Define an '$ngRndrFormatters' model to allow ng-rndr to support a user configured formatters module.
+    define('$ngRndrFormatters', [], function() {
+        'use strict';
+
+        return $ngRndrFormatters;
+    });
+
+    // Define an '$ngRndrSorters' model to allow ng-rndr to support a user configured sorters module.
+    define('$ngRndrSorters', [], function() {
+        'use strict';
+
+        return $ngRndrSorters;
+    });
+
+    // Define an '$ngRndrDerivedAttributes' model to allow ng-rndr to support a user configured derived attributes module.
+    define('$ngRndrDerivedAttributes', [], function() {
+        'use strict';
+
+        return $ngRndrDerivedAttributes;
     });
 
 	// Use almond's special top level synchronous require to trigger factory

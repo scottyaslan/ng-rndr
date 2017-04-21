@@ -6,7 +6,7 @@
         root.ngRndr.templates = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define([], function() {
+        define('$ngRndrSorterTemplates', [], function() {
             return (root.ngRndr.templates.sorters = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
@@ -87,13 +87,13 @@
         /**
          * Ascending sorting function.
          */
-        sortForwards: function(a,b) { 
+        sortAscending: function(a,b) { 
             return a-b; 
         },
         /**
          * Descending sorting function.
          */
-        sortBackwards: function(a,b) { 
+        sortDescending: function(a,b) { 
             return b-a; 
         }
     };

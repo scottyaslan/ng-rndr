@@ -13,6 +13,27 @@
         return angular;
     });
 
+    // Define an '$ngRndrFormatters' model to allow ng-rndr to support a user configured formatters module.
+    define('$ngRndrFormatters', [], function() {
+        'use strict';
+
+        return $ngRndrFormatters;
+    });
+
+    // Define an '$ngRndrSorters' model to allow ng-rndr to support a user configured sorters module.
+    define('$ngRndrSorters', [], function() {
+        'use strict';
+
+        return $ngRndrSorters;
+    });
+
+    // Define an '$ngRndrDerivedAttributes' model to allow ng-rndr to support a user configured derived attributes module.
+    define('$ngRndrDerivedAttributes', [], function() {
+        'use strict';
+
+        return $ngRndrDerivedAttributes;
+    });
+
 	// Use almond's special top level synchronous require to trigger factory
 	// functions, get the final module, and export it as the public api.
 	return require('ng-rndr');

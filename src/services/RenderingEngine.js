@@ -1,5 +1,5 @@
-define(['jquery', 'angular'],
-    function($, angular) {
+define(['jquery', 'angular', '$ngRndrFormatters', '$ngRndrSorters', '$ngRndrDerivedAttributes'],
+    function($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes) {
         'use strict';
 
         /**
@@ -14,7 +14,7 @@ define(['jquery', 'angular'],
             })
         };
 
-        return function($ngRndrAggregators, $ngRndrRenderers, $ngRndrDerivedAttributes, $ngRndrSorters, $ngRndrFormatters, $ngRndrDataViews) {
+        return function($ngRndrAggregators, $ngRndrRenderers, $ngRndrDataViews) {
             /**
              * {@link RenderingEngine} constructor.
              * 
@@ -26,8 +26,17 @@ define(['jquery', 'angular'],
              * @param {object} [derivedAttrs] -             An array of string names of new data attributes the derived attributes.
              * @param {string} [locale] -                   The name of the locale.
              * @param {object} [sorters] -                  An array of string names of data attributes for which the corresponding $ngRndrSorters sorting function will be applied.
+             * @param {object} element                      The jQuery wrapped DOM element that contains the visualization.
              */
-            function RenderingEngine(renderer, id, aggregator, aggInputAttributeName, dv_meta, derivedAttrs, locale, sorters) {
+            function RenderingEngine(renderer, id, aggregator, aggInputAttributeName, dv_meta, derivedAttrs, locale, sorters, element, data) {
+                if (element !== undefined || element !== '' || element !== null) {
+                    this.element = element;
+                }
+
+                if (data === undefined || data === '' || data === null) {
+                    data = [];
+                }
+
                 if (id === undefined || id === '' || id === null) {
                     this.id = generateUUID();
                 } else {
@@ -55,7 +64,7 @@ define(['jquery', 'angular'],
                 this.setSorters(sorters);
 
                 if (dv_meta !== undefined && dv_meta !== '' && dv_meta !== null) {
-                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view([], {
+                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view(data, {
                         aggregator: this.aggregator,
                         derivedAttributes: this.derivedAttributes,
                         sorters: this.sorters,
@@ -63,7 +72,7 @@ define(['jquery', 'angular'],
                         meta: dv_meta
                     });
                 } else {
-                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view([], {
+                    this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view(data, {
                         aggregator: this.aggregator,
                         derivedAttributes: this.derivedAttributes,
                         sorters: this.sorters,
@@ -107,6 +116,12 @@ define(['jquery', 'angular'],
                         this.locale = locale;
                     } else {
                         this.locale = 'en';
+                    }
+                    this.dirty = true;
+                },
+                setElement: function(element) {
+                    if (element !== undefined && element !== '' && element !== null) {
+                        this.element = element;
                     }
                     this.dirty = true;
                 },
@@ -210,35 +225,45 @@ define(['jquery', 'angular'],
                  * Creates configured `DataView` and invokes the configured `renderer` to build the DOM and
                  * attach it to the view.
                  *  
-                 * @param  {html} element The jQuery element that will contain the viz.
                  * @param  {object} data The `data` can be in any format that the configured `DataView` can understand.
                  * 
                  * @return {Promise}      A promise that resolves once the view is attached to the DOM. 
                  */
-                draw: function(element, data) {
+                draw: function(data) {
                     var self = this;
+
+                    if (self.element === undefined && self.element === '' && self.element === null) {
+                        var e = new Error('RenderingEngine draw: cannot draw a RenderingEngine object without an HTML element container defined.');
+                        if (typeof console !== 'undefined' && console !== null) {
+                            console.error(e.stack);
+                        }
+                        throw e;
+                    }
+
                     //remove old viz
-                    element.empty();
-                    var spinner = $('<div>').addClass('rndr-loader').css({'top':(element.parent().innerHeight() - 60)/2, 'left': (element.parent().innerWidth() - 60)/2}); // .loader css has 60px height and 60 px width
-                    element.append(spinner);
+                    self.element.empty();
+                    var spinner = $('<div>').addClass('rndr-loader').css({'top':(self.element.innerHeight() - 60)/2, 'left': (self.element.innerWidth() - 60)/2}); // .loader css has 60px height and 60 px width
+                    self.element.append(spinner);
                     // using setTimeout starategy ensures containing DOM element is visible so that height and width info is available to renderer
                     return setTimeout(function(dataContext) {
                         var result;
-                        try {
-                            var dataView_opts = {
-                                aggregator: self.aggregator,
-                                derivedAttributes: self.derivedAttributes,
-                                sorters: self.sorters,
-                                formatters: $ngRndrFormatters,
-                                meta: self.dataView.meta
-                            };
 
-                            self.dataView = new $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].opts));
+                        var dataView_opts = {
+                            aggregator: self.aggregator,
+                            derivedAttributes: self.derivedAttributes,
+                            sorters: self.sorters,
+                            formatters: $ngRndrFormatters,
+                            meta: self.dataView.meta
+                        };
 
-                            var opts = {
-                                element: element,
+                        var opts = {
+                                element: self.element,
                                 renderers: $ngRndrRenderers,
                                 dataViews: $ngRndrDataViews,
+                                sorters: $ngRndrSorters,
+                                aggregators: $ngRndrAggregators,
+                                derivedAttributes: $ngRndrDerivedAttributes,
+                                formatters: $ngRndrFormatters,
                                 heightOffset: 0,
                                 widthOffset: 0,
                                 locales: {
@@ -249,10 +274,13 @@ define(['jquery', 'angular'],
                                         }
                                     }
                                 },
-                                height: element.parent().innerHeight(),
-                                width: element.parent().innerWidth()
+                                height: self.element.innerHeight(),
+                                width: self.element.innerWidth()
                             };
 
+                        try {
+                            self.dataView = new $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].opts));
+                            
                             try {
                                 //render and attach new viz
                                 result = $ngRndrRenderers[self.renderer].render(self, $.extend(opts, $ngRndrRenderers[self.renderer].opts));
@@ -262,9 +290,9 @@ define(['jquery', 'angular'],
                                     console.log(e.stack);
                                 }
                                 // remove old viz
-                                element.empty();
+                                self.element.empty();
                                 // append error message
-                                element.append($('<span>').html(opts.locales[self.locale].localeStrings.renderError));
+                                self.element.append($('<span>').html(opts.locales[self.locale].localeStrings.renderError));
                             }
                         } catch (_error) {
                             var e = _error;
@@ -272,14 +300,14 @@ define(['jquery', 'angular'],
                                 console.log(e.stack);
                             }
                             // remove old viz
-                            element.empty();
+                            self.element.empty();
                             // append error messagez
-                            element.append($('<span>').html(opts.locales[self.locale].localeStrings.computeError));
+                            self.element.append($('<span>').html(opts.locales[self.locale].localeStrings.computeError));
                         }
                         self.dirty = false;
                         console.log(self.meta());
                         return result;
-                    }, 0, true, { 'data': data, 'element': element });
+                    }, 0, true, { 'data': data });
                 },
                 /**
                  * The state of this rendering engine. True implies that something in this rendering engine's metadata has been changed and a `draw()` is required to display the latest visualization.

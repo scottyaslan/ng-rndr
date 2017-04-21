@@ -1,11 +1,11 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-  	define(["jquery", "angular"], function($, angular) {
-            factory($, angular);
+  	define(['jquery', 'angular', '$ngRndrFormatters', '$ngRndrSorters', '$ngRndrDerivedAttributes'], function($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes) {
+            factory($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes);
         });
-  } else if (typeof exports === 'object' && typeof module === "object") {
-    module.exports = factory(require("jquery"), require("angular"));
+  } else if (typeof exports === 'object' && typeof module === 'object') {
+    module.exports = factory(require('jquery'), require('angular'), root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes);
   } else {
-    factory(root.$, root.angular);
+    factory(root.$, root.angular, root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes);
   }
-}(this, function ($, angular) {
+}(this, function ($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes) {
