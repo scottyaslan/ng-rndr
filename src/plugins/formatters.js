@@ -5,19 +5,16 @@
     if (root.ngRndr.plugins === undefined) {
         root.ngRndr.plugins = {};
     }
-    if (root.ngRndr.plugins.formatters === undefined) {
-        root.ngRndr.plugins.formatters = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrFormatters', ['jquery', '$ngRndrFormatterTemplates'], function($, $ngRndrFormatterTemplates) {
-            return (root.ngRndr.plugins.formatters = factory($, $ngRndrFormatterTemplates));
+        define('$ngRndrFormatters', ['$ngRndrFormatterTemplates'], function($ngRndrFormatterTemplates) {
+            return (root.ngRndr.plugins.formatters = factory($ngRndrFormatterTemplates));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.formatters = factory(require('jquery'), root.ngRndr.templates.formatters));
+        module.exports = (root.ngRndr.plugins.formatters = factory(require('$ngRndrFormatterTemplates')));
     } else {
-        root.ngRndr.plugins.formatters = factory(root.$, root.ngRndr.templates.formatters);
+        root.ngRndr.plugins.formatters = factory(root.ngRndr.templates.formatters);
     }
-}(this, function($, $ngRndrFormatterTemplates) {
+}(this, function($ngRndrFormatterTemplates) {
     /**
      * A function for formatting a number into a standard US formatted number.
      * 
@@ -73,9 +70,11 @@
         }
     };
 
-    var formatters = new Formatters();
-    formatters['US Standard'] = usFmt();
-    formatters['US Standard Integer'] = usFmtInt();
-    formatters['US Standard Percentage'] = usFmtPct();
-    return formatters;
+    var $ngRndrFormatters = new Formatters();
+
+    $ngRndrFormatters.add('US Standard', usFmt());
+    $ngRndrFormatters.add('US Standard Integer', usFmtInt());
+    $ngRndrFormatters.add('US Standard Percentage', usFmtPct());
+
+    return $ngRndrFormatters;
 }));

@@ -5,19 +5,16 @@
     if (root.ngRndr.plugins === undefined) {
         root.ngRndr.plugins = {};
     }
-    if (root.ngRndr.plugins.formatters === undefined) {
-        root.ngRndr.plugins.formatters = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrSorters', ['jquery', '$ngRndrSorterTemplates'], function($, $ngRndrSorterTemplates) {
-            return (root.ngRndr.plugins.sorters = factory($, $ngRndrSorterTemplates));
+        define('$ngRndrSorters', ['$ngRndrSorterTemplates'], function($ngRndrSorterTemplates) {
+            return (root.ngRndr.plugins.sorters = factory($ngRndrSorterTemplates));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.sorters = factory(require('jquery'), root.ngRndr.templates.sorters));
+        module.exports = (root.ngRndr.plugins.sorters = factory(require('$ngRndrSorterTemplates')));
     } else {
-        root.ngRndr.plugins.sorters = factory(root.$, root.ngRndr.templates.sorters);
+        root.ngRndr.plugins.sorters = factory(root.ngRndr.templates.sorters);
     }
-}(this, function($, $ngRndrSorterTemplates) {
+}(this, function($ngRndrSorterTemplates) {
     function Sorters() {}
     Sorters.prototype = {
         constructor: Sorters,
@@ -40,6 +37,7 @@
         }
     };
 
-    var sorters = new Sorters();
-    return sorters;
+    var $ngRndrSorters = new Sorters();
+
+    return $ngRndrSorters;
 }));

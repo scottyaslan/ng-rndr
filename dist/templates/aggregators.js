@@ -6,7 +6,7 @@
         root.ngRndr.templates = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define([], function() {
+        define('$ngRndrAggregatorsTemplates', [], function() {
             return (root.ngRndr.templates.aggregators = factory());
         });
     } else if (typeof module === 'object' && module.exports) {

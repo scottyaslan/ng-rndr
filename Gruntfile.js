@@ -5,20 +5,25 @@ module.exports = function(grunt) {
                 files: [
                     { expand: true, src: ['LICENSE'], dest: 'dist/', filter: 'isFile' },
                     { expand: true, src: ['README.md'], dest: 'dist/', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/PivotData.js'], dest: 'dist/plugins/pivot-data/PivotData.js', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/clone-data/CloneData.js'], dest: 'dist/plugins/clone-data/CloneData.js', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/pivot-data-ui/pivot-data-ui-renderer.js'], dest: 'dist/plugins/pivot-data/renderers/pivot-data-ui/pivot-data-ui-renderer.js', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/c3/c3_renderers.js'], dest: 'dist/plugins/pivot-data/renderers/c3/c3_renderers.js', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/d3/d3_renderers.js'], dest: 'dist/plugins/pivot-data/renderers/d3/d3_renderers.js', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/datatables/datatables_renderers.js'], dest: 'dist/plugins/pivot-data/renderers/datatables/datatables_renderers.js', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/datatables/datatables_renderers.css'], dest: 'dist/plugins/pivot-data/renderers/datatables/datatables_renderers.css', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/pivottables/pivottables_renderers.js'], dest: 'dist/plugins/pivot-data/renderers/pivottables/pivottables_renderers.js', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/pivottables/pivottables_renderers.css'], dest: 'dist/plugins/pivot-data/renderers/pivottables/pivottables_renderers.css', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/pivot-data-ui/pivot-data-ui.css'], dest: 'dist/plugins/pivot-data/renderers/pivot-data-ui/pivot-data-ui.css', filter: 'isFile' },
-                    { expand: false, src: ['src/plugins/pivot-data/renderers/google_chart/gchart_renderers.js'], dest: 'dist/plugins/pivot-data/renderers/google_chart/gchart_renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/RenderingEngine.js'], dest: 'dist/RenderingEngine.js', filter: 'isFile' },
+                    { expand: false, src: ['src/RenderingEngines.js'], dest: 'dist/RenderingEngines.js', filter: 'isFile' },
+                    { expand: false, src: ['src/data-views/pivot-data/PivotData.js'], dest: 'dist/data-views/pivot-data/PivotData.js', filter: 'isFile' },
+                    { expand: false, src: ['src/data-views/clone-data/CloneData.js'], dest: 'dist/data-views/clone-data/CloneData.js', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/angular/pivot-data/pivot-data-ui-renderer.js'], dest: 'dist/renderers/angular/pivot-data/pivot-data-ui-renderer.js', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/angular/pivot-data/pivot-data-ui.css'], dest: 'dist/renderers/angular/pivot-data/pivot-data-ui.css', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/c3/pivot-data/c3-renderers.js'], dest: 'dist/renderers/c3/pivot-data/c3-renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/d3/pivot-data/d3-renderers.js'], dest: 'dist/renderers/d3/pivot-data/d3-renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/datatables/pivot-data/datatables-renderers.js'], dest: 'dist/renderers/datatables/pivot-data/datatables-renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/datatables/pivot-data/datatables-renderers.css'], dest: 'dist/renderers/datatables/pivot-data/datatables-renderers.css', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/pivottables/pivot-data/pivottables-renderers.js'], dest: 'dist/renderers/pivottables/pivot-data/pivottables-renderers.js', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/pivottables/pivot-data/pivottables-renderers.css'], dest: 'dist/renderers/pivottables/pivot-data/pivottables-renderers.css', filter: 'isFile' },
+                    { expand: false, src: ['src/renderers/google-chart/pivot-data/gchart-renderers.js'], dest: 'dist/renderers/google-chart/pivot-data/gchart-renderers.js', filter: 'isFile' },
                     { expand: false, src: ['src/plugins/formatters.js'], dest: 'dist/plugins/formatters.js', filter: 'isFile' },
                     { expand: false, src: ['src/plugins/sorters.js'], dest: 'dist/plugins/sorters.js', filter: 'isFile' },
                     { expand: false, src: ['src/plugins/derived-attributes.js'], dest: 'dist/plugins/derived-attributes.js', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/aggregators.js'], dest: 'dist/plugins/aggregators.js', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/data-views.js'], dest: 'dist/plugins/data-views.js', filter: 'isFile' },
+                    { expand: false, src: ['src/plugins/renderers.js'], dest: 'dist/plugins/renderers.js', filter: 'isFile' },
                     { expand: false, src: ['src/templates/aggregators.js'], dest: 'dist/templates/aggregators.js', filter: 'isFile' },
                     { expand: false, src: ['src/templates/derivers.js'], dest: 'dist/templates/derivers.js', filter: 'isFile' },
                     { expand: false, src: ['src/templates/formatters.js'], dest: 'dist/templates/formatters.js', filter: 'isFile' },
@@ -44,7 +49,7 @@ module.exports = function(grunt) {
                 }
             },
             main: {
-                src: ['src/plugins/pivot-data/renderers/pivot-data-ui/views/*.html'],
+                src: ['src/renderers/angular/pivot-data/views/*.html'],
                 dest: 'dist/ng-rndr-templates.js'
             }
         },
@@ -60,7 +65,10 @@ module.exports = function(grunt) {
                     'angular': 'empty:',
                     '$ngRndrFormatters': 'empty:',
                     '$ngRndrSorters': 'empty:',
-                    '$ngRndrDerivedAttributes': 'empty:'
+                    '$ngRndrDerivedAttributes': 'empty:',
+                    '$ngRndrAggregators': 'empty:',
+                    '$ngRndrDataViews': 'empty:',
+                    '$ngRndrRenderers': 'empty:'
                 },
                 name: '../node_modules/almond/almond',
                 wrap: {
@@ -88,17 +96,22 @@ module.exports = function(grunt) {
                 files: [{
                     './dist/ng-rndr-templates.min.js': ['./dist/ng-rndr-templates.js'],
                     './dist/ng-rndr.min.js': ['./dist/ng-rndr.js'],
-                    './dist/plugins/pivot-data/PivotData.min.js': ['./src/plugins/pivot-data/PivotData.js'],
-                    './dist/plugins/clone-data/CloneData.min.js': ['./src/plugins/clone-data/CloneData.js'],
-                    './dist/plugins/pivot-data/renderers/pivot-data-ui/pivot-data-ui_renderer.min.js': ['./src/plugins/pivot-data/renderers/pivot-data-ui/pivot-data-ui-renderer.js'],
-                    './dist/plugins/pivot-data/renderers/c3/c3_renderers.min.js': ['./src/plugins/pivot-data/renderers/c3/c3_renderers.js'],
-                    './dist/plugins/pivot-data/renderers/d3/d3_renderers.min.js': ['./src/plugins/pivot-data/renderers/d3/d3_renderers.js'],
-                    './dist/plugins/pivot-data/renderers/datatables/datatables_renderers.min.js': ['./src/plugins/pivot-data/renderers/datatables/datatables_renderers.js'],
-                    './dist/plugins/pivot-data/renderers/pivottables/pivottables_renderers.min.js': ['./src/plugins/pivot-data/renderers/pivottables/pivottables_renderers.js'],
-                    './dist/plugins/pivot-data/renderers/google_chart/gchart_renderers.min.js': ['./src/plugins/pivot-data/renderers/google_chart/gchart_renderers.js'],
+                    './dist/RenderingEngine.min.js': ['./src/RenderingEngine.js'],
+                    './dist/RenderingEngines.min.js': ['./src/RenderingEngines.js'],
+                    './dist/data-views/pivot-data/PivotData.min.js': ['./src/data-views/pivot-data/PivotData.js'],
+                    './dist/data-views/clone-data/CloneData.min.js': ['./src/data-views/clone-data/CloneData.js'],
+                    './dist/renderers/angular/pivot-data/pivot-data-ui_renderer.min.js': ['./src/renderers/angular/pivot-data/pivot-data-ui-renderer.js'],
+                    './dist/renderers/c3/pivot-data/c3-renderers.min.js': ['./src/renderers/c3/pivot-data/c3-renderers.js'],
+                    './dist/renderers/d3/pivot-data/d3-renderers.min.js': ['./src/renderers/d3/pivot-data/d3-renderers.js'],
+                    './dist/renderers/datatables/pivot-data/datatables-renderers.min.js': ['./src/renderers/datatables/pivot-data/datatables-renderers.js'],
+                    './dist/renderers/pivottables/pivot-data/pivottables-renderers.min.js': ['./src/renderers/pivottables/pivot-data/pivottables-renderers.js'],
+                    './dist/renderers/google-chart/pivot-data/gchart-renderers.min.js': ['./src/renderers/google-chart/pivot-data/gchart-renderers.js'],
                     './dist/plugins/formatters.min.js': ['./src/plugins/formatters.js'],
                     './dist/plugins/sorters.min.js': ['./src/plugins/sorters.js'],
                     './dist/plugins/derived-attributes.min.js': ['./src/plugins/derived-attributes.js'],
+                    './dist/plugins/aggregators.min.js': ['./src/plugins/aggregators.js'],
+                    './dist/plugins/data-views.min.js': ['./src/plugins/data-views.js'],
+                    './dist/plugins/renderers.min.js': ['./src/plugins/renderers.js'],
                     './dist/templates/aggregators.min.js': ['./src/templates/aggregators.js'],
                     './dist/templates/derivers.min.js': ['./src/templates/derivers.js'],
                     './dist/templates/formatters.min.js': ['./src/templates/formatters.js'],
@@ -113,9 +126,9 @@ module.exports = function(grunt) {
             },
             target: {
                 files: {
-                    './dist/plugins/pivot-data/renderers/datatables/datatables_renderers.min.css': ['./src/plugins/pivot-data/renderers/datatables/datatables_renderers.css'],
-                    './dist/plugins/pivot-data/renderers/pivottables/pivottables_renderers.min.css': ['./src/plugins/pivot-data/renderers/pivottables/pivottables_renderers.css'],
-                    './dist/plugins/pivot-data/renderers/pivot-data-ui/pivot-data-ui.min.css': ['./src/plugins/pivot-data/renderers/pivot-data-ui/pivot-data-ui.css'],
+                    './dist/renderers/datatables/pivot-data/datatables-renderers.min.css': ['./src/renderers/datatables/pivot-data/datatables-renderers.css'],
+                    './dist/renderers/pivottables/pivot-data/pivottables-renderers.min.css': ['./src/renderers/pivottables/pivot-data/pivottables-renderers.css'],
+                    './dist/renderers/angular/pivot-data/pivot-data-ui-renderer.min.css': ['./src/renderers/angular/pivot-data/pivot-data-ui-renderer.css'],
                     './dist/ng-rndr.min.css': ['./src/ng-rndr.css']
                 }
             }
@@ -149,5 +162,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
 
     grunt.registerTask('dev', ['requirejs:dev', 'html2js:main']);
-    grunt.registerTask('release', ['requirejs:dev', 'requirejs:release', 'uglify:build', 'copy:main', 'cssmin:target', 'html2js:main']);
+    grunt.registerTask('release', ['requirejs:dev', 'html2js:main', 'requirejs:release', 'uglify:build', 'copy:main', 'cssmin:target']);
 };
