@@ -25,9 +25,9 @@ define([], function() {
                 dialogControllerService.dialogWidth = dialogWidth;
                 var dialogTemplateUrl;
                 if (dialogTitle === 'Filters') {
-                    dialogTemplateUrl = 'plugins/pivot-data/renderers/pivot-data-ui/views/pivot-data-ui-filter-dialog-template-view.html'
+                    dialogTemplateUrl = 'renderers/angular/pivot-data/views/pivot-data-ui-filter-dialog-template-view.html'
                 } else if(dialogTitle === 'Aggregate') {
-                    dialogTemplateUrl = 'plugins/pivot-data/renderers/pivot-data-ui/views/pivot-data-ui-aggregator-dialog-template-view.html'
+                    dialogTemplateUrl = 'renderers/angular/pivot-data/views/pivot-data-ui-aggregator-dialog-template-view.html'
                 }
                 $mdDialog.show({
                     controller: 'pivotDataUIDialogController',

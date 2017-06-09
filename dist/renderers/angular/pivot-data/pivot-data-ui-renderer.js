@@ -179,27 +179,27 @@
                     "default": "500"
                 });
 
-                var dataViewName = opts.renderers[renderingEngine.renderer].dataViewName;
+                // var dataViewName = opts.renderers[renderingEngine.renderer].dataViewName;
 
                 //load configured DataViews
-                $.each(opts.dataViews.list(), function(index, dataViewName) {
-                    $ngRndrDataViews.add(dataViewName,
-                        opts.dataViews[dataViewName].view,
-                        opts.dataViews[dataViewName].opts
-                    );
-                });
+                // $.each(opts.dataViews.list(), function(index, dataViewName) {
+                //     $ngRndrDataViews.add(dataViewName,
+                //         opts.dataViews[dataViewName].view,
+                //         opts.dataViews[dataViewName].opts
+                //     );
+                // });
 
                 //load configured renderers
-                $.each(opts.renderers.list(), function(index, rendererName) {
-                    if ((rendererName !== renderingEngine.renderer) &&
-                        (opts.renderers[rendererName].dataViewName === dataViewName)) {
-                        $ngRndrRenderers.add(rendererName,
-                            opts.renderers[rendererName].render,
-                            opts.renderers[rendererName].dataViewName,
-                            opts.renderers[rendererName].opts
-                        );
-                    }
-                });
+                // $.each(opts.renderers.list(), function(index, rendererName) {
+                //     if ((rendererName !== renderingEngine.renderer) &&
+                //         (opts.renderers[rendererName].dataViewName === dataViewName)) {
+                //         $ngRndrRenderers.add(rendererName,
+                //             opts.renderers[rendererName].render,
+                //             opts.renderers[rendererName].dataViewName,
+                //             opts.renderers[rendererName].opts
+                //         );
+                //     }
+                // });
 
                 //load configured formatters
                 // $.each(opts.formatters.list(), function(index, formatterName) {
@@ -223,11 +223,11 @@
                 // });
 
                 //load configured aggregators.
-                $.each(opts.aggregators.list(), function(index, aggregatorName) {
-                    $ngRndrAggregators.add(aggregatorName,
-                        opts.aggregators[aggregatorName].aggregate
-                    );
-                });
+                // $.each(opts.aggregators.list(), function(index, aggregatorName) {
+                //     $ngRndrAggregators.add(aggregatorName,
+                //         opts.aggregators[aggregatorName].aggregate
+                //     );
+                // });
             };
 
             pivotDataUIConfig.$inject = ['$mdThemingProvider'];

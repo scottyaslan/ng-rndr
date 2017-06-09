@@ -2,18 +2,6 @@
     if (root.ngRndr === undefined) {
         root.ngRndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
-    }
-    if (root.ngRndr.plugins.pivotData === undefined) {
-        root.ngRndr.plugins.pivotData = {};
-    }
-    if (root.ngRndr.plugins.pivotData.renderers === undefined) {
-        root.ngRndr.plugins.pivotData.renderers = {};
-    }
-    if (root.ngRndr.plugins.pivotData.renderers.c3 === undefined) {
-        root.ngRndr.plugins.pivotData.renderers.c3 = {};
-    }
     if (typeof define === 'function' && define.amd) {
         define('$ngRndrRenderingEngine', ['jquery', 'angular', '$ngRndrFormatters', '$ngRndrSorters', '$ngRndrDerivedAttributes', '$ngRndrAggregators', '$ngRndrDataViews', '$ngRndrRenderers'], function($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers) {
             return (root.ngRndr.RenderingEngine = factory(root, $, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers));
@@ -353,16 +341,16 @@
             //Only need the names of the derived attributes since functions do not serialize
             meta.derivedAttributes = [];
 
-            angular.forEach(this.derivedAttributes, function(value, key) {
-                meta.derivedAttributes.push(key);
-            });
+            for(var key in this.derivedAttributes) {
+                 meta.derivedAttributes.push(this.derivedAttributes[key]);
+            }
 
             //Only need the names of the sorters since functions do not serialize
             meta.sorters = [];
 
-            angular.forEach(this.sorters, function(value, key) {
-                meta.sorters.push(key);
-            });
+            for(var key in this.sorters) {
+                 meta.sorters.push(this.sorters[key]);
+            }
 
             return meta;
         }

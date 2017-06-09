@@ -71,3 +71,6 @@
     cursor: move;
 }
 
+md-menu-bar button {
+    width: 100%;
+}
