@@ -75,7 +75,7 @@ define([], function() {
                         $(li).append($compile("<header style='cursor:move' class='ui-dialog-titlebar ui-widget-header' context-menu='" + contextMenu + "' context-menu-selector=\"'.context-menu'\"><div class='context-menu box' ><span class='handle ui-icon ui-icon-gear' style='display:inline-block'></span>" + renderingEngine.title + "</div></header>")(scope));
                         var div = document.createElement('div');
                         div.setAttribute('class', 'gridsterWidgetContainer');
-                        var renderer = $compile("<rndr input='dataSources.map[renderingEnginesCollection.map[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEnginesCollection.map[\"" + uuid + "\"]'></rndr>")(scope);
+                        var renderer = $compile("<rndr style='position: absolute; top: 28px; bottom: 5px; left: 5px; right: 5px; overflow: auto;' input='dataSources.map[renderingEnginesCollection.map[\"" + uuid + "\"].dataSourceConfigId].formattedData' engine='renderingEnginesCollection.map[\"" + uuid + "\"]'></rndr>")(scope);
                         $(div).append(renderer[0]);
                         $(li).append(div);
                         i++;

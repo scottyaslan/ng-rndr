@@ -8,14 +8,14 @@ define(['../ng-rndr/AppController',
         '../ng-rndr/common/services/uiControls',
         '../ng-rndr/acquire/services/acquisitionController',
         '../ng-rndr/acquire/directives/acquisitionDirective',
-        '../ng-rndr/explore/directives/explorationDirective',
-        '../ng-rndr/explore/services/exploreController',
+        '../ng-rndr/rendering-engine-collection-tabular-ui/directives/rendering-engine-collection-tabular-ui-directive',
+        '../ng-rndr/rendering-engine-collection-tabular-ui/services/rendering-engine-collection-tabular-ui-controller',
         '../ng-rndr/syndicate/directives/dashboardDirective',
         '../ng-rndr/syndicate/services/Dashboard',
         '../ng-rndr/syndicate/directives/gridsterDirective',
         '../ng-rndr/datDirective',
         '../ng-rndr/config',
-        'downloadjs',
+        'downloadjs', 'c3-renderers', 'd3-renderers', 'gchart-renderers', 'pivottables-renderers', 'datatables-renderers', 'pivot-data-ui-renderer',
         'cyclejs',
         'jquery-csv',
         'ng-rndr',
@@ -39,8 +39,8 @@ define(['../ng-rndr/AppController',
         uiControls,
         acquisitionController,
         acquisitionDirective,
-        explorationDirective,
-        exploreController,
+        renderingEngineCollectionTabularUIDirective,
+        renderingEngineCollectionTabularUIController,
         dashboardDirective,
         Dashboard,
         gridsterDirective,
@@ -70,21 +70,18 @@ define(['../ng-rndr/AppController',
         gridsterDirective.$inject = [];
         renderingEnginesCollection.$inject = [];
         datDirective.$inject = [];
-        explorationDirective.$inject = ['exploreController', 'renderingEnginesCollection', 'dataSources'];
+        renderingEngineCollectionTabularUIDirective.$inject = ['renderingEngineCollectionTabularUIController', 'renderingEnginesCollection', 'dataSources'];
         dashboardDirective.$inject = ['Dashboard', '$window'];
-        exploreController.$inject = ['renderingEnginesCollection', 'dataSources', 'dataSourceConfigurations', '$ngRndrAggregators', 'uiControls', '$window', '$timeout', '$rootScope', '$http'];
+        renderingEngineCollectionTabularUIController.$inject = ['renderingEnginesCollection', 'dataSources', 'dataSourceConfigurations', 'uiControls', '$window', '$timeout', '$rootScope', '$http'];
         Dashboard.$inject = ['$rootScope', '$compile', '$window', '$q', '$timeout', 'dataSources'];
         uiControls.$inject = ['$window', '$mdSidenav', '$mdUtil', '$mdBottomSheet', '$mdDialog'];
-        acquisitionController.$inject = ['$ngRndrRenderingEngine', 'renderingEnginesCollection', 'dataSources', 'dataSourceConfigurations', '$rootScope', '$window', '$q'];
-        AppController.$inject = ['$ngRndrRenderingEngine',
-            'dataSources',
+        acquisitionController.$inject = ['renderingEnginesCollection', 'dataSources', 'dataSourceConfigurations', '$rootScope', '$window', '$q'];
+        AppController.$inject = ['dataSources',
             'acquisitionController',
-            'exploreController',
-            '$ngRndrRenderingEngines',
+            'renderingEngineCollectionTabularUIController',
             'renderingEnginesCollection',
             'uiControls',
             'dataSourceConfigurations',
-            '$ngRndrRenderers',
             '$window',
             '$rootScope',
             '$timeout',
@@ -93,10 +90,10 @@ define(['../ng-rndr/AppController',
             '$scope',
             '$q'
         ];
-        controllerWrapper.$inject = ['$scope', 'uiControls', 'dataSources', 'dataSourceConfigurations', 'acquisitionController', 'exploreController', 'renderingEnginesCollection', '$ngRndrAggregators'];
+        controllerWrapper.$inject = ['$scope', 'uiControls', 'dataSources', 'dataSourceConfigurations', 'acquisitionController', 'renderingEngineCollectionTabularUIController', 'renderingEnginesCollection'];
         acquisitionDirective.$inject = ['acquisitionController', 'dataSourceConfigurations', 'dataSources'];
 
-        config.$inject = ['$locationProvider', '$mdThemingProvider', '$provide', '$ngRndrRenderersProvider', '$ngRndrDataViewsProvider', '$ngRndrAggregatorsProvider', '$ngRndrDerivedAttributesProvider', '$ngRndrFormattersProvider'];
+        config.$inject = ['$locationProvider', '$mdThemingProvider', '$provide'];
         app.config(config);
 
         // Module controllers
@@ -111,13 +108,13 @@ define(['../ng-rndr/AppController',
         app.service('renderingEnginesCollection', renderingEnginesCollection);
         app.service('uiControls', uiControls);
         app.service('acquisitionController', acquisitionController);
-        app.service('exploreController', exploreController);
+        app.service('renderingEngineCollectionTabularUIController',renderingEngineCollectionTabularUIController);
         app.service('Dashboard', Dashboard);
 
         // Module directives
         app.directive('gridsterDirective', gridsterDirective);
         app.directive('datDirective', datDirective);
-        app.directive('explorationDirective', explorationDirective);
+        app.directive('renderingEngineCollectionTabularUiDirective', renderingEngineCollectionTabularUIDirective);
         app.directive('dashboardDirective', dashboardDirective);
         app.directive('acquisitionDirective', acquisitionDirective);
 

@@ -165,39 +165,15 @@ h6 {
 }
 
 /* line 1, ../sass/_structureElements.scss */
-.gridsterWidgetContainer {
-  height: calc(100% - 24px);
-  overflow: auto;
+.dropzone {
+  height: calc(100% - 23px);
 }
 
 /* line 5, ../sass/_structureElements.scss */
-.gridsterWidgetContainer li {
+.dropzone li {
   padding: 8px 6px;
   list-style-type: none;
   position: relative;
-}
-
-/* line 10, ../sass/_structureElements.scss */
-.pvtAttr {
-  background: #F3F3F3;
-  border: 1px solid #DEDEDE;
-  padding: 2px 5px;
-  white-space: nowrap;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  color: #000;
-  cursor: move;
-}
-
-/* line 21, ../sass/_structureElements.scss */
-#renderer {
-  position: absolute;
-  top: 23px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
-  overflow: auto;
 }
 
 /*!

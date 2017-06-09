@@ -26,11 +26,11 @@
     "jquery": "~2.1.1"
   },
   "homepage": "https://github.com/scottyaslan/ng-rndr",
-  "_release": "5123c19ac3",
+  "_release": "7ccb3f7f1b",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "5123c19ac3583b15191246bd6e7340a9a8461b1b"
+    "commit": "7ccb3f7f1b9650ed693a06c249ad642ca0163a1b"
   },
   "_source": "https://github.com/scottyaslan/ng-rndr.git",
   "_target": "*",

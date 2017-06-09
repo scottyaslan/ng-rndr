@@ -1,19 +1,17 @@
-define(['downloadjs',
+define(['$ngRndrRenderers',
+        '$ngRndrRenderingEngines',
+        'downloadjs',
         'goog!visualization,1,packages:[corechart,geochart]'
     ],
-    function(downloadjs) {
-
+    function($ngRndrRenderers, $ngRndrRenderingEngines, downloadjs) {
         'use strict';
 
-        return function(RenderingEngine,
-            dataSources,
+        return function(dataSources,
             acquisitionController,
-            exploreController,
-            RenderingEngines,
+            renderingEngineCollectionTabularUIController,
             renderingEnginesCollection,
             uiControls,
             dataSourceConfigurations,
-            renderers,
             $window,
             $rootScope,
             $timeout,
@@ -51,25 +49,19 @@ define(['downloadjs',
                             self.mainContentView = view;
                         }
                     });
-                    $rootScope.$on('exploreController:initiate data source configuration wizard', function() {
+                    $rootScope.$on('renderingEngineCollectionTabularUIController:initiate data source configuration wizard', function() {
                         self.initiateDataSourceConfigurationWizard();
                     });
                     $rootScope.$on('Dashboard:edit', function() {
                         self.initiateDataExploration();
                         $scope.$apply();
                     });
-                    $rootScope.$on('RenderingEngine:draw:begin', function() {
-                        uiControls.showRenderingEngineProgress();
-                    });
-                    $rootScope.$on('RenderingEngine:draw:complete', function() {
-                        uiControls.hideRenderingEngineProgress();
-                    });
-                    $rootScope.$on('explore:new', function() {
-                        exploreController.dialogContentView = "Data Sources";
+                    $rootScope.$on('renderingEngineCollectionTabularUIController:new', function() {
+                        renderingEngineCollectionTabularUIController.dialogContentView = "Data Sources";
                         // uiControls.openDialog('Data Source');
                     });
-                    $rootScope.$on('explore:init', function() {
-                        uiControls.init('ng-rndr/explore/views/bottomSheetGridTemplate.html', 'ng-rndr/explore/views/dialogTemplate.html');
+                    $rootScope.$on('renderingEngineCollectionTabularUIController:init', function() {
+                        uiControls.init('ng-rndr/rendering-engine-collection-tabular-ui/views/bottomSheetGridTemplate.html', 'ng-rndr/rendering-engine-collection-tabular-ui/views/dialogTemplate.html');
                     });
                     $rootScope.$on('dataSource:acquire:success', function() {
                         uiControls.openLeftSideNav();
@@ -127,7 +119,7 @@ define(['downloadjs',
                             dataSources.map[dataSourceConfiguration.id].format();
                         });
                         $rootScope.$emit('controller:hydrate:complete');
-                        self.mainContentView = "Explore";
+                        self.mainContentView = "RenderingEngineCollectionTabularUI";
                     });
                 },
                 open: function(rndr) {
@@ -203,20 +195,20 @@ define(['downloadjs',
                     renderingEnginesCollection.delete(id);
                     if (Object.keys(renderingEnginesCollection.map).length === 0) {
                         $timeout(function() {
-                            exploreController.new();
+                            renderingEngineCollectionTabularUIController.new();
                         }, 0);
                     }
                 },
                 initiateDataExploration: function(createNew) {
                     var self = this;
-                    if (self.mainContentView !== "Explore") {
-                        self.mainContentView = "Explore";
-                        uiControls.init('ng-rndr/explore/views/bottomSheetGridTemplate.html', 'ng-rndr/explore/views/dialogTemplate.html');
+                    if (self.mainContentView !== "RenderingEngineCollectionTabularUI") {
+                        self.mainContentView = "RenderingEngineCollectionTabularUI";
+                        uiControls.init('ng-rndr/rendering-engine-collection-tabular-ui/views/bottomSheetGridTemplate.html', 'ng-rndr/rendering-engine-collection-tabular-ui/views/dialogTemplate.html');
                     }
                     if (createNew) {
-                        //Have to get on the call stack after the exploration-directive link function is executed
+                        //Have to get on the call stack after the rendering-engine-collection-tabular-ui-directive link function is executed
                         $timeout(function() {
-                            exploreController.new();
+                            renderingEngineCollectionTabularUIController.new();
                             uiControls.openDialog('Data Source', 40);
                         }, 0);
                     }
@@ -241,14 +233,14 @@ define(['downloadjs',
                 },
                 hideDialogAndDraw: function(rendererName) {
                     renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].setRenderer(rendererName);
-                    renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw($('#renderer'), dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData);
+                    renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].draw(dataSources.map[renderingEnginesCollection.map[renderingEnginesCollection.activeRenderingEngine].dataSourceConfigId].formattedData);
                 }
             };
-            
-            $scope.renderers = renderers;
+
+            $scope.renderers = $ngRndrRenderers;
 
             //Singleton for tracking all renderingEngine objects
-            $.extend(renderingEnginesCollection, new RenderingEngines());
+            $.extend(renderingEnginesCollection, new $ngRndrRenderingEngines());
             $scope.renderingEnginesCollection = renderingEnginesCollection;
 
             //Singleton for controlling the UI
@@ -276,7 +268,7 @@ define(['downloadjs',
                     enabled: true,
                     resize: function(e, ui, $widget) {},
                     stop: function(e, ui, $widget) {
-                        renderingEnginesCollection.map[$widget[0].id].draw($($widget[0]).find('.gridsterWidgetContainer'), dataSources.map[renderingEnginesCollection.map[$widget[0].id].dataSourceConfigId].formattedData);
+                        renderingEnginesCollection.map[$widget[0].id].draw(dataSources.map[renderingEnginesCollection.map[$widget[0].id].dataSourceConfigId].formattedData);
                         renderingEnginesCollection.updateAllRenderingEngineTileSizeAndPosition(ui.$player.parent().parent().data('gridster').$widgets);
                     }
                 },
@@ -293,7 +285,7 @@ define(['downloadjs',
                 }
             };
 
-            $scope.exploreController = exploreController;
+            $scope.renderingEngineCollectionTabularUIController = renderingEngineCollectionTabularUIController;
 
             //Singleton for tracking all dataSources
             $scope.dataSources = dataSources;

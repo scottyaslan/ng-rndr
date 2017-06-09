@@ -1,7 +1,7 @@
 define([], function() {
     'use strict';
 
-    return function(RenderingEngine, renderingEnginesCollection, dataSources, dataSourceConfigurations, $rootScope, $window, $q) {
+    return function(renderingEnginesCollection, dataSources, dataSourceConfigurations, $rootScope, $window, $q) {
         function AcquisitionController() {}
         AcquisitionController.prototype = {
             constructor: AcquisitionController,
@@ -19,7 +19,7 @@ define([], function() {
                 acquisitionController.restClientContentView = 'HTTP Config';
             },
             save: function() {
-                var renderingEngine = renderingEnginesCollection.create("DT - Table", dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].name);
+                var renderingEngine = renderingEnginesCollection.create("DataTable - Table", dataSources.map[dataSourceConfigurations.activeDataSourceConfiguration].name);
                 //This is a flag that the tabs use in the Explore perspective to know which tab is active.
                 renderingEngine.disabled = false;
                 //This is an objet the `dashboard` uses in the Dashboard Designer perspective to know location and size of the widget.

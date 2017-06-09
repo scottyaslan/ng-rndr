@@ -11,23 +11,7 @@ define([], function() {
              * @typedef RenderingEnginesCollection
              * @type {object}
              */
-            constructor: RenderingEnginesCollection,
-            setActiveRenderingEngine: function(id) {
-                var self = this;
-                self.activeRenderingEngine = id;
-                angular.forEach(self.renderingEngines, function(renderingEngine) {
-                    renderingEngine.active = false;
-                    if (renderingEngine.id === id) {
-                        renderingEngine.active = true;
-                    }
-                });
-            },
-            updateAllRenderingEngineTileSizeAndPosition: function($widgets) {
-                var self = this;
-                angular.forEach($widgets, function($widget) {
-                    self.map[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'));
-                });
-            }
+            constructor: RenderingEnginesCollection
         };
 
         return new RenderingEnginesCollection();

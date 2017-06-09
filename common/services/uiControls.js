@@ -37,14 +37,6 @@ define([], function() {
                     escapeToClose: false
                 }).then(function(answer) {}, function() {});
             },
-            showRenderingEngineProgress: function() {
-                $("#rendererProgress").show();
-                $("#renderer").hide();
-            },
-            hideRenderingEngineProgress: function() {
-                $("#rendererProgress").hide();
-                $("#renderer").show();
-            },
             hideDialog: function() {
                 $mdDialog.hide();
             },

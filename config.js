@@ -1,25 +1,55 @@
-define(['PivotData',
-        'datatables_renderers',
-        'pivottables_renderers',
-        'c3_renderers',
-        'd3_renderers',
-        'gchart_renderers',
-        'ngRndr.templates.aggregators',
-        'ngRndr.templates.derivers',
-        'ngRndr.templates.formatters'
+define(['../ng-rndr/DataSourceConfiguration',
+        '../ng-rndr/dataSourceConfigurations',
+        '../ng-rndr/DataSource',
+        '../ng-rndr/dataSources',
+        '../ng-rndr/renderingEnginesCollection',
+        '../ng-rndr/common/controllers/controllerWrapper',
+        '../ng-rndr/common/services/uiControls',
+        '../ng-rndr/acquire/services/acquisitionController',
+        '../ng-rndr/acquire/directives/acquisitionDirective',
+        '../ng-rndr/syndicate/directives/dashboardDirective',
+        '../ng-rndr/syndicate/services/Dashboard',
+        '../ng-rndr/syndicate/directives/gridsterDirective',
+        '$ngRndrFormatters',
+        '$ngRndrSorters',
+        '$ngRndrAggregatorsTemplates',
+        '$ngRndrDeriverTemplates',
+        '$ngRndrFormatterTemplates',
+        '$ngRndrSorterTemplates',
+        '$ngRndrDerivedAttributes',
+        '$ngRndrAggregators',
+        '$ngRndrDataViews',
+        '$ngRndrRenderers',
+        '$ngRndrRenderingEngine',
+        '$ngRndrRenderingEngines'
     ],
-    function(PivotData,
-        datatables_renderers,
-        pivottables_renderers,
-        c3_renderers,
-        d3_renderers,
-        gchart_renderers,
-        aggregatorTemplates,
-        deriverTemplates,
-        formatterTemplates) {
+    function(DataSourceConfiguration,
+        dataSourceConfigurations,
+        DataSource,
+        dataSources,
+        renderingEnginesCollection,
+        controllerWrapper,
+        uiControls,
+        acquisitionController,
+        acquisitionDirective,
+        dashboardDirective,
+        Dashboard,
+        gridsterDirective,
+        $ngRndrFormatters,
+        $ngRndrSorters,
+        $ngRndrAggregatorsTemplates,
+        $ngRndrDeriverTemplates,
+        $ngRndrFormatterTemplates,
+        $ngRndrSorterTemplates,
+        $ngRndrDerivedAttributes,
+        $ngRndrAggregators,
+        $ngRndrDataViews,
+        $ngRndrRenderers,
+        $ngRndrRenderingEngine,
+        $ngRndrRenderingEngines) {
         'use strict';
 
-        return function($locationProvider, $mdThemingProvider, $provide, $ngRndrRenderersProvider, $ngRndrDataViewsProvider, $ngRndrAggregatorsProvider, $ngRndrDerivedAttributesProvider, $ngRndrFormattersProvider) {
+        var config = function($locationProvider, $mdThemingProvider, $provide) {
             $locationProvider.html5Mode(true);
             //Define app palettes
             var customBluePaletteMap = $mdThemingProvider.extendPalette("grey", {
@@ -48,11 +78,18 @@ define(['PivotData',
                 "hue-3": "600" // use for the <code>md-hue-3</code> class
             });
 
-            //Extend RenderingEngine functionality
-            $provide.decorator('$ngRndrRenderingEngine', [
-                '$delegate',
-                function renderingEngineDecorator($delegate) {
-                    $delegate.prototype.updateTile = function(size_x, size_y, col, row) {
+            var metaDecorator = function (f) {
+                return function() {
+                    var meta = f.call(this);
+                    meta.title = this.title;
+                    return meta;
+                };
+            };
+            
+            $ngRndrRenderingEngine.prototype.meta = metaDecorator($ngRndrRenderingEngine.prototype.meta)
+
+
+            $ngRndrRenderingEngine.prototype.updateTile = function(size_x, size_y, col, row) {
                         this.tile = {
                             size_x: size_x,
                             size_y: size_y,
@@ -61,7 +98,7 @@ define(['PivotData',
                         };
                     };
 
-                    $delegate.prototype.setTitle = function(title) {
+            $ngRndrRenderingEngine.prototype.setTitle = function(title) {
                         if (title === undefined || title === '' || title === null) {
                             this.title = 'Untitled';
                         } else {
@@ -69,25 +106,7 @@ define(['PivotData',
                         }
                     };
 
-                    var metaDecorator = function (f) {
-                        return function() {
-                            var meta = f.call(this);
-                            meta.title = this.title;
-                            return meta;
-                        };
-                    };
-
-                    $delegate.prototype.meta = metaDecorator($delegate.prototype.meta)
-
-                    return $delegate;
-                }
-            ]);
-
-            //Extend RenderingEngines functionality
-            $provide.decorator('$ngRndrRenderingEngines', [
-                '$delegate', '$ngRndrRenderingEngine',
-                function renderingEnginesDecorator($delegate, $ngRndrRenderingEngine) {
-                    $delegate.prototype.create = function(rendererName, title, renderingEngineId, aggregatorName, aggInputAttributeName, dataViewMeta, derivedAttributes, localeName, sorters) {
+            $ngRndrRenderingEngines.prototype.create = function(rendererName, title, renderingEngineId, aggregatorName, aggInputAttributeName, dataViewMeta, derivedAttributes, localeName, sorters) {
                         var self = this;
                         var renderingEngine = new $ngRndrRenderingEngine(rendererName, renderingEngineId, aggregatorName, aggInputAttributeName, dataViewMeta, derivedAttributes, localeName, sorters);
                         renderingEngine.setTitle(title);
@@ -101,177 +120,109 @@ define(['PivotData',
                         return renderingEngine;
                     };
 
-                    return $delegate;
-                }
-            ]);
+            $ngRndrRenderingEngines.prototype.setActiveRenderingEngine = function(id) {
+                var self = this;
+                self.activeRenderingEngine = id;
+                angular.forEach(self.map, function(renderingEngine) {
+                    renderingEngine.active = false;
+                    if (renderingEngine.id === id) {
+                        renderingEngine.active = true;
+                    }
+                });
+            };
 
-            //DataTables.net enhanced pivot tables
-            $ngRndrRenderersProvider.add("DT - Table",
-                datatables_renderers["DataTable"],
-                'PivotData', {
-                    clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -100
-                }
-            );
-            $ngRndrRenderersProvider.add("DT - Table Barchart",
-                datatables_renderers["DataTable Barchart"],
-                'PivotData', {
-                    clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -100
-                }
-            );
-            $ngRndrRenderersProvider.add("DT - Heatmap",
-                datatables_renderers["DataTable Heatmap"],
-                'PivotData', {
-                    clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -100
-                }
-            );
-            $ngRndrRenderersProvider.add("DT - Row Heatmap",
-                datatables_renderers["DataTable Row Heatmap"],
-                'PivotData', {
-                    clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -100
-                }
-            );
-            $ngRndrRenderersProvider.add("DT - Col Heatmap",
-                datatables_renderers["DataTable Col Heatmap"],
-                'PivotData', {
-                    clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
-                    heightOffset: -100
-                }
-            );
-
-            // Pivot Tables
-            $ngRndrRenderersProvider.add("Pivot Table - Table",
-                pivottables_renderers["PivotTable"],
-                'PivotData');
-            $ngRndrRenderersProvider.add("Pivot Table - Table Barchart",
-                pivottables_renderers["PivotTable Barchart"],
-                'PivotData');
-            $ngRndrRenderersProvider.add("Pivot Table - Heatmap",
-                pivottables_renderers["PivotTable Heatmap"],
-                'PivotData');
-            $ngRndrRenderersProvider.add("Pivot Table - Row Heatmap",
-                pivottables_renderers["PivotTable Row Heatmap"],
-                'PivotData');
-            $ngRndrRenderersProvider.add("Pivot Table - Col Heatmap",
-                pivottables_renderers["PivotTable Col Heatmap"],
-                'PivotData');
-
-            //C3
-            $ngRndrRenderersProvider.add("C3 - Line Chart",
-                c3_renderers["C3 - Line Chart"],
-                'PivotData');
-            $ngRndrRenderersProvider.add("C3 - Bar Chart",
-                c3_renderers["C3 - Bar Chart"],
-                'PivotData');
-            $ngRndrRenderersProvider.add("C3 - Stacked Bar Chart",
-                c3_renderers["C3 - Stacked Bar Chart"],
-                'PivotData');
-            $ngRndrRenderersProvider.add("C3 - Area Chart",
-                c3_renderers["C3 - Area Chart"],
-                'PivotData');
-            $ngRndrRenderersProvider.add("C3 - Scatter Chart",
-                c3_renderers["C3 - Scatter Chart"],
-                'PivotData');
-
-            //D3
-            $ngRndrRenderersProvider.add("D3 - Treemap",
-                d3_renderers["Treemap"],
-                'PivotData');
-
-            //Google Charts
-            $ngRndrRenderersProvider.add("Google - Line Chart",
-                gchart_renderers["Line Chart"],
-                'PivotData', {
-                    heightOffset: -23
-                }
-            );
-            $ngRndrRenderersProvider.add("Google - Bar Chart",
-                gchart_renderers["Bar Chart"],
-                'PivotData', {
-                    heightOffset: -23
-                }
-            );
-            $ngRndrRenderersProvider.add("Google - Stacked Bar Chart",
-                gchart_renderers["Stacked Bar Chart"],
-                'PivotData', {
-                    heightOffset: -23
-                }
-            );
-            $ngRndrRenderersProvider.add("Google - Area Chart",
-                gchart_renderers["Area Chart"],
-                'PivotData', {
-                    heightOffset: -23
-                }
-            );
-            $ngRndrRenderersProvider.add("Google - Scatter Chart",
-                gchart_renderers["Scatter Chart"],
-                'PivotData', {
-                    heightOffset: -23
-                }
-            );
+            $ngRndrRenderingEngines.prototype.updateAllRenderingEngineTileSizeAndPosition = function($widgets) {
+                var self = this;
+                angular.forEach($widgets, function($widget) {
+                    self.map[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'));
+                });
+            }
 
             /**
-             * Configure Data Views.
+             * Update any renderer opts.
              */
-            $ngRndrDataViewsProvider.add('PivotData', PivotData);
+
+            //DataTables.net enhanced pivot tables
+            $.extend($ngRndrRenderers["DataTable - Table"].opts, {
+                    heightOffset: -100
+                });
+            $.extend($ngRndrRenderers["DataTable - Table Barchart"].opts, {
+                    heightOffset: -100
+                });
+            $.extend($ngRndrRenderers["DataTable - Heatmap"].opts, {
+                    heightOffset: -100
+                });
+            $.extend($ngRndrRenderers["DataTable - Row Heatmap"].opts, {
+                    heightOffset: -100
+                });
+            $.extend($ngRndrRenderers["DataTable - Col Heatmap"].opts, {
+                    heightOffset: -100
+                });
+
+            //C3
+            $.extend($ngRndrRenderers["C3 - Line Chart"].opts, {
+                    heightOffset: -23
+                });
+            $.extend($ngRndrRenderers["C3 - Bar Chart"].opts, {
+                    heightOffset: -23
+                });
+            $.extend($ngRndrRenderers["C3 - Stacked Bar Chart"].opts, {
+                    heightOffset: -23
+                });
+            $.extend($ngRndrRenderers["C3 - Area Chart"].opts, {
+                    heightOffset: -23
+                });
+            $.extend($ngRndrRenderers["C3 - Scatter Chart"].opts, {
+                    heightOffset: -23
+                });
+
+            //Google Charts
+            $.extend($ngRndrRenderers["Google - Line Chart"].opts, {
+                    heightOffset: -23
+                });
+            $.extend($ngRndrRenderers["Google - Bar Chart"].opts, {
+                    heightOffset: -23
+                });
+            $.extend($ngRndrRenderers["Google - Stacked Bar Chart"].opts, {
+                    heightOffset: -23
+                });
+            $.extend($ngRndrRenderers["Google - Area Chart"].opts, {
+                    heightOffset: -23
+                });
+            $.extend($ngRndrRenderers["Google - Scatter Chart"].opts, {
+                    heightOffset: -23
+                });
+
+            /**
+             * Configure additional attributes.
+             */
+            $ngRndrDerivedAttributes.add('Max Temp (C) Bin', $ngRndrDeriverTemplates.bin('Max Temp (C)', 10));
+
+            /**
+             * Configure additional sorters.
+             */
+            $ngRndrSorters.add('month name', $ngRndrSorterTemplates.sortAs(["Jan","Feb","Mar","Apr", "May",
+                                "Jun","Jul","Aug","Sep","Oct","Nov","Dec"]));
+
+            $ngRndrSorters.add('Age', $ngRndrSorterTemplates.sortDescending);
 
             /**
              * A function for converting to a standard US formatted number.
              * 
              * @return {function} A data formatter function for converting to standard US formatted number.
              */
-            var usFmt = function() {
-                return formatterTemplates.numberFormat();
-            };
+            var frFmt = $ngRndrFormatterTemplates.numberFormat({thousandsSep:" ", decimalSep:","});
 
             /**
-             * A function for converting to a standard US formatted integer.
-             * 
-             * @return {function} A data formatter function for converting to standard US formatted integer.
+             * Configure additional formatters.
              */
-            var usFmtInt = function() {
-                return formatterTemplates.numberFormat({
-                    digitsAfterDecimal: 0
-                });
-            };
+            $ngRndrFormatters.add('FR Standard', frFmt);
 
             /**
-             * A function for converting to a standard US formatted percentage.
+             * Configure additional Aggregators
              * 
-             * @return {function} A data formatter function for converting to standard US formatted percentage.
-             */
-            var usFmtPct = function() {
-                return formatterTemplates.numberFormat({
-                    digitsAfterDecimal: 1,
-                    scaler: 100,
-                    suffix: '%'
-                });
-            };
-
-            /**
-             * Configure formatters.
-             */
-            $ngRndrFormattersProvider.add('usFmt', usFmt);
-            $ngRndrFormattersProvider.add('usFmtInt', usFmtInt);
-            $ngRndrFormattersProvider.add('usFmtPct', usFmtPct);
-
-            /**
-             * Configure Aggregators
-             * 
-             * Count - Takes as an argument an array of attribute-names and returns the US integer formatted count of the number of values observed of the given attribute for records which match the cell.
-             * Count Unique Values - Takes as an argument an array of attribute-names and returns the US integer formatted count of the number of unique values observed.
-             * List Unique Values - Takes as an argument an array of attribute-names and returns a CSV string listing of the unique values observed.
-             * Sum - Takes as an argument an array of attribute-names and returns the US floating formatted sum of the values observed.
-             * Integer Sum - Takes as an argument an array of attribute-names and returns the US integer formatted sum of the values observed.
-             * Average - Takes as an argument an array of attribute-names and returns the US floating formatted average of the values observed.
-             * Minimum - Takes as an argument an array of attribute-names and returns the US floating formatted minimum value of the unique values observed.
-             * Maximum - Takes as an argument an array of attribute-names and returns the US floating formatted maximum value of the unique values observed.
-             * Sum over Sum - Takes as an argument an array of attribute-names and returns the US floating formatted quotient of the values observed.
-             * 80% Upper Bound - Takes as an argument an array of attribute-names and returns the US floating formatted quotient "upper" 80% bound of the values observed.
-             * 80% Lower Bound - Takes as an argument an array of attribute-names and returns the US floating formatted quotient "lower" 80% bound of the values observed.
+             * FR Sum - Takes as an argument an array of attribute-names and returns the FR standard floating formatted sum of the values observed.
+             * FR Average - Takes as an argument an array of attribute-names and returns the FR standard floating formatted average of the values observed.
              * Sum as Fraction of Total - Takes as an argument an array of attribute-names and returns the US percentage formatted quotiant of the sum of the values observed to the 'total'.
              * Sum as Fraction of Rows - Takes as an argument an array of attribute-names and returns the US percentage formatted quotiant of the sum of the values observed to the 'row'.
              * Sum as Fraction of Columns - Takes as an argument an array of attribute-names and returns the US percentage formatted quotiant of the sum of the values observed to the 'col'.
@@ -279,22 +230,15 @@ define(['PivotData',
              * Count as Fraction of Rows - Takes as an argument an array of attribute-names and returns the US percentage formatted quotiant of the count of the values observed to the 'row'.
              * Count as Fraction of Columns - Takes as an argument an array of attribute-names and returns the US percentage formatted quotiant of the count of the values observed to the 'col'.
              */
-            $ngRndrAggregatorsProvider.add('Count', aggregatorTemplates.count(usFmtInt()));
-            $ngRndrAggregatorsProvider.add('Count Unique Values', aggregatorTemplates.countUnique(usFmtInt()));
-            $ngRndrAggregatorsProvider.add('List Unique Values', aggregatorTemplates.listUnique(', '));
-            $ngRndrAggregatorsProvider.add('Sum', aggregatorTemplates.sum(usFmt()));
-            $ngRndrAggregatorsProvider.add('Integer Sum', aggregatorTemplates.sum(usFmtInt()));
-            $ngRndrAggregatorsProvider.add('Average', aggregatorTemplates.average(usFmt()));
-            $ngRndrAggregatorsProvider.add('Minimum', aggregatorTemplates.min(usFmt()));
-            $ngRndrAggregatorsProvider.add('Maximum', aggregatorTemplates.max(usFmt()));
-            $ngRndrAggregatorsProvider.add('Sum over Sum', aggregatorTemplates.sumOverSum(usFmt()));
-            $ngRndrAggregatorsProvider.add('80% Upper Bound', aggregatorTemplates.sumOverSumBound80(true, usFmt()));
-            $ngRndrAggregatorsProvider.add('80% Lower Bound', aggregatorTemplates.sumOverSumBound80(false, usFmt()));
-            $ngRndrAggregatorsProvider.add('Sum as Fraction of Total', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(usFmt()), 'total', usFmtPct()));
-            $ngRndrAggregatorsProvider.add('Sum as Fraction of Rows', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(usFmt()), 'row', usFmtPct()));
-            $ngRndrAggregatorsProvider.add('Sum as Fraction of Columns', aggregatorTemplates.fractionOf(aggregatorTemplates.sum(usFmt()), 'col', usFmtPct()));
-            $ngRndrAggregatorsProvider.add('Count as Fraction of Total', aggregatorTemplates.fractionOf(aggregatorTemplates.count(usFmtInt()), 'total', usFmtPct()));
-            $ngRndrAggregatorsProvider.add('Count as Fraction of Rows', aggregatorTemplates.fractionOf(aggregatorTemplates.count(usFmtInt()), 'row', usFmtPct()));
-            $ngRndrAggregatorsProvider.add('Count as Fraction of Columns', aggregatorTemplates.fractionOf(aggregatorTemplates.count(usFmtInt()), 'col', usFmtPct()));
-        }
+            $ngRndrAggregators.add('FR Sum', $ngRndrAggregatorsTemplates.sum($ngRndrFormatters['FR Standard']));
+            $ngRndrAggregators.add('FR Average', $ngRndrAggregatorsTemplates.average($ngRndrFormatters['FR Standard']));
+            $ngRndrAggregators.add('Sum as Fraction of Total', $ngRndrAggregatorsTemplates.fractionOf($ngRndrAggregatorsTemplates.sum($ngRndrFormatters['US Standard']), 'total', $ngRndrFormatters['US Standard Percentage']));
+            $ngRndrAggregators.add('Sum as Fraction of Rows', $ngRndrAggregatorsTemplates.fractionOf($ngRndrAggregatorsTemplates.sum($ngRndrFormatters['US Standard']), 'row', $ngRndrFormatters['US Standard Percentage']));
+            $ngRndrAggregators.add('Sum as Fraction of Columns', $ngRndrAggregatorsTemplates.fractionOf($ngRndrAggregatorsTemplates.sum($ngRndrFormatters['US Standard']), 'col', $ngRndrFormatters['US Standard Percentage']));
+            $ngRndrAggregators.add('Count as Fraction of Total', $ngRndrAggregatorsTemplates.fractionOf($ngRndrAggregatorsTemplates.count($ngRndrFormatters['US Standard Integer']), 'total', $ngRndrFormatters['US Standard Percentage']));
+            $ngRndrAggregators.add('Count as Fraction of Rows', $ngRndrAggregatorsTemplates.fractionOf($ngRndrAggregatorsTemplates.count($ngRndrFormatters['US Standard Integer']), 'row', $ngRndrFormatters['US Standard Percentage']));
+            $ngRndrAggregators.add('Count as Fraction of Columns', $ngRndrAggregatorsTemplates.fractionOf($ngRndrAggregatorsTemplates.count($ngRndrFormatters['US Standard Integer']), 'col', $ngRndrFormatters['US Standard Percentage']));
+        };
+
+        return config;
     });

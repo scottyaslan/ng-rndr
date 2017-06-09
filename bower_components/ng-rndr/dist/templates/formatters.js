@@ -6,15 +6,15 @@
         root.ngRndr.templates = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define([], function() {
-            return (root.ngRndr.templates.formatters = factory());
+        define('$ngRndrFormatterTemplates', ['jquery'], function($) {
+            return (root.ngRndr.templates.formatters = factory($));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.templates.formatters = factory());
+        module.exports = (root.ngRndr.templates.formatters = factory(require('jquery')));
     } else {
-        root.ngRndr.templates.formatters = factory();
+        root.ngRndr.templates.formatters = factory(root.$);
     }
-}(this, function() {
+}(this, function($) {
     /**
      * Adds thousands and decimal seperators to a number string.
      * 

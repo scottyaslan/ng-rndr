@@ -1,13 +1,13 @@
-define([], function() {
+define(['$ngRndrAggregators'], function($ngRndrAggregators) {
     'use strict';
 
-    return function($scope, uiControls, dataSources, dataSourceConfigurations, acquisitionController, exploreController, renderingEnginesCollection, aggregators) {
+    return function($scope, uiControls, dataSources, dataSourceConfigurations, acquisitionController, renderingEngineCollectionTabularUIController, renderingEnginesCollection) {
         $scope.uiControls = uiControls;
         $scope.dataSources = dataSources;
         $scope.dataSourceConfigurations = dataSourceConfigurations;
         $scope.acquisitionController = acquisitionController;
-        $scope.exploreController = exploreController;
+        $scope.renderingEngineCollectionTabularUIController = renderingEngineCollectionTabularUIController;
         $scope.renderingEnginesCollection = renderingEnginesCollection;
-        $scope.aggregators = aggregators;
+        $scope.aggregators = $ngRndrAggregators;
     }
 });
