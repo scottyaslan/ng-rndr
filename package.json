@@ -1,6 +1,6 @@
 {
   "name": "ng-rndr",
-  "version": "0.0.1-RC.5",
+  "version": "0.0.1-RC.6",
   "license": "MIT",
   "description": "ng-rndr is a pluggable and embeddable angular module for visualizing data.",
   "author": {
