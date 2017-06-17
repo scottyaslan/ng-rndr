@@ -1,25 +1,24 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrRenderers', [], function() {
-            return (root.ngRndr.plugins.renderers = factory());
+        define('$rndrRenderers', [], function() {
+            return (root.rndr.plugins.renderers = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.renderers = factory());
+        module.exports = (root.rndr.plugins.renderers = factory());
     } else {
-        root.ngRndr.plugins.renderers = factory();
+        root.rndr.plugins.renderers = factory();
     }
 }(this, function() {
     /**
      * A dictionary of renderer functions.
      */
-    function Renderers() {
-    }
+    function Renderers() {}
     Renderers.prototype = {
         constructor: Renderers,
         /**
@@ -49,6 +48,6 @@
         }
     };
 
-    var $ngRndrRenderers = new Renderers();
-    return $ngRndrRenderers;
+    var $rndrRenderers = new Renderers();
+    return $rndrRenderers;
 }));

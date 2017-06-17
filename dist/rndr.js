@@ -1,14 +1,14 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-  	define(['jquery', 'angular', '$ngRndrFormatters', '$ngRndrSorters', '$ngRndrDerivedAttributes', '$ngRndrAggregators', '$ngRndrDataViews', '$ngRndrRenderers'], function($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers) {
-            factory($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers);
+  	define(['jquery', 'angular', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+            factory($, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers);
         });
   } else if (typeof exports === 'object' && typeof module === 'object') {
-    module.exports = factory(require('jquery'), require('angular'), root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes, root.ngRndr.plugins.aggregators, root.ngRndr.plugins.dataViews, root.ngRndr.plugins.renderers);
+    module.exports = factory(require('jquery'), require('angular'), root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
   } else {
-    factory(root.$, root.angular, root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes, root.ngRndr.plugins.aggregators, root.ngRndr.plugins.dataViews, root.ngRndr.plugins.renderers);
+    factory(root.$, root.angular, root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
   }
-}(this, function ($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers) {/**
+}(this, function ($, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {/**
  * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
  * Released under MIT license, http://github.com/requirejs/almond/LICENSE
  */
@@ -582,8 +582,8 @@ define('renderers/angular/pivot-data/services/pivot-data-ui-dialog-controller-se
     };
 });
 
-define('renderers/angular/pivot-data/controllers/pivot-data-ui-controller',['$ngRndrRenderers'],
-    function($ngRndrRenderers) {
+define('renderers/angular/pivot-data/controllers/pivot-data-ui-controller',['$rndrRenderers'],
+    function($rndrRenderers) {
         'use strict';
 
         return function(exploreController, dialogControllerService, $scope) {
@@ -597,7 +597,7 @@ define('renderers/angular/pivot-data/controllers/pivot-data-ui-controller',['$ng
                 }
             };
             
-            $scope.renderers = $ngRndrRenderers;
+            $scope.renderers = $rndrRenderers;
             $scope.dialogControllerService = dialogControllerService;
             $scope.exploreController = exploreController;
 
@@ -606,17 +606,17 @@ define('renderers/angular/pivot-data/controllers/pivot-data-ui-controller',['$ng
         };
     });
 
-define('renderers/angular/pivot-data/controllers/pivot-data-ui-dialog-controller',['$ngRndrAggregators'], function($ngRndrAggregators) {
+define('renderers/angular/pivot-data/controllers/pivot-data-ui-dialog-controller',['$rndrAggregators'], function($rndrAggregators) {
     'use strict';
 
     return function($scope, dialogControllerService, exploreController) {
         $scope.dialogControllerService = dialogControllerService;
         $scope.exploreController = exploreController;
-        $scope.aggregators = $ngRndrAggregators;
+        $scope.aggregators = $rndrAggregators;
     };
 });
 
-define('ng-rndr',['renderers/angular/pivot-data/directives/rndr',
+define('rndr',['renderers/angular/pivot-data/directives/rndr',
         'renderers/angular/pivot-data/directives/pivot-data-ui-directive',
         'renderers/angular/pivot-data/services/pivot-data-ui-explore-controller',
         'renderers/angular/pivot-data/services/pivot-data-ui-dialog-controller-service',
@@ -631,7 +631,7 @@ define('ng-rndr',['renderers/angular/pivot-data/directives/rndr',
         pivotDataUIDialogController) {
 
         // Create module
-        var app = angular.module('ngRndr', []);
+        var app = angular.module('ngPivotData', []);
 
         // Annotate module dependencies
         rndr.$inject = [];
@@ -658,63 +658,63 @@ define('ng-rndr',['renderers/angular/pivot-data/directives/rndr',
     });
 
 	
-	// Define a 'jquery' model to allow ng-rndr to support a user configured jquery version.
+	// Define a 'jquery' model to allow rndr to support a user configured jquery version.
 	define('jquery', [], function() {
         'use strict';
 
         return $;
     });
 
-    // Define an 'angular' model to allow ng-rndr to support a user configured angular version.
+    // Define an 'angular' model to allow rndr to support a user configured angular version.
     define('angular', [], function() {
         'use strict';
 
         return angular;
     });
 
-    // Define an '$ngRndrFormatters' model to allow ng-rndr to support a user configured formatters module.
-    define('$ngRndrFormatters', [], function() {
+    // Define an '$rndrFormatters' model to allow rndr to support a user configured formatters module.
+    define('$rndrFormatters', [], function() {
         'use strict';
 
-        return $ngRndrFormatters;
+        return $rndrFormatters;
     });
 
-    // Define an '$ngRndrSorters' model to allow ng-rndr to support a user configured sorters module.
-    define('$ngRndrSorters', [], function() {
+    // Define an '$rndrSorters' model to allow rndr to support a user configured sorters module.
+    define('$rndrSorters', [], function() {
         'use strict';
 
-        return $ngRndrSorters;
+        return $rndrSorters;
     });
 
-    // Define an '$ngRndrDerivedAttributes' model to allow ng-rndr to support a user configured derived attributes module.
-    define('$ngRndrDerivedAttributes', [], function() {
+    // Define an '$rndrDerivedAttributes' model to allow rndr to support a user configured derived attributes module.
+    define('$rndrDerivedAttributes', [], function() {
         'use strict';
 
-        return $ngRndrDerivedAttributes;
+        return $rndrDerivedAttributes;
     });
 
-    // Define an '$ngRndrAggregators' model to allow ng-rndr to support a user configured aggregators module.
-    define('$ngRndrAggregators', [], function() {
+    // Define an '$rndrAggregators' model to allow rndr to support a user configured aggregators module.
+    define('$rndrAggregators', [], function() {
         'use strict';
 
-        return $ngRndrAggregators;
+        return $rndrAggregators;
     });
 
-    // Define an '$ngRndrDataViews' model to allow ng-rndr to support a user configured data views module.
-    define('$ngRndrDataViews', [], function() {
+    // Define an '$rndrDataViews' model to allow rndr to support a user configured data views module.
+    define('$rndrDataViews', [], function() {
         'use strict';
 
-        return $ngRndrDataViews;
+        return $rndrDataViews;
     })
 
-    // Define an '$ngRndrRenderers' model to allow ng-rndr to support a user configured renderers module.
-    define('$ngRndrRenderers', [], function() {
+    // Define an '$rndrRenderers' model to allow rndr to support a user configured renderers module.
+    define('$rndrRenderers', [], function() {
         'use strict';
 
-        return $ngRndrRenderers;
+        return $rndrRenderers;
     });
 
 	// Use almond's special top level synchronous require to trigger factory
 	// functions, get the final module, and export it as the public api.
-	return require('ng-rndr');
+	return require('rndr');
 }));

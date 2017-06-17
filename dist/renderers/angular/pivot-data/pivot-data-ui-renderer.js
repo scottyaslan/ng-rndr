@@ -1,64 +1,64 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
-    if (root.ngRndr.plugins.pivotData === undefined) {
-        root.ngRndr.plugins.pivotData = {};
+    if (root.rndr.plugins.pivotData === undefined) {
+        root.rndr.plugins.pivotData = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers === undefined) {
-        root.ngRndr.plugins.pivotData.renderers = {};
+    if (root.rndr.plugins.pivotData.renderers === undefined) {
+        root.rndr.plugins.pivotData.renderers = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers.pivotDataUi === undefined) {
-        root.ngRndr.plugins.pivotData.renderers.pivotDataUi = {};
+    if (root.rndr.plugins.pivotData.renderers.pivotDataUi === undefined) {
+        root.rndr.plugins.pivotData.renderers.pivotDataUi = {};
     }
     if (typeof define === 'function' && define.amd) {
         define(['jquery',
             'angular',
-            '$ngRndrAggregators',
-            '$ngRndrDataViews',
-            '$ngRndrRenderers',
-            '$ngRndrRenderingEngine'
+            '$rndrAggregators',
+            '$rndrDataViews',
+            '$rndrRenderers',
+            '$rndrRenderingEngine'
         ], function($,
             angular,
-            $ngRndrAggregators,
-            $ngRndrDataViews,
-            $ngRndrRenderers,
-            $ngRndrRenderingEngine) {
+            $rndrAggregators,
+            $rndrDataViews,
+            $rndrRenderers,
+            $rndrRenderingEngine) {
             return factory(root,
                 $,
                 angular,
-                $ngRndrAggregators,
-                $ngRndrDataViews,
-                $ngRndrRenderers,
-                $ngRndrRenderingEngine);
+                $rndrAggregators,
+                $rndrDataViews,
+                $rndrRenderers,
+                $rndrRenderingEngine);
         });
     } else if (typeof module === 'object' && module.exports) {
         module.exports = factory(root,
             require('jquery'),
             require('angular'),
-            require('$ngRndrAggregators'),
-            require('$ngRndrDataViews'),
-            require('$ngRndrRenderers'),
-            require('$ngRndrRenderingEngine'));
+            require('$rndrAggregators'),
+            require('$rndrDataViews'),
+            require('$rndrRenderers'),
+            require('$rndrRenderingEngine'));
     } else {
         factory(root,
             root.$,
             root.angular,
-            root.ngRndr.plugins.aggregators,
-            root.ngRndr.plugins.dataViews,
-            root.ngRndr.plugins.renderers,
-            root.ngRndr.RenderingEngine);
+            root.rndr.plugins.aggregators,
+            root.rndr.plugins.dataViews,
+            root.rndr.plugins.renderers,
+            root.rndr.RenderingEngine);
     }
 }(this, function(root,
     $,
     angular,
-    $ngRndrAggregators,
-    $ngRndrDataViews,
-    $ngRndrRenderers,
-    $ngRndrRenderingEngine) {
+    $rndrAggregators,
+    $rndrDataViews,
+    $rndrRenderers,
+    $rndrRenderingEngine) {
     var pivotDataUiRenderer = {
         'PivotData UI': function(renderingEngine, opts) {
             /**
@@ -104,7 +104,7 @@
             };
             opts = $.extend(true, defaults, opts);
 
-            var app = angular.module(uuid + 'App', ['ngResource', 'ngRoute', 'ngMaterial', 'ui.sortable', 'ngRndr', 'ngRndrTemplates']);
+            var app = angular.module(uuid + 'App', ['ngResource', 'ngRoute', 'ngMaterial', 'ui.sortable', 'ngPivotData', 'ngPivotDataTemplates']);
 
             var pivotDataUIConfig = function($mdThemingProvider) {
                 //Define app palettes
@@ -178,56 +178,6 @@
                 }).warnPalette("warnPalette", {
                     "default": "500"
                 });
-
-                // var dataViewName = opts.renderers[renderingEngine.renderer].dataViewName;
-
-                //load configured DataViews
-                // $.each(opts.dataViews.list(), function(index, dataViewName) {
-                //     $ngRndrDataViews.add(dataViewName,
-                //         opts.dataViews[dataViewName].view,
-                //         opts.dataViews[dataViewName].opts
-                //     );
-                // });
-
-                //load configured renderers
-                // $.each(opts.renderers.list(), function(index, rendererName) {
-                //     if ((rendererName !== renderingEngine.renderer) &&
-                //         (opts.renderers[rendererName].dataViewName === dataViewName)) {
-                //         $ngRndrRenderers.add(rendererName,
-                //             opts.renderers[rendererName].render,
-                //             opts.renderers[rendererName].dataViewName,
-                //             opts.renderers[rendererName].opts
-                //         );
-                //     }
-                // });
-
-                //load configured formatters
-                // $.each(opts.formatters.list(), function(index, formatterName) {
-                //     $ngRndrFormattersProvider.add(formatterName,
-                //         opts.formatters[formatterName]
-                //     );
-                // });
-
-                //load configured sorters.
-                // $.each(opts.sorters.list(), function(index, sorterName) {
-                //     $ngRndrSortersProvider.add(sorterName,
-                //         opts.sorters[sorterName]
-                //     );
-                // });
-
-                //load configured attributes.
-                // $.each(opts.derivedAttributes.list(), function(index, derivedAttributeName) {
-                //     $ngRndrDerivedAttributesProvider.add(derivedAttributeName,
-                //         opts.derivedAttributes[derivedAttributeName]
-                //     );
-                // });
-
-                //load configured aggregators.
-                // $.each(opts.aggregators.list(), function(index, aggregatorName) {
-                //     $ngRndrAggregators.add(aggregatorName,
-                //         opts.aggregators[aggregatorName].aggregate
-                //     );
-                // });
             };
 
             pivotDataUIConfig.$inject = ['$mdThemingProvider'];
@@ -255,7 +205,7 @@
             }
 
             //create embedded rendering engine from original to control the display of the data within this plugin 
-            var embeddedRenderingEngine = new $ngRndrRenderingEngine(renderingEngine.dataView.meta.renderer, renderingEngine.id, renderingEngine.aggregator.name, renderingEngine.aggregator.aggInputAttributeName, renderingEngine.dataView.meta, renderingEngine.derivedAttributes, renderingEngine.locale, renderingEngine.sorters, null, renderingEngine.dataView.data);
+            var embeddedRenderingEngine = new $rndrRenderingEngine(renderingEngine.dataView.meta.renderer, renderingEngine.id, renderingEngine.aggregator.name, renderingEngine.aggregator.aggInputAttributeName, renderingEngine.dataView.meta, renderingEngine.derivedAttributes, renderingEngine.locale, renderingEngine.sorters, null, renderingEngine.dataView.data);
 
             var pivotDataUIExploreController = injector.get('pivotDataUIExploreController');
             pivotDataUIExploreController.init(renderingEngine, embeddedRenderingEngine);
@@ -270,7 +220,7 @@
         }
     };
 
-    root.ngRndr.plugins.pivotData.renderers.pivotDataUi.ux = $ngRndrRenderers.add('PivotData UI',
+    root.rndr.plugins.pivotData.renderers.pivotDataUi.ux = $rndrRenderers.add('PivotData UI',
         pivotDataUiRenderer['PivotData UI'],
         'PivotData', {
             renderer: 'Pivot Table - Table'

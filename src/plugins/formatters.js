@@ -1,27 +1,27 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrFormatters', ['$ngRndrFormatterTemplates'], function($ngRndrFormatterTemplates) {
-            return (root.ngRndr.plugins.formatters = factory($ngRndrFormatterTemplates));
+        define('$rndrFormatters', ['$rndrFormatterTemplates'], function($rndrFormatterTemplates) {
+            return (root.rndr.plugins.formatters = factory($rndrFormatterTemplates));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.formatters = factory(require('$ngRndrFormatterTemplates')));
+        module.exports = (root.rndr.plugins.formatters = factory(require('$rndrFormatterTemplates')));
     } else {
-        root.ngRndr.plugins.formatters = factory(root.ngRndr.templates.formatters);
+        root.rndr.plugins.formatters = factory(root.rndr.templates.formatters);
     }
-}(this, function($ngRndrFormatterTemplates) {
+}(this, function($rndrFormatterTemplates) {
     /**
      * A function for formatting a number into a standard US formatted number.
      * 
      * @return {function} A data formatter function for converting to standard US formatted number.
      */
     var usFmt = function() {
-        return $ngRndrFormatterTemplates.numberFormat();
+        return $rndrFormatterTemplates.numberFormat();
     };
 
     /**
@@ -30,7 +30,7 @@
      * @return {function} A data formatter function for converting to standard US formatted integer.
      */
     var usFmtInt = function() {
-        return $ngRndrFormatterTemplates.numberFormat({
+        return $rndrFormatterTemplates.numberFormat({
             digitsAfterDecimal: 0
         });
     };
@@ -41,7 +41,7 @@
      * @return {function} A data formatter function for converting to standard US formatted percentage.
      */
     var usFmtPct = function() {
-        return $ngRndrFormatterTemplates.numberFormat({
+        return $rndrFormatterTemplates.numberFormat({
             digitsAfterDecimal: 1,
             scaler: 100,
             suffix: '%'
@@ -70,11 +70,11 @@
         }
     };
 
-    var $ngRndrFormatters = new Formatters();
+    var $rndrFormatters = new Formatters();
 
-    $ngRndrFormatters.add('US Standard', usFmt());
-    $ngRndrFormatters.add('US Standard Integer', usFmtInt());
-    $ngRndrFormatters.add('US Standard Percentage', usFmtPct());
+    $rndrFormatters.add('US Standard', usFmt());
+    $rndrFormatters.add('US Standard Integer', usFmtInt());
+    $rndrFormatters.add('US Standard Percentage', usFmtPct());
 
-    return $ngRndrFormatters;
+    return $rndrFormatters;
 }));

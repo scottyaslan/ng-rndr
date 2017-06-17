@@ -1,35 +1,35 @@
 /**
  * The `PivotData` Object factory
  * 
- * The `PivotData` is one type of `dataView` object factory that ships with ng-rndr 
+ * The `PivotData` is one type of `dataView` object factory that ships with rndr 
  * and may be passed into any `PivotData` compatable `renderer` plugin. It 
  * essentially wraps a tree of aggregator objects and provides some accessors to list 
  * all the `rowKey` and `colKey` values in the tree, and some other information useful 
  * to generate views of data.
  */
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
-    if (root.ngRndr.plugins.pivotData === undefined) {
-        root.ngRndr.plugins.pivotData = {};
+    if (root.rndr.plugins.pivotData === undefined) {
+        root.rndr.plugins.pivotData = {};
     }
-    if (root.ngRndr.plugins.pivotData.dataView === undefined) {
-        root.ngRndr.plugins.pivotData.dataView = {};
+    if (root.rndr.plugins.pivotData.dataView === undefined) {
+        root.rndr.plugins.pivotData.dataView = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', '$ngRndrDataViews'], function($, $ngRndrDataViews) {
-            return (root.ngRndr.plugins.pivotData.dataView = factory($, $ngRndrDataViews));
+        define(['jquery', '$rndrDataViews'], function($, $rndrDataViews) {
+            return (root.rndr.plugins.pivotData.dataView = factory($, $rndrDataViews));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.pivotData.dataView = factory(require('jquery'), require('$ngRndrDataViews')));
+        module.exports = (root.rndr.plugins.pivotData.dataView = factory(require('jquery'), require('$rndrDataViews')));
     } else {
-        root.ngRndr.plugins.pivotData.dataView = factory(root.$, root.ngRndr.plugins.dataViews);
+        root.rndr.plugins.pivotData.dataView = factory(root.$, root.rndr.plugins.dataViews);
     }
-}(this, function($, $ngRndrDataViews) {
+}(this, function($, $rndrDataViews) {
     var naturalSort = function(as, bs) {
         var a, a1, b, b1, rd, rx, rz;
         rx = /(\d+)|(\D+)/g;
@@ -387,5 +387,5 @@
         }
     };
 
-    return $ngRndrDataViews.add('PivotData', PivotData);
+    return $rndrDataViews.add('PivotData', PivotData);
 }));

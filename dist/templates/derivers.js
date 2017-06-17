@@ -1,18 +1,18 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.templates === undefined) {
-        root.ngRndr.templates = {};
+    if (root.rndr.templates === undefined) {
+        root.rndr.templates = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrDeriverTemplates', [], function() {
-            return (root.ngRndr.templates.derivers = factory());
+        define('$rndrDeriverTemplates', [], function() {
+            return (root.rndr.templates.derivers = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.templates.derivers = factory());
+        module.exports = (root.rndr.templates.derivers = factory());
     } else {
-        root.ngRndr.templates.derivers = factory();
+        root.rndr.templates.derivers = factory();
     }
 }(this, function() {
     /**

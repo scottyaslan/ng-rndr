@@ -1,29 +1,29 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
-    if (root.ngRndr.plugins.pivotData === undefined) {
-        root.ngRndr.plugins.pivotData = {};
+    if (root.rndr.plugins.pivotData === undefined) {
+        root.rndr.plugins.pivotData = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers === undefined) {
-        root.ngRndr.plugins.pivotData.renderers = {};
+    if (root.rndr.plugins.pivotData.renderers === undefined) {
+        root.rndr.plugins.pivotData.renderers = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers.pivottables === undefined) {
-        root.ngRndr.plugins.pivotData.renderers.pivottables = {};
+    if (root.rndr.plugins.pivotData.renderers.pivottables === undefined) {
+        root.rndr.plugins.pivotData.renderers.pivottables = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', '$ngRndrRenderers'], function($, $ngRndrRenderers) {
-            return factory(root, $, $ngRndrRenderers);
+        define(['jquery', '$rndrRenderers'], function($, $rndrRenderers) {
+            return factory(root, $, $rndrRenderers);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('$ngRndrRenderers'));
+        module.exports = factory(root, require('jquery'), require('$rndrRenderers'));
     } else {
-        factory(root, root.$, root.ngRndr.plugins.renderers);
+        factory(root, root.$, root.rndr.plugins.renderers);
     }
-}(this, function(root, $, $ngRndrRenderers) {
+}(this, function(root, $, $rndrRenderers) {
     var pivottable = function(renderingEngine, opts) {
         var aggregator, c, colAttrs, colKey, colKeys, defaults, i, j, r, result, rowAttrs, rowKey, rowKeys, spanSize, tbody, td, tfoot, th, thead, totalAggregator, tr, txt, val, x;
         defaults = {
@@ -383,31 +383,31 @@
         }
     };
 
-    root.ngRndr.plugins.pivotData.renderers.pivottables.table = $ngRndrRenderers.add('Pivot Table - Table',
+    root.rndr.plugins.pivotData.renderers.pivottables.table = $rndrRenderers.add('Pivot Table - Table',
         pivotTableRenderers['Pivot Table - Table'],
         'PivotData', {
             heightOffset: 0
         });
 
-    root.ngRndr.plugins.pivotData.renderers.pivottables.tablebar = $ngRndrRenderers.add('Pivot Table - Table Barchart',
+    root.rndr.plugins.pivotData.renderers.pivottables.tablebar = $rndrRenderers.add('Pivot Table - Table Barchart',
         pivotTableRenderers['Pivot Table - Table Barchart'],
         'PivotData', {
             heightOffset: 0
         });
 
-    root.ngRndr.plugins.pivotData.renderers.pivottables.tableheat = $ngRndrRenderers.add('Pivot Table - Heatmap',
+    root.rndr.plugins.pivotData.renderers.pivottables.tableheat = $rndrRenderers.add('Pivot Table - Heatmap',
         pivotTableRenderers['Pivot Table - Heatmap'],
         'PivotData', {
             heightOffset: 0
         });
 
-    root.ngRndr.plugins.pivotData.renderers.pivottables.tablerowheat = $ngRndrRenderers.add('Pivot Table - Row Heatmap',
+    root.rndr.plugins.pivotData.renderers.pivottables.tablerowheat = $rndrRenderers.add('Pivot Table - Row Heatmap',
         pivotTableRenderers['Pivot Table - Row Heatmap'],
         'PivotData', {
             heightOffset: 0
         });
 
-    root.ngRndr.plugins.pivotData.renderers.pivottables.tablecolheat = $ngRndrRenderers.add('Pivot Table - Col Heatmap',
+    root.rndr.plugins.pivotData.renderers.pivottables.tablecolheat = $rndrRenderers.add('Pivot Table - Col Heatmap',
         pivotTableRenderers['Pivot Table - Col Heatmap'],
         'PivotData', {
             heightOffset: 0

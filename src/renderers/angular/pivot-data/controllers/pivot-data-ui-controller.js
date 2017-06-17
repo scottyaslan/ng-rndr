@@ -1,5 +1,5 @@
-define(['$ngRndrRenderers'],
-    function($ngRndrRenderers) {
+define(['$rndrRenderers'],
+    function($rndrRenderers) {
         'use strict';
 
         return function(exploreController, dialogControllerService, $scope) {
@@ -13,7 +13,7 @@ define(['$ngRndrRenderers'],
                 }
             };
             
-            $scope.renderers = $ngRndrRenderers;
+            $scope.renderers = $rndrRenderers;
             $scope.dialogControllerService = dialogControllerService;
             $scope.exploreController = exploreController;
 

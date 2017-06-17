@@ -1,20 +1,20 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrAggregators', ['$ngRndrAggregatorsTemplates', '$ngRndrFormatters'], function($ngRndrAggregatorsTemplates, $ngRndrFormatters) {
-            return (root.ngRndr.plugins.aggregators = factory($ngRndrAggregatorsTemplates, $ngRndrFormatters));
+        define('$rndrAggregators', ['$rndrAggregatorsTemplates', '$rndrFormatters'], function($rndrAggregatorsTemplates, $rndrFormatters) {
+            return (root.rndr.plugins.aggregators = factory($rndrAggregatorsTemplates, $rndrFormatters));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.aggregators = factory(require('$ngRndrAggregatorsTemplates'), require('$ngRndrFormatters')));
+        module.exports = (root.rndr.plugins.aggregators = factory(require('$rndrAggregatorsTemplates'), require('$rndrFormatters')));
     } else {
-        root.ngRndr.plugins.aggregators = factory(root.ngRndr.templates.aggregators, root.ngRndr.plugins.formatters);
+        root.rndr.plugins.aggregators = factory(root.rndr.templates.aggregators, root.rndr.plugins.formatters);
     }
-}(this, function($ngRndrAggregatorsTemplates, $ngRndrFormatters) {
+}(this, function($rndrAggregatorsTemplates, $rndrFormatters) {
     /**
      * A dictionary of functions which *generate* a function that defines how data
      * is aggregated. Each `aggregator` should take as an argument an array of 
@@ -45,7 +45,7 @@
         }
     };
 
-    var $ngRndrAggregators = new Aggregators();
+    var $rndrAggregators = new Aggregators();
 
     /**
      * Configure Aggregators
@@ -62,17 +62,17 @@
      * 80% Upper Bound - Takes as an argument an array of attribute-names and returns the US floating formatted quotient "upper" 80% bound of the values observed.
      * 80% Lower Bound - Takes as an argument an array of attribute-names and returns the US floating formatted quotient "lower" 80% bound of the values observed.
      */
-    $ngRndrAggregators.add('Count', $ngRndrAggregatorsTemplates.count($ngRndrFormatters['US Standard Integer']));
-    $ngRndrAggregators.add('Count Unique Values', $ngRndrAggregatorsTemplates.countUnique($ngRndrFormatters['US Standard Integer']));
-    $ngRndrAggregators.add('List Unique Values', $ngRndrAggregatorsTemplates.listUnique(', '));
-    $ngRndrAggregators.add('Sum', $ngRndrAggregatorsTemplates.sum($ngRndrFormatters['US Standard']));
-    $ngRndrAggregators.add('Integer Sum', $ngRndrAggregatorsTemplates.sum($ngRndrFormatters['US Standard Integer']));
-    $ngRndrAggregators.add('Average', $ngRndrAggregatorsTemplates.average($ngRndrFormatters['US Standard']));
-    $ngRndrAggregators.add('Minimum', $ngRndrAggregatorsTemplates.min($ngRndrFormatters['US Standard']));
-    $ngRndrAggregators.add('Maximum', $ngRndrAggregatorsTemplates.max($ngRndrFormatters['US Standard']));
-    $ngRndrAggregators.add('Sum over Sum', $ngRndrAggregatorsTemplates.sumOverSum($ngRndrFormatters['US Standard']));
-    $ngRndrAggregators.add('80% Upper Bound', $ngRndrAggregatorsTemplates.sumOverSumBound80(true, $ngRndrFormatters['US Standard']));
-    $ngRndrAggregators.add('80% Lower Bound', $ngRndrAggregatorsTemplates.sumOverSumBound80(false, $ngRndrFormatters['US Standard']));
+    $rndrAggregators.add('Count', $rndrAggregatorsTemplates.count($rndrFormatters['US Standard Integer']));
+    $rndrAggregators.add('Count Unique Values', $rndrAggregatorsTemplates.countUnique($rndrFormatters['US Standard Integer']));
+    $rndrAggregators.add('List Unique Values', $rndrAggregatorsTemplates.listUnique(', '));
+    $rndrAggregators.add('Sum', $rndrAggregatorsTemplates.sum($rndrFormatters['US Standard']));
+    $rndrAggregators.add('Integer Sum', $rndrAggregatorsTemplates.sum($rndrFormatters['US Standard Integer']));
+    $rndrAggregators.add('Average', $rndrAggregatorsTemplates.average($rndrFormatters['US Standard']));
+    $rndrAggregators.add('Minimum', $rndrAggregatorsTemplates.min($rndrFormatters['US Standard']));
+    $rndrAggregators.add('Maximum', $rndrAggregatorsTemplates.max($rndrFormatters['US Standard']));
+    $rndrAggregators.add('Sum over Sum', $rndrAggregatorsTemplates.sumOverSum($rndrFormatters['US Standard']));
+    $rndrAggregators.add('80% Upper Bound', $rndrAggregatorsTemplates.sumOverSumBound80(true, $rndrFormatters['US Standard']));
+    $rndrAggregators.add('80% Lower Bound', $rndrAggregatorsTemplates.sumOverSumBound80(false, $rndrFormatters['US Standard']));
     
-    return $ngRndrAggregators;
+    return $rndrAggregators;
 }));

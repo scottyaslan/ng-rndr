@@ -1,18 +1,18 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.templates === undefined) {
-        root.ngRndr.templates = {};
+    if (root.rndr.templates === undefined) {
+        root.rndr.templates = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrAggregatorsTemplates', [], function() {
-            return (root.ngRndr.templates.aggregators = factory());
+        define('$rndrAggregatorsTemplates', [], function() {
+            return (root.rndr.templates.aggregators = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.templates.aggregators = factory());
+        module.exports = (root.rndr.templates.aggregators = factory());
     } else {
-        root.ngRndr.templates.aggregators = factory();
+        root.rndr.templates.aggregators = factory();
     }
 }(this, function() {
     /**

@@ -1,18 +1,18 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.templates === undefined) {
-        root.ngRndr.templates = {};
+    if (root.rndr.templates === undefined) {
+        root.rndr.templates = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrSorterTemplates', [], function() {
-            return (root.ngRndr.templates.sorters = factory());
+        define('$rndrSorterTemplates', [], function() {
+            return (root.rndr.templates.sorters = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.templates.sorters = factory());
+        module.exports = (root.rndr.templates.sorters = factory());
     } else {
-        root.ngRndr.templates.sorters = factory();
+        root.rndr.templates.sorters = factory();
     }
 }(this, function() {
     var naturalSort = function(as, bs) {

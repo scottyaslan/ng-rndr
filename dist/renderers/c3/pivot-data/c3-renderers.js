@@ -1,29 +1,29 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
-    if (root.ngRndr.plugins.pivotData === undefined) {
-        root.ngRndr.plugins.pivotData = {};
+    if (root.rndr.plugins.pivotData === undefined) {
+        root.rndr.plugins.pivotData = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers === undefined) {
-        root.ngRndr.plugins.pivotData.renderers = {};
+    if (root.rndr.plugins.pivotData.renderers === undefined) {
+        root.rndr.plugins.pivotData.renderers = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers.c3 === undefined) {
-        root.ngRndr.plugins.pivotData.renderers.c3 = {};
+    if (root.rndr.plugins.pivotData.renderers.c3 === undefined) {
+        root.rndr.plugins.pivotData.renderers.c3 = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'c3', '$ngRndrRenderers'], function($, c3, $ngRndrRenderers) {
-            return factory(root, $, c3, $ngRndrRenderers);
+        define(['jquery', 'c3', '$rndrRenderers'], function($, c3, $rndrRenderers) {
+            return factory(root, $, c3, $rndrRenderers);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('c3'), require('$ngRndrRenderers'));
+        module.exports = factory(root, require('jquery'), require('c3'), require('$rndrRenderers'));
     } else {
-        factory(root, root.$, root.c3, root.ngRndr.plugins.renderers);
+        factory(root, root.$, root.c3, root.rndr.plugins.renderers);
     }
-}(this, function(root, $, c3, $ngRndrRenderers) {
+}(this, function(root, $, c3, $rndrRenderers) {
     var makeC3Chart = function(chartOpts) {
         if (chartOpts == null) {
             chartOpts = {};
@@ -239,27 +239,27 @@
             })
     };
 
-    root.ngRndr.plugins.pivotData.renderers.c3.line = $ngRndrRenderers.add('C3 - Line Chart',
+    root.rndr.plugins.pivotData.renderers.c3.line = $rndrRenderers.add('C3 - Line Chart',
         c3Renderers['C3 - Line Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.ngRndr.plugins.pivotData.renderers.c3.bar = $ngRndrRenderers.add('C3 - Bar Chart',
+    root.rndr.plugins.pivotData.renderers.c3.bar = $rndrRenderers.add('C3 - Bar Chart',
         c3Renderers['C3 - Bar Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.ngRndr.plugins.pivotData.renderers.c3.stacked = $ngRndrRenderers.add('C3 - Stacked Bar Chart',
+    root.rndr.plugins.pivotData.renderers.c3.stacked = $rndrRenderers.add('C3 - Stacked Bar Chart',
         c3Renderers['C3 - Stacked Bar Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.ngRndr.plugins.pivotData.renderers.c3.area = $ngRndrRenderers.add('C3 - Area Chart',
+    root.rndr.plugins.pivotData.renderers.c3.area = $rndrRenderers.add('C3 - Area Chart',
         c3Renderers['C3 - Area Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.ngRndr.plugins.pivotData.renderers.c3.scatter = $ngRndrRenderers.add('C3 - Scatter Chart',
+    root.rndr.plugins.pivotData.renderers.c3.scatter = $rndrRenderers.add('C3 - Scatter Chart',
         c3Renderers['C3 - Scatter Chart'],
         'PivotData', {
             heightOffset: 0

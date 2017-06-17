@@ -1,29 +1,29 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
-    if (root.ngRndr.plugins.pivotData === undefined) {
-        root.ngRndr.plugins.pivotData = {};
+    if (root.rndr.plugins.pivotData === undefined) {
+        root.rndr.plugins.pivotData = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers === undefined) {
-        root.ngRndr.plugins.pivotData.renderers = {};
+    if (root.rndr.plugins.pivotData.renderers === undefined) {
+        root.rndr.plugins.pivotData.renderers = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers.d3 === undefined) {
-        root.ngRndr.plugins.pivotData.renderers.d3 = {};
+    if (root.rndr.plugins.pivotData.renderers.d3 === undefined) {
+        root.rndr.plugins.pivotData.renderers.d3 = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'd3', '$ngRndrRenderers'], function($, d3, $ngRndrRenderers) {
-            return factory(root, $, d3, $ngRndrRenderers);
+        define(['jquery', 'd3', '$rndrRenderers'], function($, d3, $rndrRenderers) {
+            return factory(root, $, d3, $rndrRenderers);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('d3'), require('$ngRndrRenderers'));
+        module.exports = factory(root, require('jquery'), require('d3'), require('$rndrRenderers'));
     } else {
-        factory(root, root.$, root.d3, root.ngRndr.plugins.renderers);
+        factory(root, root.$, root.d3, root.rndr.plugins.renderers);
     }
-}(this, function(root, $, d3, $ngRndrRenderers) {
+}(this, function(root, $, d3, $rndrRenderers) {
     var d3Renderers =  {
         'D3 - Treemap': function(renderingEngine, opts) {
             var addToTree, color, defaults, height, i, len, ref, result, returnObject, rowKey, tree, treemap, value, width;
@@ -119,7 +119,7 @@
         }
     };
 
-    root.ngRndr.plugins.pivotData.renderers.d3.tree = $ngRndrRenderers.add('D3 - Treemap',
+    root.rndr.plugins.pivotData.renderers.d3.tree = $rndrRenderers.add('D3 - Treemap',
         d3Renderers['D3 - Treemap'],
         'PivotData', {});
 

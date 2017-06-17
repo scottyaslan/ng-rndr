@@ -13,7 +13,7 @@ define(['renderers/angular/pivot-data/directives/rndr',
         pivotDataUIDialogController) {
 
         // Create module
-        var app = angular.module('ngRndr', []);
+        var app = angular.module('ngPivotData', []);
 
         // Annotate module dependencies
         rndr.$inject = [];

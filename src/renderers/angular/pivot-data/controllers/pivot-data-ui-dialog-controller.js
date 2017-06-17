@@ -1,9 +1,9 @@
-define(['$ngRndrAggregators'], function($ngRndrAggregators) {
+define(['$rndrAggregators'], function($rndrAggregators) {
     'use strict';
 
     return function($scope, dialogControllerService, exploreController) {
         $scope.dialogControllerService = dialogControllerService;
         $scope.exploreController = exploreController;
-        $scope.aggregators = $ngRndrAggregators;
+        $scope.aggregators = $rndrAggregators;
     };
 });

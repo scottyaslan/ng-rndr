@@ -1,11 +1,11 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-  	define(['jquery', 'angular', '$ngRndrFormatters', '$ngRndrSorters', '$ngRndrDerivedAttributes', '$ngRndrAggregators', '$ngRndrDataViews', '$ngRndrRenderers'], function($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers) {
-            factory($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers);
+  	define(['jquery', 'angular', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+            factory($, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers);
         });
   } else if (typeof exports === 'object' && typeof module === 'object') {
-    module.exports = factory(require('jquery'), require('angular'), root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes, root.ngRndr.plugins.aggregators, root.ngRndr.plugins.dataViews, root.ngRndr.plugins.renderers);
+    module.exports = factory(require('jquery'), require('angular'), root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
   } else {
-    factory(root.$, root.angular, root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes, root.ngRndr.plugins.aggregators, root.ngRndr.plugins.dataViews, root.ngRndr.plugins.renderers);
+    factory(root.$, root.angular, root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
   }
-}(this, function ($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers) {
+}(this, function ($, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {

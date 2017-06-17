@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         html2js: {
             options: {
                 base: "./src",
-                module: 'ngRndrTemplates',
+                module: 'ngPivotDataTemplates',
                 singleModule: true,
                 useStrict: true,
                 htmlmin: {
@@ -50,25 +50,25 @@ module.exports = function(grunt) {
             },
             main: {
                 src: ['src/renderers/angular/pivot-data/views/*.html'],
-                dest: 'dist/ng-rndr-templates.js'
+                dest: 'dist/ng-pivot-data-templates.js'
             }
         },
         requirejs: {
             options: {
                 baseUrl: './src',
-                out: './dist/ng-rndr.js',
+                out: './dist/rndr.js',
                 optimize: 'none',
-                mainConfigFile: './src/ng-rndr.js',
-                include: 'ng-rndr',
+                mainConfigFile: './src/rndr.js',
+                include: 'rndr',
                 paths: {
                     'jquery': 'empty:',
                     'angular': 'empty:',
-                    '$ngRndrFormatters': 'empty:',
-                    '$ngRndrSorters': 'empty:',
-                    '$ngRndrDerivedAttributes': 'empty:',
-                    '$ngRndrAggregators': 'empty:',
-                    '$ngRndrDataViews': 'empty:',
-                    '$ngRndrRenderers': 'empty:'
+                    '$rndrFormatters': 'empty:',
+                    '$rndrSorters': 'empty:',
+                    '$rndrDerivedAttributes': 'empty:',
+                    '$rndrAggregators': 'empty:',
+                    '$rndrDataViews': 'empty:',
+                    '$rndrRenderers': 'empty:'
                 },
                 name: '../node_modules/almond/almond',
                 wrap: {
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
             release: {
                 options: {
                     optimize: 'uglify',
-                    out: './dist/ng-rndr.min.js'
+                    out: './dist/rndr.min.js'
                 }
             }
         },
@@ -94,8 +94,8 @@ module.exports = function(grunt) {
                     sourceMap: true
                 },
                 files: [{
-                    './dist/ng-rndr-templates.min.js': ['./dist/ng-rndr-templates.js'],
-                    './dist/ng-rndr.min.js': ['./dist/ng-rndr.js'],
+                    './dist/ng-pivot-data-templates.min.js': ['./dist/ng-pivot-data-templates.js'],
+                    './dist/rndr.min.js': ['./dist/rndr.js'],
                     './dist/RenderingEngine.min.js': ['./src/RenderingEngine.js'],
                     './dist/RenderingEngines.min.js': ['./src/RenderingEngines.js'],
                     './dist/data-views/pivot-data/PivotData.min.js': ['./src/data-views/pivot-data/PivotData.js'],
@@ -129,7 +129,7 @@ module.exports = function(grunt) {
                     './dist/renderers/datatables/pivot-data/datatables-renderers.min.css': ['./src/renderers/datatables/pivot-data/datatables-renderers.css'],
                     './dist/renderers/pivottables/pivot-data/pivottables-renderers.min.css': ['./src/renderers/pivottables/pivot-data/pivottables-renderers.css'],
                     './dist/renderers/angular/pivot-data/pivot-data-ui-renderer.min.css': ['./src/renderers/angular/pivot-data/pivot-data-ui-renderer.css'],
-                    './dist/ng-rndr.min.css': ['./src/ng-rndr.css']
+                    './dist/rndr.min.css': ['./src/rndr.css']
                 }
             }
         },
@@ -138,11 +138,11 @@ module.exports = function(grunt) {
                 files: ['package.json', 'bower.json'],
                 updateConfigs: [],
                 commit: true,
-                commitMessage: 'Release ng-rndr-%VERSION%',
+                commitMessage: 'Release rndr-%VERSION%',
                 commitFiles: ['-a'],
                 createTag: true,
-                tagName: 'ng-rndr-%VERSION%',
-                tagMessage: 'Version ng-rndr-%VERSION%',
+                tagName: 'rndr-%VERSION%',
+                tagMessage: 'Version rndr-%VERSION%',
                 push: true,
                 pushTo: 'origin',
                 gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',

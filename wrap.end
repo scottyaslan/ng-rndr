@@ -1,61 +1,61 @@
 	
-	// Define a 'jquery' model to allow ng-rndr to support a user configured jquery version.
+	// Define a 'jquery' model to allow rndr to support a user configured jquery version.
 	define('jquery', [], function() {
         'use strict';
 
         return $;
     });
 
-    // Define an 'angular' model to allow ng-rndr to support a user configured angular version.
+    // Define an 'angular' model to allow rndr to support a user configured angular version.
     define('angular', [], function() {
         'use strict';
 
         return angular;
     });
 
-    // Define an '$ngRndrFormatters' model to allow ng-rndr to support a user configured formatters module.
-    define('$ngRndrFormatters', [], function() {
+    // Define an '$rndrFormatters' model to allow rndr to support a user configured formatters module.
+    define('$rndrFormatters', [], function() {
         'use strict';
 
-        return $ngRndrFormatters;
+        return $rndrFormatters;
     });
 
-    // Define an '$ngRndrSorters' model to allow ng-rndr to support a user configured sorters module.
-    define('$ngRndrSorters', [], function() {
+    // Define an '$rndrSorters' model to allow rndr to support a user configured sorters module.
+    define('$rndrSorters', [], function() {
         'use strict';
 
-        return $ngRndrSorters;
+        return $rndrSorters;
     });
 
-    // Define an '$ngRndrDerivedAttributes' model to allow ng-rndr to support a user configured derived attributes module.
-    define('$ngRndrDerivedAttributes', [], function() {
+    // Define an '$rndrDerivedAttributes' model to allow rndr to support a user configured derived attributes module.
+    define('$rndrDerivedAttributes', [], function() {
         'use strict';
 
-        return $ngRndrDerivedAttributes;
+        return $rndrDerivedAttributes;
     });
 
-    // Define an '$ngRndrAggregators' model to allow ng-rndr to support a user configured aggregators module.
-    define('$ngRndrAggregators', [], function() {
+    // Define an '$rndrAggregators' model to allow rndr to support a user configured aggregators module.
+    define('$rndrAggregators', [], function() {
         'use strict';
 
-        return $ngRndrAggregators;
+        return $rndrAggregators;
     });
 
-    // Define an '$ngRndrDataViews' model to allow ng-rndr to support a user configured data views module.
-    define('$ngRndrDataViews', [], function() {
+    // Define an '$rndrDataViews' model to allow rndr to support a user configured data views module.
+    define('$rndrDataViews', [], function() {
         'use strict';
 
-        return $ngRndrDataViews;
+        return $rndrDataViews;
     })
 
-    // Define an '$ngRndrRenderers' model to allow ng-rndr to support a user configured renderers module.
-    define('$ngRndrRenderers', [], function() {
+    // Define an '$rndrRenderers' model to allow rndr to support a user configured renderers module.
+    define('$rndrRenderers', [], function() {
         'use strict';
 
-        return $ngRndrRenderers;
+        return $rndrRenderers;
     });
 
 	// Use almond's special top level synchronous require to trigger factory
 	// functions, get the final module, and export it as the public api.
-	return require('ng-rndr');
+	return require('rndr');
 }));

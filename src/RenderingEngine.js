@@ -1,17 +1,17 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrRenderingEngine', ['jquery', 'angular', '$ngRndrFormatters', '$ngRndrSorters', '$ngRndrDerivedAttributes', '$ngRndrAggregators', '$ngRndrDataViews', '$ngRndrRenderers'], function($, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers) {
-            return (root.ngRndr.RenderingEngine = factory(root, $, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers));
+        define('$rndrRenderingEngine', ['jquery', 'angular', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+            return (root.rndr.RenderingEngine = factory(root, $, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.RenderingEngine = factory(root, require('jquery'), require('angular'), require('$ngRndrFormatters'), require('$ngRndrSorters'), require('$ngRndrDerivedAttributes'), require('$ngRndrAggregators'), require('$ngRndrDataViews'), require('$ngRndrRenderers')));
+        module.exports = (root.rndr.RenderingEngine = factory(root, require('jquery'), require('angular'), require('$rndrFormatters'), require('$rndrSorters'), require('$rndrDerivedAttributes'), require('$rndrAggregators'), require('$rndrDataViews'), require('$rndrRenderers')));
     } else {
-        root.ngRndr.RenderingEngine = factory(root, root.$, root.angular, root.ngRndr.plugins.formatters, root.ngRndr.plugins.sorters, root.ngRndr.plugins.derivedAttributes, root.ngRndr.plugins.aggregators, root.ngRndr.plugins.dataViews, root.ngRndr.plugins.renderers);
+        root.rndr.RenderingEngine = factory(root, root.$, root.angular, root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
     }
-}(this, function(root, $, angular, $ngRndrFormatters, $ngRndrSorters, $ngRndrDerivedAttributes, $ngRndrAggregators, $ngRndrDataViews, $ngRndrRenderers) {
+}(this, function(root, $, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
     'use strict';
 
     /**
@@ -35,7 +35,7 @@
      * @param {object} [dv_meta] -                  The meta object used to initialze the .
      * @param {object} [derivedAttrs] -             An array of string names of new data attributes the derived attributes.
      * @param {string} [locale] -                   The name of the locale.
-     * @param {object} [sorters] -                  An array of string names of data attributes for which the corresponding $ngRndrSorters sorting function will be applied.
+     * @param {object} [sorters] -                  An array of string names of data attributes for which the corresponding $rndrSorters sorting function will be applied.
      * @param {object} element                      The jQuery wrapped DOM element that contains the visualization.
      */
     function RenderingEngine(renderer, id, aggregator, aggInputAttributeName, dv_meta, derivedAttrs, locale, sorters, element, data) {
@@ -74,19 +74,19 @@
         this.setSorters(sorters);
 
         if (dv_meta !== undefined && dv_meta !== '' && dv_meta !== null) {
-            this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view(data, {
+            this.dataView = new $rndrDataViews[$rndrRenderers[this.renderer].dataViewName].view(data, {
                 aggregator: this.aggregator,
                 derivedAttributes: this.derivedAttributes,
                 sorters: this.sorters,
-                formatters: $ngRndrFormatters,
+                formatters: $rndrFormatters,
                 meta: dv_meta
             });
         } else {
-            this.dataView = new $ngRndrDataViews[$ngRndrRenderers[this.renderer].dataViewName].view(data, {
+            this.dataView = new $rndrDataViews[$rndrRenderers[this.renderer].dataViewName].view(data, {
                 aggregator: this.aggregator,
                 derivedAttributes: this.derivedAttributes,
                 sorters: this.sorters,
-                formatters: $ngRndrFormatters,
+                formatters: $rndrFormatters,
             });
         }
         this.dirty = false;
@@ -144,11 +144,11 @@
             if (attrs !== undefined && attrs !== '' && attrs !== null) {
                 angular.forEach(attrs, function(name) {
                     try {
-                        this.derivedAttributes[name] = $ngRndrDerivedAttributes[name];
+                        this.derivedAttributes[name] = $rndrDerivedAttributes[name];
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {
-                            console.log('The \'' + name + '\' derived attribute is not configured with the $ngRndrDerivedAttributes service. Stack Trace: ' + e.stack);
+                            console.log('The \'' + name + '\' derived attribute is not configured with the $rndrDerivedAttributes service. Stack Trace: ' + e.stack);
                         }
                     }
                 });
@@ -160,11 +160,11 @@
             if (sorters !== undefined && sorters !== '' && sorters !== null) {
                 angular.forEach(sorters, function(name) {
                     try {
-                        this.sorters[name] = $ngRndrSorters[name];
+                        this.sorters[name] = $rndrSorters[name];
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {
-                            console.log('The \'' + name + '\' sorter is not configured with the $ngRndrSorters service. Stack Trace: ' + e.stack);
+                            console.log('The \'' + name + '\' sorter is not configured with the $rndrSorters service. Stack Trace: ' + e.stack);
                         }
                     }
                 });
@@ -181,42 +181,42 @@
                 if (this.aggregator === undefined) {
                     this.aggregator = {
                         name: 'Count',
-                        aggregate: $ngRndrAggregators['Count'].aggregate,
+                        aggregate: $rndrAggregators['Count'].aggregate,
                         aggInputAttributeName: []
                     }
                 }
             } catch (_error) {
                 var e = _error;
                 if (typeof console !== 'undefined' && console !== null) {
-                    console.log('The \'Count\' aggregator is not configured with the $ngRndrAggregators service. Stack Trace: ' + e.stack);
+                    console.log('The \'Count\' aggregator is not configured with the $rndrAggregators service. Stack Trace: ' + e.stack);
                 }
             }
 
             if (aggregator === undefined || aggregator === '' || aggregator === null) {
                 this.aggregator.name = 'Count';
                 try {
-                    this.aggregator.aggregate = $ngRndrAggregators['Count'].aggregate;
+                    this.aggregator.aggregate = $rndrAggregators['Count'].aggregate;
                 } catch (_error) {
                     var e = _error;
                     if (typeof console !== 'undefined' && console !== null) {
-                        console.log('The \'Count\' aggregator is not configured with the $ngRndrAggregators service. Stack Trace: ' + e.stack);
+                        console.log('The \'Count\' aggregator is not configured with the $rndrAggregators service. Stack Trace: ' + e.stack);
                     }
                 }
                 this.aggregator.aggInputAttributeName = [];
             } else {
                 this.aggregator.name = aggregator;
                 try {
-                    this.aggregator.aggregate = $ngRndrAggregators[aggregator].aggregate;
+                    this.aggregator.aggregate = $rndrAggregators[aggregator].aggregate;
                 } catch (_error) {
                     var e = _error;
                     if (typeof console !== 'undefined' && console !== null) {
-                        console.log('The \'' + name + '\' aggregator is not configured with the ngRndr.aggregators module. Stack Trace: ' + e.stack);
+                        console.log('The \'' + name + '\' aggregator is not configured with the rndr.aggregators module. Stack Trace: ' + e.stack);
                     }
                 }
                 this.aggregator.aggInputAttributeName = [];
             }
 
-            var numInputs = $ngRndrAggregators[this.aggregator.name].aggregate([])([]).numInputs;
+            var numInputs = $rndrAggregators[this.aggregator.name].aggregate([])([]).numInputs;
 
             if (numInputs === undefined) {
                 this.aggregator.aggInputAttributeName = new Array();
@@ -262,18 +262,18 @@
                     aggregator: self.aggregator,
                     derivedAttributes: self.derivedAttributes,
                     sorters: self.sorters,
-                    formatters: $ngRndrFormatters,
+                    formatters: $rndrFormatters,
                     meta: self.dataView.meta
                 };
 
                 var opts = {
                     element: self.element,
-                    renderers: $ngRndrRenderers,
-                    dataViews: $ngRndrDataViews,
-                    sorters: $ngRndrSorters,
-                    aggregators: $ngRndrAggregators,
-                    derivedAttributes: $ngRndrDerivedAttributes,
-                    formatters: $ngRndrFormatters,
+                    renderers: $rndrRenderers,
+                    dataViews: $rndrDataViews,
+                    sorters: $rndrSorters,
+                    aggregators: $rndrAggregators,
+                    derivedAttributes: $rndrDerivedAttributes,
+                    formatters: $rndrFormatters,
                     heightOffset: 0,
                     widthOffset: 0,
                     locales: {
@@ -289,11 +289,11 @@
                 };
 
                 try {
-                    self.dataView = new $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $ngRndrDataViews[$ngRndrRenderers[self.renderer].dataViewName].opts));
+                    self.dataView = new $rndrDataViews[$rndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $rndrDataViews[$rndrRenderers[self.renderer].dataViewName].opts));
 
                     try {
                         //render and attach new viz
-                        result = $ngRndrRenderers[self.renderer].render(self, $.extend(opts, $ngRndrRenderers[self.renderer].opts));
+                        result = $rndrRenderers[self.renderer].render(self, $.extend(opts, $rndrRenderers[self.renderer].opts));
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {

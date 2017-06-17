@@ -1,33 +1,33 @@
 /**
  * The `CloneData` Object factory
  * 
- * The `CloneData` is one type of `dataView` object factory that ships with ng-rndr
+ * The `CloneData` is one type of `dataView` object factory that ships with rndr
  * and may be passed into any `CloneData` compatable `renderer` plugin. It 
  * essentially wraps any data format/object and makes it available to generate 
- * visualizations of itself within the context of ng-rndr. 
+ * visualizations of itself within the context of rndr. 
  * 
  * Since it takes in an object any methods available on that object will be
  * available to the renderer that uses it but it is impossible to document these
  * methods as this factory is designed to support an infinite number of possibilities.
  */
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
-    if (root.ngRndr.plugins.DataViews === undefined) {
-        root.ngRndr.plugins.DataViews = {};
+    if (root.rndr.plugins.DataViews === undefined) {
+        root.rndr.plugins.DataViews = {};
     }
     if (typeof define === 'function' && define.amd) {
         define([], function() {
-            return (root.ngRndr.plugins.DataViews['CloneData'] = factory());
+            return (root.rndr.plugins.DataViews['CloneData'] = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.DataViews['CloneData'] = factory());
+        module.exports = (root.rndr.plugins.DataViews['CloneData'] = factory());
     } else {
-        root.ngRndr.plugins.DataViews['CloneData'] = factory();
+        root.rndr.plugins.DataViews['CloneData'] = factory();
     }
 }(this, function() {
     function CloneData(data, opts) {

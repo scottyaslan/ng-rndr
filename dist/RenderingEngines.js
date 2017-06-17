@@ -1,27 +1,27 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
-    if (root.ngRndr.plugins.pivotData === undefined) {
-        root.ngRndr.plugins.pivotData = {};
+    if (root.rndr.plugins.pivotData === undefined) {
+        root.rndr.plugins.pivotData = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers === undefined) {
-        root.ngRndr.plugins.pivotData.renderers = {};
+    if (root.rndr.plugins.pivotData.renderers === undefined) {
+        root.rndr.plugins.pivotData.renderers = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers.c3 === undefined) {
-        root.ngRndr.plugins.pivotData.renderers.c3 = {};
+    if (root.rndr.plugins.pivotData.renderers.c3 === undefined) {
+        root.rndr.plugins.pivotData.renderers.c3 = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrRenderingEngines', [], function() {
-            return (root.ngRndr.RenderingEngines = factory(root));
+        define('$rndrRenderingEngines', [], function() {
+            return (root.rndr.RenderingEngines = factory(root));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.RenderingEngines = factory(root));
+        module.exports = (root.rndr.RenderingEngines = factory(root));
     } else {
-        root.ngRndr.RenderingEngines = factory(root);
+        root.rndr.RenderingEngines = factory(root);
     }
 }(this, function(root) {
     'use strict';

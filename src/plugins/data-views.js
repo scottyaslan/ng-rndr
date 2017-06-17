@@ -1,25 +1,24 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrDataViews', [], function() {
-            return (root.ngRndr.plugins.dataViews = factory());
+        define('$rndrDataViews', [], function() {
+            return (root.rndr.plugins.dataViews = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.dataViews = factory());
+        module.exports = (root.rndr.plugins.dataViews = factory());
     } else {
-        root.ngRndr.plugins.dataViews = factory();
+        root.rndr.plugins.dataViews = factory();
     }
 }(this, function() {
     /**
      * A dictionary of data view object factories.
      */
-    function DataViews() {
-    }
+    function DataViews() {}
     DataViews.prototype = {
         constructor: DataViews,
         /**
@@ -45,6 +44,6 @@
         }
     };
 
-    var $ngRndrDataViews = new DataViews();
-    return $ngRndrDataViews;
+    var $rndrDataViews = new DataViews();
+    return $rndrDataViews;
 }));

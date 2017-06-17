@@ -1,29 +1,29 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
-    if (root.ngRndr.plugins.pivotData === undefined) {
-        root.ngRndr.plugins.pivotData = {};
+    if (root.rndr.plugins.pivotData === undefined) {
+        root.rndr.plugins.pivotData = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers === undefined) {
-        root.ngRndr.plugins.pivotData.renderers = {};
+    if (root.rndr.plugins.pivotData.renderers === undefined) {
+        root.rndr.plugins.pivotData.renderers = {};
     }
-    if (root.ngRndr.plugins.pivotData.renderers.gchart === undefined) {
-        root.ngRndr.plugins.pivotData.renderers.gchart = {};
+    if (root.rndr.plugins.pivotData.renderers.gchart === undefined) {
+        root.rndr.plugins.pivotData.renderers.gchart = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', '$ngRndrRenderers'], function($, $ngRndrRenderers) {
-            return factory(root, $, $ngRndrRenderers);
+        define(['jquery', '$rndrRenderers'], function($, $rndrRenderers) {
+            return factory(root, $, $rndrRenderers);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('$ngRndrRenderers'));
+        module.exports = factory(root, require('jquery'), require('$rndrRenderers'));
     } else {
-        factory(root, root.$, root.ngRndr.plugins.renderers);
+        factory(root, root.$, root.rndr.plugins.renderers);
     }
-}(this, function(root, $, $ngRndrRenderers) {
+}(this, function(root, $, $rndrRenderers) {
     var makeGoogleChart = function(chartType, extraOptions) {
         return function(renderingEngine, opts) {
             var agg, base, base1, colKey, colKeys, dataArray, dataTable, defaults, fullAggName, groupByTitle, h, hAxisTitle, headers, i, j, len, len1, numCharsInHAxis, options, ref, result, returnObject, row, rowKey, rowKeys, title, tree2, vAxisTitle, val, wrapper, x, y;
@@ -199,27 +199,27 @@
         'Google - Scatter Chart': makeGoogleChart('ScatterChart')
     };
 
-    root.ngRndr.plugins.pivotData.renderers.gchart.line = $ngRndrRenderers.add('Google - Line Chart',
+    root.rndr.plugins.pivotData.renderers.gchart.line = $rndrRenderers.add('Google - Line Chart',
         gchartRenderers['Google - Line Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.ngRndr.plugins.pivotData.renderers.gchart.bar = $ngRndrRenderers.add('Google - Bar Chart',
+    root.rndr.plugins.pivotData.renderers.gchart.bar = $rndrRenderers.add('Google - Bar Chart',
         gchartRenderers['Google - Bar Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.ngRndr.plugins.pivotData.renderers.gchart.stacked = $ngRndrRenderers.add('Google - Stacked Bar Chart',
+    root.rndr.plugins.pivotData.renderers.gchart.stacked = $rndrRenderers.add('Google - Stacked Bar Chart',
         gchartRenderers['Google - Stacked Bar Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.ngRndr.plugins.pivotData.renderers.gchart.area = $ngRndrRenderers.add('Google - Area Chart',
+    root.rndr.plugins.pivotData.renderers.gchart.area = $rndrRenderers.add('Google - Area Chart',
         gchartRenderers['Google - Area Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.ngRndr.plugins.pivotData.renderers.gchart.scatter = $ngRndrRenderers.add('Google - Scatter Chart',
+    root.rndr.plugins.pivotData.renderers.gchart.scatter = $rndrRenderers.add('Google - Scatter Chart',
         gchartRenderers['Google - Scatter Chart'],
         'PivotData', {
             heightOffset: 0

@@ -1,20 +1,20 @@
 (function(root, factory) {
-    if (root.ngRndr === undefined) {
-        root.ngRndr = {};
+    if (root.rndr === undefined) {
+        root.rndr = {};
     }
-    if (root.ngRndr.plugins === undefined) {
-        root.ngRndr.plugins = {};
+    if (root.rndr.plugins === undefined) {
+        root.rndr.plugins = {};
     }
     if (typeof define === 'function' && define.amd) {
-        define('$ngRndrDerivedAttributes', ['$ngRndrDeriverTemplates'], function($ngRndrDeriverTemplates) {
-            return (root.ngRndr.plugins.derivedAttributes = factory($ngRndrDeriverTemplates));
+        define('$rndrDerivedAttributes', ['$rndrDeriverTemplates'], function($rndrDeriverTemplates) {
+            return (root.rndr.plugins.derivedAttributes = factory($rndrDeriverTemplates));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.ngRndr.plugins.derivedAttributes = factory(require('$ngRndrDeriverTemplates')));
+        module.exports = (root.rndr.plugins.derivedAttributes = factory(require('$rndrDeriverTemplates')));
     } else {
-        root.ngRndr.plugins.derivedAttributes = factory(root.ngRndr.templates.derivers);
+        root.rndr.plugins.derivedAttributes = factory(root.rndr.templates.derivers);
     }
-}(this, function($ngRndrDeriverTemplates) {
+}(this, function($rndrDeriverTemplates) {
     function DerivedAttributes() {}
     DerivedAttributes.prototype = {
         constructor: DerivedAttributes,
@@ -37,6 +37,6 @@
         }
     };
 
-    var $ngRndrDerivedAttributes = new DerivedAttributes();
-    return $ngRndrDerivedAttributes;
+    var $rndrDerivedAttributes = new DerivedAttributes();
+    return $rndrDerivedAttributes;
 }));
