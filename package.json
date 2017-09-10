@@ -1,6 +1,6 @@
 {
   "name": "rndr",
-  "version": "0.0.1-RC.6",
+  "version": "0.0.1-RC.7",
   "license": "MIT",
   "description": "rndr is a pluggable and embeddable framework for visualizing data.",
   "author": {
