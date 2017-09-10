@@ -1,0 +1,15 @@
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+  	define('rndr', ['jquery'], function($) {
+            return factory(root, $);
+        });
+  } else if (typeof exports === 'object' && typeof module === 'object') {
+    module.exports = factory(root, require('jquery'));
+  } else {
+    return factory(root, root.$);
+  }
+}(this, function (root, $) {
+	root.rndr = {
+		templates: {},
+		plugins: {}
+	};

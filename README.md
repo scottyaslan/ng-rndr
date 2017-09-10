@@ -1,10 +1,10 @@
-##ng-rndr
+## rndr
 
-ng-rndr is a pluggable and embeddable angular module for formatting and visualizing data.  
+rndr is a pluggable and embeddable framework for formatting and visualizing data.  
 
-##Building
+## Building
 
-Developers can easily build ng-rndr using **bower** and **grunt**.
+Developers can easily build rndr using **grunt**.
 
 First install or update your local project's **npm** tools:
 
@@ -19,32 +19,17 @@ Next run the **grunt** task:
 grunt release
 ```
 
-##Release Managment
+## Release Managment
 
-For developers with permissions releasing a new version of ng-rndr is simple with [grunt bump](https://github.com/vojtajina/grunt-bump)
+For developers with permissions releasing a new version of rndr is simple with [grunt bump](https://github.com/vojtajina/grunt-bump)
 
-For developers not interested in building the ng-rndr library you can use **bower** to install the ng-rndr distribution files.
+For developers not interested in building the rndr library you can use **npm** to install the rndr distribution files.
 
 Change to your project's root directory and for 
-
-#### bower
-
-```bash
-# To get the latest stable version, use bower from the command line.
-bower install ng-rndr
-```
-
-or for
 
 #### npm
 
 ```bash
 # To get the latest stable version, use npm from the command line.
-npm install ng-rndr
-```
-
-Once you have all the necessary assets installed, add `ngRndr` as a dependency for your app:
-
-```javascript
-angular.module('myApp', ['ngRndr']);
+npm install rndr
 ```

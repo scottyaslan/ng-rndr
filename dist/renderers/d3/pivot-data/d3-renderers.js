@@ -1,29 +1,14 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
-    if (root.rndr.plugins.pivotData === undefined) {
-        root.rndr.plugins.pivotData = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers === undefined) {
-        root.rndr.plugins.pivotData.renderers = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers.d3 === undefined) {
-        root.rndr.plugins.pivotData.renderers.d3 = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'd3', '$rndrRenderers'], function($, d3, $rndrRenderers) {
-            return factory(root, $, d3, $rndrRenderers);
+        define(['jquery', 'd3', 'rndr'], function($, d3, rndr) {
+            return factory(root, $, d3, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('d3'), require('$rndrRenderers'));
+        module.exports = factory(root, require('jquery'), require('d3'), require('rndr'));
     } else {
-        factory(root, root.$, root.d3, root.rndr.plugins.renderers);
+        factory(root, root.$, root.d3, root.rndr);
     }
-}(this, function(root, $, d3, $rndrRenderers) {
+}(this, function(root, $, d3, rndr) {
     var d3Renderers =  {
         'D3 - Treemap': function(renderingEngine, opts) {
             var addToTree, color, defaults, height, i, len, ref, result, returnObject, rowKey, tree, treemap, value, width;
@@ -119,9 +104,7 @@
         }
     };
 
-    root.rndr.plugins.pivotData.renderers.d3.tree = $rndrRenderers.add('D3 - Treemap',
+    rndr.plugins.renderers.add('D3 - Treemap',
         d3Renderers['D3 - Treemap'],
         'PivotData', {});
-
-    return d3Renderers;
 }));

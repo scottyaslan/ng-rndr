@@ -1,29 +1,14 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
-    if (root.rndr.plugins.pivotData === undefined) {
-        root.rndr.plugins.pivotData = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers === undefined) {
-        root.rndr.plugins.pivotData.renderers = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers.c3 === undefined) {
-        root.rndr.plugins.pivotData.renderers.c3 = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'c3', '$rndrRenderers'], function($, c3, $rndrRenderers) {
-            return factory(root, $, c3, $rndrRenderers);
+        define(['jquery', 'c3', 'rndr'], function($, c3, rndr) {
+            return factory(root, $, c3, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('c3'), require('$rndrRenderers'));
+        module.exports = factory(root, require('jquery'), require('c3'), require('rndr'));
     } else {
-        factory(root, root.$, root.c3, root.rndr.plugins.renderers);
+        factory(root, root.$, root.c3, root.rndr);
     }
-}(this, function(root, $, c3, $rndrRenderers) {
+}(this, function(root, $, c3, rndr) {
     var makeC3Chart = function(chartOpts) {
         if (chartOpts == null) {
             chartOpts = {};
@@ -239,31 +224,29 @@
             })
     };
 
-    root.rndr.plugins.pivotData.renderers.c3.line = $rndrRenderers.add('C3 - Line Chart',
+    rndr.plugins.renderers.add('C3 - Line Chart',
         c3Renderers['C3 - Line Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.rndr.plugins.pivotData.renderers.c3.bar = $rndrRenderers.add('C3 - Bar Chart',
+    rndr.plugins.renderers.add('C3 - Bar Chart',
         c3Renderers['C3 - Bar Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.rndr.plugins.pivotData.renderers.c3.stacked = $rndrRenderers.add('C3 - Stacked Bar Chart',
+    rndr.plugins.renderers.add('C3 - Stacked Bar Chart',
         c3Renderers['C3 - Stacked Bar Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.rndr.plugins.pivotData.renderers.c3.area = $rndrRenderers.add('C3 - Area Chart',
+    rndr.plugins.renderers.add('C3 - Area Chart',
         c3Renderers['C3 - Area Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.rndr.plugins.pivotData.renderers.c3.scatter = $rndrRenderers.add('C3 - Scatter Chart',
+    rndr.plugins.renderers.add('C3 - Scatter Chart',
         c3Renderers['C3 - Scatter Chart'],
         'PivotData', {
             heightOffset: 0
         });
-
-    return c3Renderers;
 }));

@@ -1,29 +1,14 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
-    if (root.rndr.plugins.pivotData === undefined) {
-        root.rndr.plugins.pivotData = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers === undefined) {
-        root.rndr.plugins.pivotData.renderers = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers.gchart === undefined) {
-        root.rndr.plugins.pivotData.renderers.gchart = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', '$rndrRenderers'], function($, $rndrRenderers) {
-            return factory(root, $, $rndrRenderers);
+        define(['jquery', 'rndr'], function($, rndr) {
+            return factory(root, $, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('$rndrRenderers'));
+        module.exports = factory(root, require('jquery'), require('rndr'));
     } else {
-        factory(root, root.$, root.rndr.plugins.renderers);
+        factory(root, root.$, root.rndr);
     }
-}(this, function(root, $, $rndrRenderers) {
+}(this, function(root, $, rndr) {
     var makeGoogleChart = function(chartType, extraOptions) {
         return function(renderingEngine, opts) {
             var agg, base, base1, colKey, colKeys, dataArray, dataTable, defaults, fullAggName, groupByTitle, h, hAxisTitle, headers, i, j, len, len1, numCharsInHAxis, options, ref, result, returnObject, row, rowKey, rowKeys, title, tree2, vAxisTitle, val, wrapper, x, y;
@@ -199,31 +184,29 @@
         'Google - Scatter Chart': makeGoogleChart('ScatterChart')
     };
 
-    root.rndr.plugins.pivotData.renderers.gchart.line = $rndrRenderers.add('Google - Line Chart',
+    rndr.plugins.renderers.add('Google - Line Chart',
         gchartRenderers['Google - Line Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.rndr.plugins.pivotData.renderers.gchart.bar = $rndrRenderers.add('Google - Bar Chart',
+    rndr.plugins.renderers.add('Google - Bar Chart',
         gchartRenderers['Google - Bar Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.rndr.plugins.pivotData.renderers.gchart.stacked = $rndrRenderers.add('Google - Stacked Bar Chart',
+    rndr.plugins.renderers.add('Google - Stacked Bar Chart',
         gchartRenderers['Google - Stacked Bar Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.rndr.plugins.pivotData.renderers.gchart.area = $rndrRenderers.add('Google - Area Chart',
+    rndr.plugins.renderers.add('Google - Area Chart',
         gchartRenderers['Google - Area Chart'],
         'PivotData', {
             heightOffset: 0
         });
-    root.rndr.plugins.pivotData.renderers.gchart.scatter = $rndrRenderers.add('Google - Scatter Chart',
+    rndr.plugins.renderers.add('Google - Scatter Chart',
         gchartRenderers['Google - Scatter Chart'],
         'PivotData', {
             heightOffset: 0
         });
-
-    return gchartRenderers;
 }));

@@ -1,12 +1,6 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.templates === undefined) {
-        root.rndr.templates = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define('$rndrFormatterTemplates', ['jquery'], function($) {
+        define('$rndrFormattersTemplates', ['jquery'], function($) {
             return (root.rndr.templates.formatters = factory($));
         });
     } else if (typeof module === 'object' && module.exports) {
@@ -43,6 +37,23 @@
     FormattersTemplates.prototype = {
         constructor: FormattersTemplates,
         /**
+         * Adds a helper function used to create data formatters.
+         * 
+         * @param {string} name       The lookup name of the helper function.
+         * @param {function} helper The helper function used to create data formatters.
+         */
+        add: function(name, helper) {
+            this[name] = helper;
+        },
+        /**
+         * Lists the available helper functions.
+         * 
+         * @return {Array.<string>} The lookup names.
+         */
+        list: function() {
+            return Object.keys(this);
+        },
+        /**
          * A helper function used to create data formatters.
          * 
          * @param  {object} opts The formatting options described as follows:
@@ -66,16 +77,12 @@
                 thousandsSep: ',',
                 decimalSep: '.',
                 prefix: '',
-                suffix: '',
-                showZero: false
+                suffix: ''
             };
             opts = $.extend(defaults, opts);
             return function(x) {
                 var result;
                 if (isNaN(x) || !isFinite(x)) {
-                    return '';
-                }
-                if (x === 0 && !opts.showZero) {
                     return '';
                 }
                 result = addSeparators((opts.scaler * x).toFixed(opts.digitsAfterDecimal), opts.thousandsSep, opts.decimalSep);
@@ -84,5 +91,7 @@
         }
     };
 
-    return new FormattersTemplates();
+    var $rndrFormatterTemplates = new FormattersTemplates();
+
+    return $rndrFormatterTemplates;
 }));

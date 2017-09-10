@@ -34,7 +34,7 @@ module.exports = function(grunt) {
         html2js: {
             options: {
                 base: "./src",
-                module: 'ngPivotDataTemplates',
+                module: 'ngRndrTemplates',
                 singleModule: true,
                 useStrict: true,
                 htmlmin: {
@@ -56,35 +56,96 @@ module.exports = function(grunt) {
         requirejs: {
             options: {
                 baseUrl: './src',
-                out: './dist/rndr.js',
-                optimize: 'none',
-                mainConfigFile: './src/rndr.js',
-                include: 'rndr',
-                paths: {
-                    'jquery': 'empty:',
-                    'angular': 'empty:',
-                    '$rndrFormatters': 'empty:',
-                    '$rndrSorters': 'empty:',
-                    '$rndrDerivedAttributes': 'empty:',
-                    '$rndrAggregators': 'empty:',
-                    '$rndrDataViews': 'empty:',
-                    '$rndrRenderers': 'empty:'
-                },
-                name: '../node_modules/almond/almond',
-                wrap: {
-                    startFile: 'wrap.start',
-                    endFile: 'wrap.end'
-                }
+                name: '../node_modules/almond/almond'
             },
-            dev: {
+            ngRndr: {
                 options: {
-                    optimize: 'none'
+                    optimize: 'none',
+                    out: './dist/ng-rndr.js',
+                    mainConfigFile: './src/ng-rndr.js',
+                    paths: {
+                        'jquery': 'empty:',
+                        'angular': 'empty:',
+                        'rndr': 'empty:'
+                    },
+                    include: 'ng-rndr',
+                    wrap: {
+                        startFile: 'ng-rndr-wrap.start',
+                        endFile: 'ng-rndr-wrap.end'
+                    }
                 }
             },
-            release: {
+            ngRndrUgly: {
                 options: {
                     optimize: 'uglify',
-                    out: './dist/rndr.min.js'
+                    out: './dist/ng-rndr.min.js',
+                    mainConfigFile: './src/ng-rndr.js',
+                    paths: {
+                        'jquery': 'empty:',
+                        'angular': 'empty:',
+                        'rndr': 'empty:'
+                    },
+                    include: 'ng-rndr',
+                    wrap: {
+                        startFile: 'ng-rndr-wrap.start',
+                        endFile: 'ng-rndr-wrap.end'
+                    }
+                }
+            },
+            rndr: {
+                options: {
+                    optimize: 'none',
+                    out: './dist/rndr.js',
+                    mainConfigFile: './src/rndr.js',
+                    paths: {
+                        'jquery': 'empty:',
+                        '$rndrFormattersTemplates': 'templates/formatters',
+                        '$rndrFormatters': 'plugins/formatters',
+                        '$rndrSortersTemplates': 'templates/sorters',
+                        '$rndrSorters': 'plugins/sorters',
+                        '$rndrDeriverTemplates': 'templates/derivers',
+                        '$rndrDerivedAttributes': 'plugins/derived-attributes',
+                        '$rndrAggregatorsTemplates': 'templates/aggregators',
+                        '$rndrAggregators': 'plugins/aggregators',
+                        '$rndrDataViews': 'plugins/data-views',
+                        '$rndrRenderers': 'plugins/renderers',
+                        '$rndrPivotData': 'data-views/pivot-data/PivotData',
+                        '$rndrRenderingEngine': 'RenderingEngine',
+                        '$rndrRenderingEngines': 'RenderingEngines'
+                    },
+                    include: 'rndr',
+                    wrap: {
+                        startFile: 'rndr-wrap.start',
+                        endFile: 'rndr-wrap.end'
+                    }
+                }
+            },
+            rndrUgly: {
+                options: {
+                    optimize: 'uglify',
+                    out: './dist/rndr.min.js',
+                    mainConfigFile: './src/rndr.js',
+                    paths: {
+                        'jquery': 'empty:',
+                        '$rndrFormattersTemplates': 'templates/formatters',
+                        '$rndrFormatters': 'plugins/formatters',
+                        '$rndrSortersTemplates': 'templates/sorters',
+                        '$rndrSorters': 'plugins/sorters',
+                        '$rndrDeriverTemplates': 'templates/derivers',
+                        '$rndrDerivedAttributes': 'plugins/derived-attributes',
+                        '$rndrAggregatorsTemplates': 'templates/aggregators',
+                        '$rndrAggregators': 'plugins/aggregators',
+                        '$rndrDataViews': 'plugins/data-views',
+                        '$rndrRenderers': 'plugins/renderers',
+                        '$rndrPivotData': 'data-views/pivot-data/PivotData',
+                        '$rndrRenderingEngine': 'RenderingEngine',
+                        '$rndrRenderingEngines': 'RenderingEngines'
+                    },
+                    include: 'rndr',
+                    wrap: {
+                        startFile: 'rndr-wrap.start',
+                        endFile: 'rndr-wrap.end'
+                    }
                 }
             }
         },
@@ -95,6 +156,7 @@ module.exports = function(grunt) {
                 },
                 files: [{
                     './dist/ng-pivot-data-templates.min.js': ['./dist/ng-pivot-data-templates.js'],
+                    './dist/ng-rndr.min.js': ['./dist/ng-rndr.js'],
                     './dist/rndr.min.js': ['./dist/rndr.js'],
                     './dist/RenderingEngine.min.js': ['./src/RenderingEngine.js'],
                     './dist/RenderingEngines.min.js': ['./src/RenderingEngines.js'],
@@ -135,7 +197,7 @@ module.exports = function(grunt) {
         },
         bump: {
             options: {
-                files: ['package.json', 'bower.json'],
+                files: ['package.json'],
                 updateConfigs: [],
                 commit: true,
                 commitMessage: 'Release rndr-%VERSION%',
@@ -161,6 +223,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-    grunt.registerTask('dev', ['requirejs:dev', 'html2js:main']);
-    grunt.registerTask('release', ['requirejs:dev', 'html2js:main', 'requirejs:release', 'uglify:build', 'copy:main', 'cssmin:target']);
+    grunt.registerTask('dev', ['requirejs:ngRndr', 'html2js:main']);
+    grunt.registerTask('release', ['requirejs:rndr', 'requirejs:ngRndr', 'html2js:main', 'requirejs:rndrUgly', 'requirejs:ngRndrUgly', 'uglify:build', 'copy:main', 'cssmin:target']);
 };

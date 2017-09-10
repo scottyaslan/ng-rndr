@@ -1,19 +1,4 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
-    if (root.rndr.plugins.pivotData === undefined) {
-        root.rndr.plugins.pivotData = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers === undefined) {
-        root.rndr.plugins.pivotData.renderers = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers.c3 === undefined) {
-        root.rndr.plugins.pivotData.renderers.c3 = {};
-    }
     if (typeof define === 'function' && define.amd) {
         define('$rndrRenderingEngines', [], function() {
             return (root.rndr.RenderingEngines = factory(root));

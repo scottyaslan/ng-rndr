@@ -1,29 +1,14 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
-    if (root.rndr.plugins.pivotData === undefined) {
-        root.rndr.plugins.pivotData = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers === undefined) {
-        root.rndr.plugins.pivotData.renderers = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers.pivottables === undefined) {
-        root.rndr.plugins.pivotData.renderers.pivottables = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', '$rndrRenderers'], function($, $rndrRenderers) {
-            return factory(root, $, $rndrRenderers);
+        define(['jquery', 'rndr'], function($, rndr) {
+            return factory(root, $, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('$rndrRenderers'));
+        module.exports = factory(root, require('jquery'), require('rndr'));
     } else {
-        factory(root, root.$, root.rndr.plugins.renderers);
+        factory(root, root.$, root.rndr);
     }
-}(this, function(root, $, $rndrRenderers) {
+}(this, function(root, $, rndr) {
     var datatable = function(renderingEngine, opts) {
         var aggregator, c, colAttrs, colKey, colKeys, defaults, i, j, r, result, rowAttrs, rowKey, rowKeys, spanSize, tbody, td, tfoot, th, thead, totalAggregator, tr, txt, val, x;
         defaults = {
@@ -409,40 +394,38 @@
         }
     };
 
-    root.rndr.plugins.pivotData.renderers.pivottables.table = $rndrRenderers.add('DataTable - Table',
+    rndr.plugins.renderers.add('DataTable - Table',
         datatableRenderers['DataTable - Table'],
         'PivotData', {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
         });
 
-    root.rndr.plugins.pivotData.renderers.pivottables.tablebar = $rndrRenderers.add('DataTable - Table Barchart',
+    rndr.plugins.renderers.add('DataTable - Table Barchart',
         datatableRenderers['DataTable - Table Barchart'],
         'PivotData', {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
         });
 
-    root.rndr.plugins.pivotData.renderers.pivottables.tableheat = $rndrRenderers.add('DataTable - Heatmap',
+    rndr.plugins.renderers.add('DataTable - Heatmap',
         datatableRenderers['DataTable - Heatmap'],
         'PivotData', {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
         });
 
-    root.rndr.plugins.pivotData.renderers.pivottables.tablerowheat = $rndrRenderers.add('DataTable - Row Heatmap',
+    rndr.plugins.renderers.add('DataTable - Row Heatmap',
         datatableRenderers['DataTable - Row Heatmap'],
         'PivotData', {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
         });
 
-    root.rndr.plugins.pivotData.renderers.pivottables.tablecolheat = $rndrRenderers.add('DataTable - Col Heatmap',
+    rndr.plugins.renderers.add('DataTable - Col Heatmap',
         datatableRenderers['DataTable - Col Heatmap'],
         'PivotData', {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
         });
-
-    return datatableRenderers;
 }));

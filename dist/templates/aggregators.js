@@ -1,10 +1,4 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.templates === undefined) {
-        root.rndr.templates = {};
-    }
     if (typeof define === 'function' && define.amd) {
         define('$rndrAggregatorsTemplates', [], function() {
             return (root.rndr.templates.aggregators = factory());
@@ -21,6 +15,24 @@
     function AggregatorTemplates() {}
     AggregatorTemplates.prototype = {
         constructor: AggregatorTemplates,
+        /**
+         * Adds a function which *generates* an aggregator-generating function.
+         * 
+         * @param {string} name       The lookup name of the aggregator-generating function.
+         * @param {function} template The function which *generates* an aggregator-generating function.
+         */
+        add: function(name, template) {
+            this[name] = template;
+        },
+        /**
+         * Lists the available `aggregator-generating` functions.
+         * 
+         * @return {Array.<string>} The lookup names.
+         */
+        list: function() {
+            return Object.keys(this);
+        },
+
         /**
          * Creates an aggregator-generating function.
          * 
@@ -385,8 +397,92 @@
                     };
                 };
             };
+        },
+        quantile: function(formatter, q) {
+            if (formatter == null) {
+                formatter = usFmt;
+            }
+            return function(arg) {
+                var attr;
+                attr = arg[0];
+                return function(data, rowKey, colKey) {
+                    return {
+                        vals: [],
+                        push: function(record) {
+                            var x;
+                            x = parseFloat(record[attr]);
+                            if (!isNaN(x)) {
+                                return this.vals.push(x);
+                            }
+                        },
+                        value: function() {
+                            var i;
+                            if (this.vals.length === 0) {
+                                return null;
+                            }
+                            this.vals.sort();
+                            i = (this.vals.length - 1) * q;
+                            return (this.vals[Math.floor(i)] + this.vals[Math.ceil(i)]) / 2.0;
+                        },
+                        format: formatter,
+                        numInputs: attr != null ? 0 : 1
+                    };
+                };
+            };
+        },
+        runningStat: function(formatter, mode, ddof) {
+            if (formatter == null) {
+                formatter = usFmt;
+            }
+            if (mode == null) {
+                mode = "var";
+            }
+            if (ddof == null) {
+                ddof = 1;
+            }
+            return function(arg) {
+                var attr;
+                attr = arg[0];
+                return function(data, rowKey, colKey) {
+                    return {
+                        n: 0.0,
+                        m: 0.0,
+                        s: 0.0,
+                        push: function(record) {
+                            var m_new, x;
+                            x = parseFloat(record[attr]);
+                            if (isNaN(x)) {
+                                return;
+                            }
+                            this.n += 1.0;
+                            if (this.n === 1.0) {
+                                return this.m = x;
+                            } else {
+                                m_new = this.m + (x - this.m) / this.n;
+                                this.s = this.s + (x - this.m) * (x - m_new);
+                                return this.m = m_new;
+                            }
+                        },
+                        value: function() {
+                            if (this.n <= ddof) {
+                                return 0;
+                            }
+                            switch (mode) {
+                                case "var":
+                                    return this.s / (this.n - ddof);
+                                case "stdev":
+                                    return Math.sqrt(this.s / (this.n - ddof));
+                            }
+                        },
+                        format: formatter,
+                        numInputs: attr != null ? 0 : 1
+                    };
+                };
+            };
         }
     };
 
-    return new AggregatorTemplates();
+    var $rndrAggregatorsTemplates = new AggregatorTemplates();
+
+    return $rndrAggregatorsTemplates;
 }));

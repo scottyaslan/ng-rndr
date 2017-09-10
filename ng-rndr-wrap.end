@@ -1,0 +1,26 @@
+	
+	// Define a 'jquery' model to allow ng-rndr to support a user configured jquery version.
+	define('jquery', [], function() {
+        'use strict';
+
+        return $;
+    });
+
+    // Define an 'angular' model to allow ng-rndr to support a user configured angular version.
+    define('angular', [], function() {
+        'use strict';
+
+        return angular;
+    });
+
+    // Define an 'rndr' model to allow ng-rndr to support a user configured rndr version.
+    define('rndr', [], function() {
+        'use strict';
+
+        return rndr;
+    });
+
+	// Use almond's special top level synchronous require to trigger factory
+	// functions, get the final module, and export it as the public api.
+	return require('ng-rndr');
+}));

@@ -1,0 +1,11 @@
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+  	define('ng-rndr', ['jquery', 'angular', 'rndr'], function($, angular, rndr) {
+            return factory($, angular, rndr);
+        });
+  } else if (typeof exports === 'object' && typeof module === 'object') {
+    module.exports = factory(require('jquery'), require('angular'), require('rndr'));
+  } else {
+    return factory(root.$, root.angular, root.rndr);
+  }
+}(this, function ($, angular, rndr) {

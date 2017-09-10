@@ -1,20 +1,14 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define('$rndrDataViews', [], function() {
-            return (root.rndr.plugins.dataViews = factory());
+        define('$rndrDataViews', ['jquery'], function($) {
+            return (root.rndr.plugins.dataViews = factory(root, $));
         });
     } else if (typeof module === 'object' && module.exports) {
         module.exports = (root.rndr.plugins.dataViews = factory());
     } else {
         root.rndr.plugins.dataViews = factory();
     }
-}(this, function() {
+}(this, function(root, $) {
     /**
      * A dictionary of data view object factories.
      */
@@ -44,6 +38,5 @@
         }
     };
 
-    var $rndrDataViews = new DataViews();
-    return $rndrDataViews;
+    return root.rndr.plugins.dataViews = $.extend(root.rndr.plugins.dataViews, new DataViews());
 }));

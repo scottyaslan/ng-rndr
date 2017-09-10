@@ -1,12 +1,6 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.templates === undefined) {
-        root.rndr.templates = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define('$rndrSorterTemplates', [], function() {
+        define('$rndrSortersTemplates', [], function() {
             return (root.rndr.templates.sorters = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
@@ -60,6 +54,23 @@
     SortersTemplates.prototype = {
         constructor: SortersTemplates,
         /**
+         * Adds a helper function used to create data sorters.
+         * 
+         * @param {string} name       The lookup name of the helper function.
+         * @param {function} helper The helper function used to create data sorters.
+         */
+        add: function(name, helper) {
+            this[name] = helper;
+        },
+        /**
+         * Lists the available helper functions.
+         * 
+         * @return {Array.<string>} The lookup names.
+         */
+        list: function() {
+            return Object.keys(this);
+        },
+        /**
          * A helper function used to generate a function that defines the order of (available) values for a given attribute.
          * 
          * @param  {array} order An array of strings that define the order of the values for an attribute.
@@ -98,5 +109,7 @@
         }
     };
 
-    return new SortersTemplates();
+    var $rndrSorterTemplates = new SortersTemplates();
+
+    return $rndrSorterTemplates;
 }));

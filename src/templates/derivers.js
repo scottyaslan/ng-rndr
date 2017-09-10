@@ -1,10 +1,4 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.templates === undefined) {
-        root.rndr.templates = {};
-    }
     if (typeof define === 'function' && define.amd) {
         define('$rndrDeriverTemplates', [], function() {
             return (root.rndr.templates.derivers = factory());
@@ -31,6 +25,23 @@
     function DeriverTemplates() {}
     DeriverTemplates.prototype = {
         constructor: DeriverTemplates,
+        /**
+         * Adds a deriver function.
+         * 
+         * @param {string} name       The lookup name of the deriver function.
+         * @param {function} deriver The function which *derives* an attribute.
+         */
+        add: function(name, deriver) {
+            this[name] = deriver;
+        },
+        /**
+         * Lists the available `attribute deriving` functions.
+         * 
+         * @return {Array.<string>} The lookup names.
+         */
+        list: function() {
+            return Object.keys(this);
+        },
         /**
          * Generates a function that performs a 'binning' of high-cardinality attributes into a lower-cardinality bucket.
          * @param  {string} col      The column name.
@@ -107,5 +118,7 @@
         }
     };
 
-    return new DeriverTemplates();
+    var $rndrDeriverTemplates = new DeriverTemplates();
+
+    return $rndrDeriverTemplates;
 }));

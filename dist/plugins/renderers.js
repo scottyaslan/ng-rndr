@@ -1,10 +1,4 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
     if (typeof define === 'function' && define.amd) {
         define('$rndrRenderers', [], function() {
             return (root.rndr.plugins.renderers = factory());
@@ -18,8 +12,7 @@
     /**
      * A dictionary of renderer functions.
      */
-    function Renderers() {
-    }
+    function Renderers() {}
     Renderers.prototype = {
         constructor: Renderers,
         /**

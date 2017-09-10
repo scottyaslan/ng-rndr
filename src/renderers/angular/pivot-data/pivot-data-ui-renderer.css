@@ -50,15 +50,6 @@
     min-width: 250px;
 }
 
-.pivot-data-ui-rndr {
-	position: absolute;
-    top: 23px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    overflow: auto;
-}
-
 .pvtAttr {
     background: #F3F3F3;
     border: 1px solid #DEDEDE;
@@ -69,6 +60,10 @@
     border-radius: 5px;
     color: #000;
     cursor: move;
+    width: 224px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 md-menu-bar button {

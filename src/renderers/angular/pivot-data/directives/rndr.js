@@ -13,10 +13,11 @@ define(['jquery'],
                     pre: function(scope, element, attr) {
                         $(element).css({
                             'position': 'absolute',
-                            'top': '0px',
-                            'bottom': '0px',
-                            'left': '0px',
-                            'right': '0px'
+                            'top': '33px',
+                            'bottom': '10px',
+                            'left': '10px',
+                            'right': '10px',
+                            'overflow': 'auto'
                         });
                         scope.engine.setElement($(element));
                         scope.engine.draw(scope.input);

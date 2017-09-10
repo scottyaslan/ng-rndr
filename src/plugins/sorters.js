@@ -1,12 +1,6 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define('$rndrSorters', ['$rndrSorterTemplates'], function($rndrSorterTemplates) {
+        define('$rndrSorters', ['$rndrSortersTemplates'], function($rndrSorterTemplates) {
             return (root.rndr.plugins.sorters = factory($rndrSorterTemplates));
         });
     } else if (typeof module === 'object' && module.exports) {

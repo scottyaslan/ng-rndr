@@ -1,17 +1,14 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define('$rndrRenderingEngine', ['jquery', 'angular', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
-            return (root.rndr.RenderingEngine = factory(root, $, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
+        define('$rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+            return (root.rndr.RenderingEngine = factory(root, $, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.RenderingEngine = factory(root, require('jquery'), require('angular'), require('$rndrFormatters'), require('$rndrSorters'), require('$rndrDerivedAttributes'), require('$rndrAggregators'), require('$rndrDataViews'), require('$rndrRenderers')));
+        module.exports = (root.rndr.RenderingEngine = factory(root, require('jquery'), require('$rndrFormatters'), require('$rndrSorters'), require('$rndrDerivedAttributes'), require('$rndrAggregators'), require('$rndrDataViews'), require('$rndrRenderers')));
     } else {
-        root.rndr.RenderingEngine = factory(root, root.$, root.angular, root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
+        root.rndr.RenderingEngine = factory(root, root.$, root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
     }
-}(this, function(root, $, angular, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+}(this, function(root, $, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
     'use strict';
 
     /**
@@ -142,7 +139,7 @@
         setDerivedAttributes: function(attrs) {
             this.derivedAttributes = {};
             if (attrs !== undefined && attrs !== '' && attrs !== null) {
-                angular.forEach(attrs, function(name) {
+                $.each(attrs, function(name) {
                     try {
                         this.derivedAttributes[name] = $rndrDerivedAttributes[name];
                     } catch (_error) {
@@ -158,7 +155,7 @@
         setSorters: function(sorters) {
             this.sorters = {};
             if (sorters !== undefined && sorters !== '' && sorters !== null) {
-                angular.forEach(sorters, function(name) {
+                $.each(sorters, function(name) {
                     try {
                         this.sorters[name] = $rndrSorters[name];
                     } catch (_error) {

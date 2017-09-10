@@ -1,64 +1,17 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
-    if (root.rndr.plugins.pivotData === undefined) {
-        root.rndr.plugins.pivotData = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers === undefined) {
-        root.rndr.plugins.pivotData.renderers = {};
-    }
-    if (root.rndr.plugins.pivotData.renderers.pivotDataUi === undefined) {
-        root.rndr.plugins.pivotData.renderers.pivotDataUi = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery',
-            'angular',
-            '$rndrAggregators',
-            '$rndrDataViews',
-            '$rndrRenderers',
-            '$rndrRenderingEngine'
-        ], function($,
-            angular,
-            $rndrAggregators,
-            $rndrDataViews,
-            $rndrRenderers,
-            $rndrRenderingEngine) {
-            return factory(root,
-                $,
-                angular,
-                $rndrAggregators,
-                $rndrDataViews,
-                $rndrRenderers,
-                $rndrRenderingEngine);
+        define(['jquery', 'angular', 'rndr'], function($, c3, rndr) {
+            return factory(root, $, c3, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root,
-            require('jquery'),
-            require('angular'),
-            require('$rndrAggregators'),
-            require('$rndrDataViews'),
-            require('$rndrRenderers'),
-            require('$rndrRenderingEngine'));
+        module.exports = factory(root, require('jquery'), require('angular'), require('rndr'));
     } else {
-        factory(root,
-            root.$,
-            root.angular,
-            root.rndr.plugins.aggregators,
-            root.rndr.plugins.dataViews,
-            root.rndr.plugins.renderers,
-            root.rndr.RenderingEngine);
+        factory(root, root.$, root.angular, root.rndr);
     }
 }(this, function(root,
     $,
     angular,
-    $rndrAggregators,
-    $rndrDataViews,
-    $rndrRenderers,
-    $rndrRenderingEngine) {
+    rndr) {
     var pivotDataUiRenderer = {
         'PivotData UI': function(renderingEngine, opts) {
             /**
@@ -104,7 +57,7 @@
             };
             opts = $.extend(true, defaults, opts);
 
-            var app = angular.module(uuid + 'App', ['ngResource', 'ngRoute', 'ngMaterial', 'ui.sortable', 'ngPivotData', 'ngPivotDataTemplates']);
+            var app = angular.module(uuid + 'App', ['ngResource', 'ngRoute', 'ngMaterial', 'ui.sortable', 'ngRndr', 'ngRndrTemplates']);
 
             var pivotDataUIConfig = function($mdThemingProvider) {
                 //Define app palettes
@@ -205,7 +158,7 @@
             }
 
             //create embedded rendering engine from original to control the display of the data within this plugin 
-            var embeddedRenderingEngine = new $rndrRenderingEngine(renderingEngine.dataView.meta.renderer, renderingEngine.id, renderingEngine.aggregator.name, renderingEngine.aggregator.aggInputAttributeName, renderingEngine.dataView.meta, renderingEngine.derivedAttributes, renderingEngine.locale, renderingEngine.sorters, null, renderingEngine.dataView.data);
+            var embeddedRenderingEngine = new rndr.RenderingEngine(renderingEngine.dataView.meta.renderer, renderingEngine.id, renderingEngine.aggregator.name, renderingEngine.aggregator.aggInputAttributeName, renderingEngine.dataView.meta, renderingEngine.derivedAttributes, renderingEngine.locale, renderingEngine.sorters, null, renderingEngine.dataView.data);
 
             var pivotDataUIExploreController = injector.get('pivotDataUIExploreController');
             pivotDataUIExploreController.init(renderingEngine, embeddedRenderingEngine);
@@ -213,18 +166,22 @@
             var $rootScope = injector.get('$rootScope');
             result.append($compile('<pivot-data-ui-directive style="height: 100%;"></pivot-data-ui-directive>')($rootScope));
 
-            var rndr = $('#pivot-data-ui-rndr');
-            rndr.attr('id', rndr.attr('id') + '-' + uuid);
+            // var rndrElam = $('#pivot-data-ui-rndr');
+            // rndrElam.attr('id', rndrElam.attr('id') + '-' + uuid);
+
+            // var a      = document.createElement('a');
+            // a.href     = 'data:image/svg+xml;utf8,' + unescape($('#SVG')[0].outerHTML);
+            // a.download = 'plot.svg';
+            // a.target   = '_blank';
+            // document.body.appendChild(a); a.click(); document.body.removeChild(a);
 
             return result;
         }
     };
 
-    root.rndr.plugins.pivotData.renderers.pivotDataUi.ux = $rndrRenderers.add('PivotData UI',
+    rndr.plugins.renderers.add('PivotData UI',
         pivotDataUiRenderer['PivotData UI'],
         'PivotData', {
             renderer: 'Pivot Table - Table'
         });
-
-    return pivotDataUiRenderer;
 }));

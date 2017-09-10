@@ -11,25 +11,16 @@
  * methods as this factory is designed to support an infinite number of possibilities.
  */
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
-    if (root.rndr.plugins.DataViews === undefined) {
-        root.rndr.plugins.DataViews = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define([], function() {
-            return (root.rndr.plugins.DataViews['CloneData'] = factory());
+        define(['rndr'], function(rndr) {
+            return factory(rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.DataViews['CloneData'] = factory());
+        module.exports = factory(require('rndr'));
     } else {
-        root.rndr.plugins.DataViews['CloneData'] = factory();
+        factory(root.rndr);
     }
-}(this, function() {
+}(this, function(rndr) {
     function CloneData(data, opts) {
         this = data;
 
@@ -39,5 +30,6 @@
     CloneData.prototype = {
         constructor: CloneData,
     };
-    return CloneData;
+
+    rndr.plugins.dataViews.add('CloneData', CloneData);
 }));

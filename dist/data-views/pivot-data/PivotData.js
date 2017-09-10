@@ -8,28 +8,16 @@
  * to generate views of data.
  */
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
-    if (root.rndr.plugins.pivotData === undefined) {
-        root.rndr.plugins.pivotData = {};
-    }
-    if (root.rndr.plugins.pivotData.dataView === undefined) {
-        root.rndr.plugins.pivotData.dataView = {};
-    }
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', '$rndrDataViews'], function($, $rndrDataViews) {
-            return (root.rndr.plugins.pivotData.dataView = factory($, $rndrDataViews));
+        define(['jquery', 'rndr'], function($, rndr) {
+            return factory(root, $, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.pivotData.dataView = factory(require('jquery'), require('$rndrDataViews')));
+        module.exports = factory(require('jquery'), require('rndr'));
     } else {
-        root.rndr.plugins.pivotData.dataView = factory(root.$, root.rndr.plugins.dataViews);
+        factory(root.$, root.rndr);
     }
-}(this, function($, $rndrDataViews) {
+}(this, function(root, $, rndr) {
     var naturalSort = function(as, bs) {
         var a, a1, b, b1, rd, rx, rz;
         rx = /(\d+)|(\D+)/g;
@@ -387,5 +375,5 @@
         }
     };
 
-    return $rndrDataViews.add('PivotData', PivotData);
+    rndr.plugins.dataViews.add('PivotData', PivotData);
 }));

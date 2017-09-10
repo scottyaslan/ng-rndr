@@ -1,10 +1,4 @@
 (function(root, factory) {
-    if (root.rndr === undefined) {
-        root.rndr = {};
-    }
-    if (root.rndr.plugins === undefined) {
-        root.rndr.plugins = {};
-    }
     if (typeof define === 'function' && define.amd) {
         define('$rndrDerivedAttributes', ['$rndrDeriverTemplates'], function($rndrDeriverTemplates) {
             return (root.rndr.plugins.derivedAttributes = factory($rndrDeriverTemplates));
