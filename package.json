@@ -1,6 +1,6 @@
 {
   "name": "rndr-eng",
-  "version": "0.0.1-RC.12",
+  "version": "0.0.1-RC.13",
   "license": "MIT",
   "description": "The rendering engine modules are a pluggable and embeddable framework for persisting data visualizations.",
   "author": {

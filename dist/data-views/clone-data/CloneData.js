@@ -25,7 +25,7 @@
         this.data = data;
 
         //set meta from previous state or initialize
-        this.meta = opts.meta || {};
+        this.meta = $.extend({}, opts.meta);
     }
     CloneData.prototype = {
         constructor: CloneData,

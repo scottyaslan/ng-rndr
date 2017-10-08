@@ -99,7 +99,7 @@
             }
             if (parseInt(j) === 0) {
                 th = document.createElement('th');
-                th.className = 'pvtTotalLabel';
+                th.className = 'pvtTotalLabel pvtRowTotalLabel';
                 th.innerHTML = opts.locales[renderingEngine.locale].localeStrings.totals;
                 th.setAttribute('rowspan', colAttrs.length + (rowAttrs.length === 0 ? 0 : 1));
                 tr.appendChild(th);
@@ -119,7 +119,7 @@
             }
             th = document.createElement('th');
             if (colAttrs.length === 0) {
-                th.className = 'pvtTotalLabel';
+                th.className = 'pvtTotalLabel pvtRowTotalLabel';
                 th.innerHTML = opts.locales[renderingEngine.locale].localeStrings.totals;
             }
             tr.appendChild(th);
@@ -179,7 +179,7 @@
         }
         tr = document.createElement('tr');
         th = document.createElement('th');
-        th.className = 'pvtTotalLabel';
+        th.className = 'pvtTotalLabel pvtColTotalLabel';
         th.innerHTML = opts.locales[renderingEngine.locale].localeStrings.totals;
         th.setAttribute('colspan', rowAttrs.length + (colAttrs.length === 0 ? 0 : 1));
         tr.appendChild(th);
@@ -299,7 +299,7 @@
         numCols = $(pivottable).data('numcols');
         barcharter = (function(_this) {
             return function(scope) {
-                var forEachCell, max, scaler, values;
+                var forEachCell, max, min, range, scaler, values;
                 forEachCell = function(f) {
                     return _this.find(scope).each(function() {
                         var x;
@@ -314,32 +314,51 @@
                     return values.push(x);
                 });
                 max = Math.max.apply(Math, values);
+                if (max < 0) {
+                    max = 0;
+                }
+                range = max;
+                min = Math.min.apply(Math, values);
+                if (min < 0) {
+                    range = max - min;
+                }
                 scaler = function(x) {
-                    return 100 * x / (1.4 * max);
+                    return 100 * x / (1.4 * range);
                 };
                 return forEachCell(function(x, elem) {
-                    var text, wrapper;
+                    var bBase, bgColor, text, wrapper;
                     text = elem.text();
-                    wrapper = $('<div>').css({
-                        'position': 'relative'
+                    wrapper = $("<div>").css({
+                        "position": "relative",
+                        "height": "55px"
                     });
-                    wrapper.append($('<div>').css({
-                        'position': 'absolute',
-                        'bottom': -2,
-                        'left': 0,
-                        'right': 0,
-                        'height': scaler(x) + '%',
-                        'background-color': 'gray'
+                    bgColor = "gray";
+                    bBase = 0;
+                    if (min < 0) {
+                        bBase = scaler(-min);
+                    }
+                    if (x < 0) {
+                        bBase += scaler(x);
+                        bgColor = "darkred";
+                        x = -x;
+                    }
+                    wrapper.append($("<div>").css({
+                        "position": "absolute",
+                        "bottom": bBase + "%",
+                        "left": 0,
+                        "right": 0,
+                        "height": scaler(x) + "%",
+                        "background-color": bgColor
                     }));
-                    wrapper.append($('<div>').text(text).css({
-                        'position': 'relative',
-                        'padding-left': '5px',
-                        'padding-right': '5px'
+                    wrapper.append($("<div>").text(text).css({
+                        "position": "relative",
+                        "padding-left": "5px",
+                        "padding-right": "5px"
                     }));
                     return elem.css({
-                        'padding': 0,
-                        'padding-top': '5px',
-                        'text-align': 'center'
+                        "padding": 0,
+                        "padding-top": "5px",
+                        "text-align": "center"
                     }).html(wrapper);
                 });
             };

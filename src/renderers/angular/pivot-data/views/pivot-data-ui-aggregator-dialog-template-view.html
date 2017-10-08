@@ -39,7 +39,7 @@
                                         <md-list-item class="md-3-line">
                                             <md-input-container>
                                                 <md-select ng-model="exploreController.embeddedRenderingEngine.aggregator.name">
-                                                    <md-option ng-click="exploreController.embeddedRenderingEngine.setAggregator(aggregatorName); exploreController.renderingEngine.setAggregator(aggregatorName);" ng-repeat="aggregatorName in aggregators.list()" value="{{aggregatorName}}">{{aggregatorName}}</md-option>
+                                                    <md-option ng-click="exploreController.embeddedRenderingEngine.setAggregator(aggregatorName); exploreController.renderingEngine.setAggregator(aggregatorName);" ng-repeat="aggregatorName in aggregators" value="{{aggregatorName}}">{{aggregatorName}}</md-option>
                                                 </md-select>
                                             </md-input-container>
                                         </md-list-item>

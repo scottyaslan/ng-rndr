@@ -61,12 +61,14 @@
         this.data = this.convertToArray(data);
 
         // set meta from previous state or initialize
-        this.meta = opts.meta || {
+        this.meta = $.extend({
             rows: [],
             cols: [],
             hiddenAttributes: [],
+            hiddenFromAggregators: [],
+            hiddenFromDragDrop: [],
             attributeFilterExclusions: {}
-        };
+        }, opts.meta);
 
         // initialize properties
         this.aggregator = opts.aggregator.aggregate(opts.aggregator.aggInputAttributeName);
@@ -114,6 +116,30 @@
                 }
             }
             return results;
+        })(this);
+        this.shownInAggregators = [];
+        this.shownInAggregators = (function(self) {
+          var l, len1, results;
+          results = [];
+          for (l = 0, len1 = self.shownAttributes.length; l < len1; l++) {
+            c = self.shownAttributes[l];
+            if (self.meta.hiddenFromAggregators.indexOf(c) < 0) {
+              results.push(c);
+            }
+          }
+          return results;
+        })(this);
+        this.shownInDragDrop = [];
+        this.shownInDragDrop = (function(self) {
+          var l, len1, results;
+          results = [];
+          for (l = 0, len1 = self.shownAttributes.length; l < len1; l++) {
+            c = self.shownAttributes[l];
+            if (self.meta.hiddenFromDragDrop.indexOf(c) < 0) {
+              results.push(c);
+            }
+          }
+          return results;
         })(this);
 
         // store the inactive attributes
