@@ -179,9 +179,11 @@
         }
     };
 
-    rndr.plugins.renderers.add('PivotData UI',
-        pivotDataUiRenderer['PivotData UI'],
-        'PivotData', {
+    rndr.plugins.renderers.set('PivotData UI', {
+        render: pivotDataUiRenderer['PivotData UI'],
+        opts: {
             renderer: 'Pivot Table - Table'
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 }));

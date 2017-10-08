@@ -9,30 +9,43 @@
         root.rndr.plugins.formatters = factory(root.rndr.templates.formatters);
     }
 }(this, function($rndrFormatterTemplates) {
+    /**
+     * A dictionary of data view object factories.
+     */
+     var $rndrFormatters = new Map();
 
-    function Formatters() {}
-    Formatters.prototype = {
-        constructor: Formatters,
-        /**
-         * Adds a formatter function.
-         * 
-         * @param {string} name         The name of the data attribute for which the `sorter` function will be applied.
-         * @param {function} sorter     The function which sorts the values of a data attribute.
-         */
-        add: function(name, sorter) {
-            this[name] = sorter;
-        },
-        /**
-         * Lists the available formatters.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        }
+    var usFmt = function() {
+        return $rndrFormatterTemplates.get('numberFormat')();
     };
 
-    var $rndrFormatters = new Formatters();
+    var usFmtInt = function() {
+        return $rndrFormatterTemplates.get('numberFormat')({
+            digitsAfterDecimal: 0
+        });
+    };
+    
+    var usFmtPct = function() {
+        return $rndrFormatterTemplates.get('numberFormat')({
+            digitsAfterDecimal: 1,
+            scaler: 100,
+            suffix: '%'
+        });
+    };
+
+    /**
+     * A function for formatting a number into a standard US formatted number.
+     */
+    $rndrFormatters.set('US Standard', usFmt());
+
+    /**
+     * A function for formatting a number into a standard US formatted integer.
+     */
+    $rndrFormatters.set('US Standard Integer', usFmtInt());
+
+    /**
+     * A function for formatting a number into a standard US formatted percentage.
+     */
+    $rndrFormatters.set('US Standard Percentage', usFmtPct());
 
     return $rndrFormatters;
 }));

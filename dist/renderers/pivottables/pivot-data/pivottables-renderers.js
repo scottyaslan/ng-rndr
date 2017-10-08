@@ -368,33 +368,43 @@
         }
     };
 
-    rndr.plugins.renderers.add('Pivot Table - Table',
-        pivotTableRenderers['Pivot Table - Table'],
-        'PivotData', {
+    rndr.plugins.renderers.set('Pivot Table - Table', {
+        render: pivotTableRenderers['Pivot Table - Table'],
+        opts: {
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 
-    rndr.plugins.renderers.add('Pivot Table - Table Barchart',
-        pivotTableRenderers['Pivot Table - Table Barchart'],
-        'PivotData', {
+    rndr.plugins.renderers.set('Pivot Table - Table Barchart', {
+        render: pivotTableRenderers['Pivot Table - Table Barchart'],
+        opts: {
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 
-    rndr.plugins.renderers.add('Pivot Table - Heatmap',
-        pivotTableRenderers['Pivot Table - Heatmap'],
-        'PivotData', {
+    rndr.plugins.renderers.set('Pivot Table - Heatmap', {
+        render: pivotTableRenderers['Pivot Table - Heatmap'],
+        opts: {
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 
-    rndr.plugins.renderers.add('Pivot Table - Row Heatmap',
-        pivotTableRenderers['Pivot Table - Row Heatmap'],
-        'PivotData', {
+    rndr.plugins.renderers.set('Pivot Table - Row Heatmap', {
+        render: pivotTableRenderers['Pivot Table - Row Heatmap'],
+        opts: {
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 
-    rndr.plugins.renderers.add('Pivot Table - Col Heatmap',
-        pivotTableRenderers['Pivot Table - Col Heatmap'],
-        'PivotData', {
+    rndr.plugins.renderers.set('Pivot Table - Col Heatmap', {
+        render: pivotTableRenderers['Pivot Table - Col Heatmap'],
+        opts: {
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 }));

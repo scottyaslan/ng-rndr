@@ -1,6 +1,6 @@
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define('$rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+        define('rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
             return (root.rndr.RenderingEngine = factory(root, $, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
         });
     } else if (typeof module === 'object' && module.exports) {
@@ -70,20 +70,21 @@
         this.setDerivedAttributes(derivedAttrs);
         this.setSorters(sorters);
 
+        var dataView = $rndrDataViews.get($rndrRenderers.get(this.renderer).dataViewName).view;
         if (dv_meta !== undefined && dv_meta !== '' && dv_meta !== null) {
-            this.dataView = new $rndrDataViews[$rndrRenderers[this.renderer].dataViewName].view(data, {
+            this.dataView = new dataView(data, {
                 aggregator: this.aggregator,
                 derivedAttributes: this.derivedAttributes,
                 sorters: this.sorters,
-                formatters: $rndrFormatters,
+                formatters: $rndrFormatters.map,
                 meta: dv_meta
             });
         } else {
-            this.dataView = new $rndrDataViews[$rndrRenderers[this.renderer].dataViewName].view(data, {
+            this.dataView = new dataView(data, {
                 aggregator: this.aggregator,
                 derivedAttributes: this.derivedAttributes,
                 sorters: this.sorters,
-                formatters: $rndrFormatters,
+                formatters: $rndrFormatters.map,
             });
         }
         this.dirty = false;
@@ -141,7 +142,7 @@
             if (attrs !== undefined && attrs !== '' && attrs !== null) {
                 $.each(attrs, function(name) {
                     try {
-                        this.derivedAttributes[name] = $rndrDerivedAttributes[name];
+                        this.derivedAttributes[name] = $rndrDerivedAttributes.map[name];
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {
@@ -157,7 +158,7 @@
             if (sorters !== undefined && sorters !== '' && sorters !== null) {
                 $.each(sorters, function(name) {
                     try {
-                        this.sorters[name] = $rndrSorters[name];
+                        this.sorters[name] = $rndrSorters.map[name];
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {
@@ -178,7 +179,7 @@
                 if (this.aggregator === undefined) {
                     this.aggregator = {
                         name: 'Count',
-                        aggregate: $rndrAggregators['Count'].aggregate,
+                        aggregate: $rndrAggregators.get('Count'),
                         aggInputAttributeName: []
                     }
                 }
@@ -192,7 +193,7 @@
             if (aggregator === undefined || aggregator === '' || aggregator === null) {
                 this.aggregator.name = 'Count';
                 try {
-                    this.aggregator.aggregate = $rndrAggregators['Count'].aggregate;
+                    this.aggregator.aggregate = $rndrAggregators.get('Count');
                 } catch (_error) {
                     var e = _error;
                     if (typeof console !== 'undefined' && console !== null) {
@@ -203,7 +204,7 @@
             } else {
                 this.aggregator.name = aggregator;
                 try {
-                    this.aggregator.aggregate = $rndrAggregators[aggregator].aggregate;
+                    this.aggregator.aggregate = $rndrAggregators.get(aggregator);
                 } catch (_error) {
                     var e = _error;
                     if (typeof console !== 'undefined' && console !== null) {
@@ -213,7 +214,7 @@
                 this.aggregator.aggInputAttributeName = [];
             }
 
-            var numInputs = $rndrAggregators[this.aggregator.name].aggregate([])([]).numInputs;
+            var numInputs = $rndrAggregators.get(this.aggregator.name)([])([]).numInputs;
 
             if (numInputs === undefined) {
                 this.aggregator.aggInputAttributeName = new Array();
@@ -259,7 +260,7 @@
                     aggregator: self.aggregator,
                     derivedAttributes: self.derivedAttributes,
                     sorters: self.sorters,
-                    formatters: $rndrFormatters,
+                    formatters: $rndrFormatters.map,
                     meta: self.dataView.meta
                 };
 
@@ -267,10 +268,10 @@
                     element: self.element,
                     renderers: $rndrRenderers,
                     dataViews: $rndrDataViews,
-                    sorters: $rndrSorters,
+                    sorters: $rndrSorters.map,
                     aggregators: $rndrAggregators,
-                    derivedAttributes: $rndrDerivedAttributes,
-                    formatters: $rndrFormatters,
+                    derivedAttributes: $rndrDerivedAttributes.map,
+                    formatters: $rndrFormatters.map,
                     heightOffset: 0,
                     widthOffset: 0,
                     locales: {
@@ -286,11 +287,12 @@
                 };
 
                 try {
-                    self.dataView = new $rndrDataViews[$rndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $rndrDataViews[$rndrRenderers[self.renderer].dataViewName].opts));
+                    var dataView = $rndrDataViews.get($rndrRenderers.get(self.renderer).dataViewName).view;
+                    self.dataView = new dataView(data, $.extend(dataView_opts, $rndrDataViews.get($rndrRenderers.get(self.renderer).dataViewName).opts));
 
                     try {
                         //render and attach new viz
-                        result = $rndrRenderers[self.renderer].render(self, $.extend(opts, $rndrRenderers[self.renderer].opts));
+                        result = $rndrRenderers.get(self.renderer).render(self, $.extend(opts, $rndrRenderers.get(self.renderer).opts));
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {

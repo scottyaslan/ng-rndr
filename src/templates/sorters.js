@@ -50,66 +50,47 @@
     /**
      * A dictionary of 'data sorting' functions.
      */
-    function SortersTemplates() {}
-    SortersTemplates.prototype = {
-        constructor: SortersTemplates,
-        /**
-         * Adds a helper function used to create data sorters.
-         * 
-         * @param {string} name       The lookup name of the helper function.
-         * @param {function} helper The helper function used to create data sorters.
-         */
-        add: function(name, helper) {
-            this[name] = helper;
-        },
-        /**
-         * Lists the available helper functions.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        },
-        /**
-         * A helper function used to generate a function that defines the order of (available) values for a given attribute.
-         * 
-         * @param  {array} order An array of strings that define the order of the values for an attribute.
-         * @return {function}    A data sorting function.
-         */
-        sortAs: function(order) {
-            var i, mapping, x;
-            mapping = {};
-            for (i in order) {
-                x = order[i];
-                mapping[x] = i;
-            }
-            return function(a, b) {
-                if ((mapping[a] != null) && (mapping[b] != null)) {
-                    return mapping[a] - mapping[b];
-                } else if (mapping[a] != null) {
-                    return -1;
-                } else if (mapping[b] != null) {
-                    return 1;
-                } else {
-                    return naturalSort(a, b);
-                }
-            };
-        },
-        /**
-         * Ascending sorting function.
-         */
-        sortAscending: function(a,b) { 
-            return a-b; 
-        },
-        /**
-         * Descending sorting function.
-         */
-        sortDescending: function(a,b) { 
-            return b-a; 
-        }
-    };
+    var $rndrSorterTemplates = new Map();
 
-    var $rndrSorterTemplates = new SortersTemplates();
+    /**
+     * A helper function used to generate a function that defines the order of (available) values for a given attribute.
+     * 
+     * @param  {array} order An array of strings that define the order of the values for an attribute.
+     * @return {function}    A data sorting function.
+     */
+    $rndrSorterTemplates.set('sortAs', function(order) {
+        var i, mapping, x;
+        mapping = {};
+        for (i in order) {
+            x = order[i];
+            mapping[x] = i;
+        }
+        return function(a, b) {
+            if ((mapping[a] != null) && (mapping[b] != null)) {
+                return mapping[a] - mapping[b];
+            } else if (mapping[a] != null) {
+                return -1;
+            } else if (mapping[b] != null) {
+                return 1;
+            } else {
+                return naturalSort(a, b);
+            }
+        };
+    });
+
+    /**
+     * Ascending sorting function.
+     */
+    $rndrSorterTemplates.set('sortAscending', function(a, b) {
+        return a - b;
+    });
+
+    /**
+     * Descending sorting function.
+     */
+    $rndrSorterTemplates.set('sortDescending', function(a, b) {
+        return b - a;
+    });
 
     return $rndrSorterTemplates;
 }));

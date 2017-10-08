@@ -260,7 +260,7 @@
                 if (index < 0) {
                     self.meta.attributeFilterExclusions[attributeFilterName].push(filterByAttributeValue);
                 } else {
-                   self.removeExclusionFilter(attributeFilterName, filterByAttributeValue);
+                    self.removeExclusionFilter(attributeFilterName, filterByAttributeValue);
                 }
             } else {
                 self.meta.attributeFilterExclusions[attributeFilterName] = [];
@@ -375,5 +375,8 @@
         }
     };
 
-    rndr.plugins.dataViews.add('PivotData', PivotData);
+    rndr.plugins.dataViews.set('PivotData', {
+        view: PivotData,
+        opts: {},
+    });
 }));

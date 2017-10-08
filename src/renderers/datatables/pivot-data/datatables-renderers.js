@@ -394,38 +394,48 @@
         }
     };
 
-    rndr.plugins.renderers.add('DataTable - Table',
-        datatableRenderers['DataTable - Table'],
-        'PivotData', {
+    rndr.plugins.renderers.set('DataTable - Table', {
+        render: datatableRenderers['DataTable - Table'],
+        opts: {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 
-    rndr.plugins.renderers.add('DataTable - Table Barchart',
-        datatableRenderers['DataTable - Table Barchart'],
-        'PivotData', {
+    rndr.plugins.renderers.set('DataTable - Table Barchart', {
+        render: datatableRenderers['DataTable - Table Barchart'],
+        opts: {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 
-    rndr.plugins.renderers.add('DataTable - Heatmap',
-        datatableRenderers['DataTable - Heatmap'],
-        'PivotData', {
+    rndr.plugins.renderers.set('DataTable - Heatmap', {
+        render: datatableRenderers['DataTable - Heatmap'],
+        opts: {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 
-    rndr.plugins.renderers.add('DataTable - Row Heatmap',
-        datatableRenderers['DataTable - Row Heatmap'],
-        'PivotData', {
+    rndr.plugins.renderers.set('DataTable - Row Heatmap', {
+        render: datatableRenderers['DataTable - Row Heatmap'],
+        opts: {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 
-    rndr.plugins.renderers.add('DataTable - Col Heatmap',
-        datatableRenderers['DataTable - Col Heatmap'],
-        'PivotData', {
+    rndr.plugins.renderers.set('DataTable - Col Heatmap', {
+        render: datatableRenderers['DataTable - Col Heatmap'],
+        opts: {
             clazz: ['pvtTable', 'cell-border', 'compact', 'hover', 'order-column', 'row-border', 'zebra'], //defaut styling classes http://www.datatables.net/manual/styling/classes
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 }));

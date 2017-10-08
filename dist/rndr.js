@@ -451,45 +451,36 @@ define("../node_modules/almond/almond", function(){});
 
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define('$rndrDataViews', ['jquery'], function($) {
-            return (root.rndr.plugins.dataViews = factory(root, $));
+        define('$rndrDataViews', [], function() {
+            return (root.rndr.plugins.dataViews = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
         module.exports = (root.rndr.plugins.dataViews = factory());
     } else {
         root.rndr.plugins.dataViews = factory();
     }
-}(this, function(root, $) {
+}(this, function() {
     /**
      * A dictionary of data view object factories.
      */
-    function DataViews() {}
-    DataViews.prototype = {
-        constructor: DataViews,
-        /**
-         * Adds a data view object factory.
-         * 
-         * @param {string} name     The lookup name of the `DataView`.
-         * @param {DataView} DataView The `DataView` object factory to add.
-         */
-        add: function(name, DataView, opts) {
-            this[name] = {
-                view: DataView,
-                opts: opts,
-            };
-            return this[name];
-        },
-        /**
-         * Lists the available data view plugins.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        }
-    };
+    return new Map();
+}));
 
-    return root.rndr.plugins.dataViews = $.extend(root.rndr.plugins.dataViews, new DataViews());
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define('$rndrSorters', [], function() {
+            return (root.rndr.plugins.sorters = factory());
+        });
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = (root.rndr.plugins.sorters = factory());
+    } else {
+        root.rndr.plugins.sorters = factory();
+    }
+}(this, function() {
+    /**
+     * A dictionary of sorters.
+     */
+     return new Map();
 }));
 
 (function(root, factory) {
@@ -544,106 +535,65 @@ define("../node_modules/almond/almond", function(){});
     /**
      * A dictionary of 'data sorting' functions.
      */
-    function SortersTemplates() {}
-    SortersTemplates.prototype = {
-        constructor: SortersTemplates,
-        /**
-         * Adds a helper function used to create data sorters.
-         * 
-         * @param {string} name       The lookup name of the helper function.
-         * @param {function} helper The helper function used to create data sorters.
-         */
-        add: function(name, helper) {
-            this[name] = helper;
-        },
-        /**
-         * Lists the available helper functions.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        },
-        /**
-         * A helper function used to generate a function that defines the order of (available) values for a given attribute.
-         * 
-         * @param  {array} order An array of strings that define the order of the values for an attribute.
-         * @return {function}    A data sorting function.
-         */
-        sortAs: function(order) {
-            var i, mapping, x;
-            mapping = {};
-            for (i in order) {
-                x = order[i];
-                mapping[x] = i;
-            }
-            return function(a, b) {
-                if ((mapping[a] != null) && (mapping[b] != null)) {
-                    return mapping[a] - mapping[b];
-                } else if (mapping[a] != null) {
-                    return -1;
-                } else if (mapping[b] != null) {
-                    return 1;
-                } else {
-                    return naturalSort(a, b);
-                }
-            };
-        },
-        /**
-         * Ascending sorting function.
-         */
-        sortAscending: function(a,b) { 
-            return a-b; 
-        },
-        /**
-         * Descending sorting function.
-         */
-        sortDescending: function(a,b) { 
-            return b-a; 
-        }
-    };
+    var $rndrSorterTemplates = new Map();
 
-    var $rndrSorterTemplates = new SortersTemplates();
+    /**
+     * A helper function used to generate a function that defines the order of (available) values for a given attribute.
+     * 
+     * @param  {array} order An array of strings that define the order of the values for an attribute.
+     * @return {function}    A data sorting function.
+     */
+    $rndrSorterTemplates.set('sortAs', function(order) {
+        var i, mapping, x;
+        mapping = {};
+        for (i in order) {
+            x = order[i];
+            mapping[x] = i;
+        }
+        return function(a, b) {
+            if ((mapping[a] != null) && (mapping[b] != null)) {
+                return mapping[a] - mapping[b];
+            } else if (mapping[a] != null) {
+                return -1;
+            } else if (mapping[b] != null) {
+                return 1;
+            } else {
+                return naturalSort(a, b);
+            }
+        };
+    });
+
+    /**
+     * Ascending sorting function.
+     */
+    $rndrSorterTemplates.set('sortAscending', function(a, b) {
+        return a - b;
+    });
+
+    /**
+     * Descending sorting function.
+     */
+    $rndrSorterTemplates.set('sortDescending', function(a, b) {
+        return b - a;
+    });
 
     return $rndrSorterTemplates;
 }));
-
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define('$rndrSorters', ['$rndrSortersTemplates'], function($rndrSorterTemplates) {
-            return (root.rndr.plugins.sorters = factory($rndrSorterTemplates));
+        define('$rndrDerivedAttributes', [], function() {
+            return (root.rndr.plugins.derivedAttributes = factory());
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.sorters = factory(require('$rndrSorterTemplates')));
+        module.exports = (root.rndr.plugins.derivedAttributes = factory());
     } else {
-        root.rndr.plugins.sorters = factory(root.rndr.templates.sorters);
+        root.rndr.plugins.derivedAttributes = factory();
     }
-}(this, function($rndrSorterTemplates) {
-    function Sorters() {}
-    Sorters.prototype = {
-        constructor: Sorters,
-        /**
-         * Adds a sorter function.
-         * 
-         * @param {string} name         The name of the data attribute for which the `sorter` function will be applied.
-         * @param {function} sorter     The function which sorts the values of a data attribute.
-         */
-        add: function(name, sorter) {
-            this[name] = sorter;
-        },
-        /**
-         * Lists the available sorters.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        }
-    };
-
-    var $rndrSorters = new Sorters();
-
-    return $rndrSorters;
+}(this, function() {
+    /**
+     * A dictionary of data attribute deriving functions.
+     */
+    return new Map();
 }));
 
 (function(root, factory) {
@@ -670,144 +620,86 @@ define("../node_modules/almond/almond", function(){});
     /**
      * A dictionary of 'deriver generator' functions: the keys are the names of the new attributes, and the functions take an existing record and return the value of the new attribute.
      */
-    function DeriverTemplates() {}
-    DeriverTemplates.prototype = {
-        constructor: DeriverTemplates,
-        /**
-         * Adds a deriver function.
-         * 
-         * @param {string} name       The lookup name of the deriver function.
-         * @param {function} deriver The function which *derives* an attribute.
-         */
-        add: function(name, deriver) {
-            this[name] = deriver;
-        },
-        /**
-         * Lists the available `attribute deriving` functions.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        },
-        /**
-         * Generates a function that performs a 'binning' of high-cardinality attributes into a lower-cardinality bucket.
-         * @param  {string} col      The column name.
-         * @param  {number} binWidth The width of the bin.
-         * @return {function}        A function that takes an existing record and returns the value of the new attribute.
-         */
-        bin: function(col, binWidth) {
-            return function(record) {
-                return record[col] - record[col] % binWidth;
-            };
-        },
-        /**
-         * Generates a function that performs a 'binning' of  date or date-time values by day, hour, minute, week, month etc.
-         * 
-         * @param  {string} col      The column name.
-         * @param  {string} formatString The date format. Interpolates as follows:
-         *                               **%y**: date.getFullYear()
-         *                               **%m**: zeroPad(date.getMonth()+1)
-         *                               **%n**: mthNames[date.getMonth()]
-         *                               **%d**: zeroPad(date.getDate())
-         *                               **%w**: dayNames[date.getDay()]
-         *                               **%x**: date.getDay()
-         *                               **%H**: zeroPad(date.getHours())
-         *                               **%M**: zeroPad(date.getMinutes())
-         *                               **%S**: zeroPad(date.getSeconds())
-         * @param  {boolean} utcOutput   Determines whether or not to display the string 'UTC' in the output
-         * @param  {object} mthNames     A dictionary of month names (where the string name of the month is the key)
-         * @param  {object} dayNames     A dictionary of day name (where the string name of the day is the key)
-         * @return {function}            A function that takes an existing record and returns the value of the new attribute.
-         */
-        dateFormat: function(col, formatString, utcOutput, mthNames, dayNames) {
-            var utc;
-            if (utcOutput == null) {
-                utcOutput = false;
-            }
-            if (mthNames == null) {
-                mthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            }
-            if (dayNames == null) {
-                dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            }
-            utc = utcOutput ? 'UTC' : '';
-            return function(record) {
-                var date;
-                date = new Date(Date.parse(record[col]));
-                if (isNaN(date)) {
-                    return '';
-                }
-                return formatString.replace(/%(.)/g, function(m, p) {
-                    switch (p) {
-                        case 'y':
-                            return date['get' + utc + 'FullYear']();
-                        case 'm':
-                            return zeroPad(date['get' + utc + 'Month']() + 1);
-                        case 'n':
-                            return mthNames[date['get' + utc + 'Month']()];
-                        case 'd':
-                            return zeroPad(date['get' + utc + 'Date']());
-                        case 'w':
-                            return dayNames[date['get' + utc + 'Day']()];
-                        case 'x':
-                            return date['get' + utc + 'Day']();
-                        case 'H':
-                            return zeroPad(date['get' + utc + 'Hours']());
-                        case 'M':
-                            return zeroPad(date['get' + utc + 'Minutes']());
-                        case 'S':
-                            return zeroPad(date['get' + utc + 'Seconds']());
-                        default:
-                            return '%' + p;
-                    }
-                });
-            };
-        }
-    };
+    var $rndrDeriverTemplates = new Map();
 
-    var $rndrDeriverTemplates = new DeriverTemplates();
+    /**
+     * Generates a function that performs a 'binning' of high-cardinality attributes into a lower-cardinality bucket.
+     * @param  {string} col      The column name.
+     * @param  {number} binWidth The width of the bin.
+     * @return {function}        A function that takes an existing record and returns the value of the new attribute.
+     */
+    $rndrDeriverTemplates.set('bin', function(col, binWidth) {
+        return function(record) {
+            return record[col] - record[col] % binWidth;
+        };
+    });
+
+    /**
+     * Generates a function that performs a 'binning' of  date or date-time values by day, hour, minute, week, month etc.
+     * 
+     * @param  {string} col      The column name.
+     * @param  {string} formatString The date format. Interpolates as follows:
+     *                               **%y**: date.getFullYear()
+     *                               **%m**: zeroPad(date.getMonth()+1)
+     *                               **%n**: mthNames[date.getMonth()]
+     *                               **%d**: zeroPad(date.getDate())
+     *                               **%w**: dayNames[date.getDay()]
+     *                               **%x**: date.getDay()
+     *                               **%H**: zeroPad(date.getHours())
+     *                               **%M**: zeroPad(date.getMinutes())
+     *                               **%S**: zeroPad(date.getSeconds())
+     * @param  {boolean} utcOutput   Determines whether or not to display the string 'UTC' in the output
+     * @param  {object} mthNames     A dictionary of month names (where the string name of the month is the key)
+     * @param  {object} dayNames     A dictionary of day name (where the string name of the day is the key)
+     * @return {function}            A function that takes an existing record and returns the value of the new attribute.
+     */
+    $rndrDeriverTemplates.set('dateFormat', function(col, formatString, utcOutput, mthNames, dayNames) {
+        var utc;
+        if (utcOutput == null) {
+            utcOutput = false;
+        }
+        if (mthNames == null) {
+            mthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        }
+        if (dayNames == null) {
+            dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        }
+        utc = utcOutput ? 'UTC' : '';
+        return function(record) {
+            var date;
+            date = new Date(Date.parse(record[col]));
+            if (isNaN(date)) {
+                return '';
+            }
+            return formatString.replace(/%(.)/g, function(m, p) {
+                switch (p) {
+                    case 'y':
+                        return date['get' + utc + 'FullYear']();
+                    case 'm':
+                        return zeroPad(date['get' + utc + 'Month']() + 1);
+                    case 'n':
+                        return mthNames[date['get' + utc + 'Month']()];
+                    case 'd':
+                        return zeroPad(date['get' + utc + 'Date']());
+                    case 'w':
+                        return dayNames[date['get' + utc + 'Day']()];
+                    case 'x':
+                        return date['get' + utc + 'Day']();
+                    case 'H':
+                        return zeroPad(date['get' + utc + 'Hours']());
+                    case 'M':
+                        return zeroPad(date['get' + utc + 'Minutes']());
+                    case 'S':
+                        return zeroPad(date['get' + utc + 'Seconds']());
+                    default:
+                        return '%' + p;
+                }
+            });
+        };
+    });
 
     return $rndrDeriverTemplates;
 }));
-
-(function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrDerivedAttributes', ['$rndrDeriverTemplates'], function($rndrDeriverTemplates) {
-            return (root.rndr.plugins.derivedAttributes = factory($rndrDeriverTemplates));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.derivedAttributes = factory(require('$rndrDeriverTemplates')));
-    } else {
-        root.rndr.plugins.derivedAttributes = factory(root.rndr.templates.derivers);
-    }
-}(this, function($rndrDeriverTemplates) {
-    function DerivedAttributes() {}
-    DerivedAttributes.prototype = {
-        constructor: DerivedAttributes,
-        /**
-         * Adds a data attribute deriving function.
-         * 
-         * @param {string} name    The 
-         * @param {[type]} deriver The name of the new data attribute created by the `deriver` function.
-         */
-        add: function(name, deriver) {
-            this[name] = deriver;
-        },
-        /**
-         * Lists the available attribute deriving functions.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        }
-    };
-
-    var $rndrDerivedAttributes = new DerivedAttributes();
-    return $rndrDerivedAttributes;
-}));
-
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define('$rndrFormattersTemplates', ['jquery'], function($) {
@@ -843,69 +735,47 @@ define("../node_modules/almond/almond", function(){});
     /**
      * A dictionary of functions for creating 'number formatting' functions.
      */
-    function FormattersTemplates() {}
-    FormattersTemplates.prototype = {
-        constructor: FormattersTemplates,
-        /**
-         * Adds a helper function used to create data formatters.
-         * 
-         * @param {string} name       The lookup name of the helper function.
-         * @param {function} helper The helper function used to create data formatters.
-         */
-        add: function(name, helper) {
-            this[name] = helper;
-        },
-        /**
-         * Lists the available helper functions.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        },
-        /**
-         * A helper function used to create data formatters.
-         * 
-         * @param  {object} opts The formatting options described as follows:
-         *                       Key  | Type | Default value | Description
-         *                       ---- | ---- | ------------- | -----------
-         *                       `digitsAfterDecimal`  | number | 2 | The number of decimal points to display.
-         *                       `scaler`  | number | 1 | The scalar multiplier applied to the result.
-         *                       `thousandsSep`  | string | ',' | The string used for thousands places.
-         *                       `decimalSep`  | string | '.' | The string used for decimal points.
-         *                       `prefix`  | string | '' | The prefix string to prepend to the resuls.
-         *                       `suffix`  | string | '' | The suffix string to concact to the resuls.
-         *                       `showZero`  | boolean | false | Whether or not to display 0 or '' when the result is equal to 0.
-         * @return {function}    A data formatting function.
-         */
-        numberFormat: function(opts) {
-            var self = this;
-            var defaults;
-            defaults = {
-                digitsAfterDecimal: 2,
-                scaler: 1,
-                thousandsSep: ',',
-                decimalSep: '.',
-                prefix: '',
-                suffix: ''
-            };
-            opts = $.extend(defaults, opts);
-            return function(x) {
-                var result;
-                if (isNaN(x) || !isFinite(x)) {
-                    return '';
-                }
-                result = addSeparators((opts.scaler * x).toFixed(opts.digitsAfterDecimal), opts.thousandsSep, opts.decimalSep);
-                return '' + opts.prefix + result + opts.suffix;
-            };
-        }
-    };
-
-    var $rndrFormatterTemplates = new FormattersTemplates();
+    var $rndrFormatterTemplates = new Map();
+    
+    /**
+     * A helper function used to create data formatters.
+     * 
+     * @param  {object} opts The formatting options described as follows:
+     *                       Key  | Type | Default value | Description
+     *                       ---- | ---- | ------------- | -----------
+     *                       `digitsAfterDecimal`  | number | 2 | The number of decimal points to display.
+     *                       `scaler`  | number | 1 | The scalar multiplier applied to the result.
+     *                       `thousandsSep`  | string | ',' | The string used for thousands places.
+     *                       `decimalSep`  | string | '.' | The string used for decimal points.
+     *                       `prefix`  | string | '' | The prefix string to prepend to the resuls.
+     *                       `suffix`  | string | '' | The suffix string to concact to the resuls.
+     *                       `showZero`  | boolean | false | Whether or not to display 0 or '' when the result is equal to 0.
+     * @return {function}    A data formatting function.
+     */
+    $rndrFormatterTemplates.set('numberFormat', function(opts) {
+        var self = this;
+        var defaults;
+        defaults = {
+            digitsAfterDecimal: 2,
+            scaler: 1,
+            thousandsSep: ',',
+            decimalSep: '.',
+            prefix: '',
+            suffix: ''
+        };
+        opts = $.extend(defaults, opts);
+        return function(x) {
+            var result;
+            if (isNaN(x) || !isFinite(x)) {
+                return '';
+            }
+            result = addSeparators((opts.scaler * x).toFixed(opts.digitsAfterDecimal), opts.thousandsSep, opts.decimalSep);
+            return '' + opts.prefix + result + opts.suffix;
+        };
+    });
 
     return $rndrFormatterTemplates;
 }));
-
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define('$rndrFormatters', ['$rndrFormattersTemplates'], function($rndrFormatterTemplates) {
@@ -917,30 +787,43 @@ define("../node_modules/almond/almond", function(){});
         root.rndr.plugins.formatters = factory(root.rndr.templates.formatters);
     }
 }(this, function($rndrFormatterTemplates) {
+    /**
+     * A dictionary of data view object factories.
+     */
+     var $rndrFormatters = new Map();
 
-    function Formatters() {}
-    Formatters.prototype = {
-        constructor: Formatters,
-        /**
-         * Adds a formatter function.
-         * 
-         * @param {string} name         The name of the data attribute for which the `sorter` function will be applied.
-         * @param {function} sorter     The function which sorts the values of a data attribute.
-         */
-        add: function(name, sorter) {
-            this[name] = sorter;
-        },
-        /**
-         * Lists the available formatters.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        }
+    var usFmt = function() {
+        return $rndrFormatterTemplates.get('numberFormat')();
     };
 
-    var $rndrFormatters = new Formatters();
+    var usFmtInt = function() {
+        return $rndrFormatterTemplates.get('numberFormat')({
+            digitsAfterDecimal: 0
+        });
+    };
+    
+    var usFmtPct = function() {
+        return $rndrFormatterTemplates.get('numberFormat')({
+            digitsAfterDecimal: 1,
+            scaler: 100,
+            suffix: '%'
+        });
+    };
+
+    /**
+     * A function for formatting a number into a standard US formatted number.
+     */
+    $rndrFormatters.set('US Standard', usFmt());
+
+    /**
+     * A function for formatting a number into a standard US formatted integer.
+     */
+    $rndrFormatters.set('US Standard Integer', usFmtInt());
+
+    /**
+     * A function for formatting a number into a standard US formatted percentage.
+     */
+    $rndrFormatters.set('US Standard Percentage', usFmtPct());
 
     return $rndrFormatters;
 }));
@@ -959,477 +842,454 @@ define("../node_modules/almond/almond", function(){});
     /**
      * A dictionary of functions for creating an aggregator-generating function.
      */
-    function AggregatorTemplates() {}
-    AggregatorTemplates.prototype = {
-        constructor: AggregatorTemplates,
-        /**
-         * Adds a function which *generates* an aggregator-generating function.
-         * 
-         * @param {string} name       The lookup name of the aggregator-generating function.
-         * @param {function} template The function which *generates* an aggregator-generating function.
-         */
-        add: function(name, template) {
-            this[name] = template;
-        },
-        /**
-         * Lists the available `aggregator-generating` functions.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        },
-
-        /**
-         * Creates an aggregator-generating function.
-         * 
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted count of the number of values observed of the given attribute for records which match the cell.
-         */
-        count: function(formatter) {
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
+    var $rndrAggregatorsTemplates = new Map();
+    /**
+     * Creates an aggregator-generating function.
+     * 
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted count of the number of values observed of the given attribute for records which match the cell.
+     */
+    $rndrAggregatorsTemplates.set('count', function(formatter) {
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
             }
-            return function() {
-                return function(data, rowKey, colKey) {
-                    return {
-                        count: 0,
-                        push: function() {
-                            return this.count++;
-                        },
-                        value: function() {
-                            return this.count;
-                        },
-                        format: formatter
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function returns the formatted count of the number of unique values observed.
-         * 
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted count of the number of unique values observed.
-         */
-        countUnique: function(formatter) {
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
-            }
-            return function(arg) {
-                var attr;
-                attr = arg[0];
-                return function(data, rowKey, colKey) {
-                    return {
-                        uniq: [],
-                        push: function(record) {
-                            var ref;
-                            if (ref = record[attr], this.uniq.indexOf(ref) < 0) {
-                                return this.uniq.push(record[attr]);
-                            }
-                        },
-                        value: function() {
-                            return this.uniq.length;
-                        },
-                        format: formatter,
-                        numInputs: attr != null ? 0 : 1
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function that returns a list of the unique values observed seperated by the `sep` parameter.
-         * 
-         * @param  {string} sep The string used to seperate the list.
-         * @return {function}     An aggregator-generating function which returns a list of the unique values observed seperated by the `sep` parameter.
-         */
-        listUnique: function(sep) {
-            return function(arg) {
-                var attr;
-                attr = arg[0];
-                return function(data, rowKey, colKey) {
-                    return {
-                        uniq: [],
-                        push: function(record) {
-                            var ref;
-                            if (ref = record[attr], this.uniq.indexOf(ref) < 0) {
-                                return this.uniq.push(record[attr]);
-                            }
-                        },
-                        value: function() {
-                            return this.uniq.join(sep);
-                        },
-                        format: function(x) {
-                            return x;
-                        },
-                        numInputs: attr != null ? 0 : 1
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function that returns the formatted sum of the values observed.
-         * 
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted sum of the values observed.
-         */
-        sum: function(formatter) {
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
-            }
-            return function(arg) {
-                var attr;
-                attr = arg[0];
-                return function(data, rowKey, colKey) {
-                    return {
-                        sum: 0,
-                        push: function(record) {
-                            if (!isNaN(parseFloat(record[attr]))) {
-                                return this.sum += parseFloat(record[attr]);
-                            }
-                        },
-                        value: function() {
-                            return this.sum;
-                        },
-                        format: formatter,
-                        numInputs: attr != null ? 0 : 1
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function that returns the formatted minimum value observed.
-         * 
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted minimum value observed.
-         */
-        min: function(formatter) {
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
-            }
-            return function(arg) {
-                var attr;
-                attr = arg[0];
-                return function(data, rowKey, colKey) {
-                    return {
-                        val: null,
-                        push: function(record) {
-                            var ref, x;
-                            x = parseFloat(record[attr]);
-                            if (!isNaN(x)) {
-                                return this.val = Math.min(x, (ref = this.val) != null ? ref : x);
-                            }
-                        },
-                        value: function() {
-                            return this.val;
-                        },
-                        format: formatter,
-                        numInputs: attr != null ? 0 : 1
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function that returns the formatted maximum value observed.
-         * 
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted maximum value observed.
-         */
-        max: function(formatter) {
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
-            }
-            return function(arg) {
-                var attr;
-                attr = arg[0];
-                return function(data, rowKey, colKey) {
-                    return {
-                        val: null,
-                        push: function(record) {
-                            var ref, x;
-                            x = parseFloat(record[attr]);
-                            if (!isNaN(x)) {
-                                return this.val = Math.max(x, (ref = this.val) != null ? ref : x);
-                            }
-                        },
-                        value: function() {
-                            return this.val;
-                        },
-                        format: formatter,
-                        numInputs: attr != null ? 0 : 1
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function that returns the formatted average of the values observed.
-         * 
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted average of the values observed.
-         */
-        average: function(formatter) {
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
-            }
-            return function(arg) {
-                var attr;
-                attr = arg[0];
-                return function(data, rowKey, colKey) {
-                    return {
-                        sum: 0,
-                        len: 0,
-                        push: function(record) {
-                            if (!isNaN(parseFloat(record[attr]))) {
-                                this.sum += parseFloat(record[attr]);
-                                return this.len++;
-                            }
-                        },
-                        value: function() {
-                            return this.sum / this.len;
-                        },
-                        format: formatter,
-                        numInputs: attr != null ? 0 : 1
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function that returns the formatted quotient of the values observed.
-         * 
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted quotient of the values observed.
-         */
-        sumOverSum: function(formatter) {
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
-            }
-            return function(arg) {
-                var denom, num;
-                num = arg[0], denom = arg[1];
-                return function(data, rowKey, colKey) {
-                    return {
-                        sumNum: 0,
-                        sumDenom: 0,
-                        push: function(record) {
-                            if (!isNaN(parseFloat(record[num]))) {
-                                this.sumNum += parseFloat(record[num]);
-                            }
-                            if (!isNaN(parseFloat(record[denom]))) {
-                                return this.sumDenom += parseFloat(record[denom]);
-                            }
-                        },
-                        value: function() {
-                            return this.sumNum / this.sumDenom;
-                        },
-                        format: formatter,
-                        numInputs: (num != null) && (denom != null) ? 0 : 2
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function that returns the formatted quotient 'upper' or 'lower' 80 bound of the values observed.
-         * 
-         * @param  {boolean} upper     A boolean to denote whether to calculate 'upper' or 'lower' 80 bound
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted quotient 'upper' or 'lower' 80 bound of the values observed.
-         */
-        sumOverSumBound80: function(upper, formatter) {
-            if (upper == null) {
-                upper = true;
-            }
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
-            }
-            return function(arg) {
-                var denom, num;
-                num = arg[0], denom = arg[1];
-                return function(data, rowKey, colKey) {
-                    return {
-                        sumNum: 0,
-                        sumDenom: 0,
-                        push: function(record) {
-                            if (!isNaN(parseFloat(record[num]))) {
-                                this.sumNum += parseFloat(record[num]);
-                            }
-                            if (!isNaN(parseFloat(record[denom]))) {
-                                return this.sumDenom += parseFloat(record[denom]);
-                            }
-                        },
-                        value: function() {
-                            var sign;
-                            sign = upper ? 1 : -1;
-                            return (0.821187207574908 / this.sumDenom + this.sumNum / this.sumDenom + 1.2815515655446004 * sign * Math.sqrt(0.410593603787454 / (this.sumDenom * this.sumDenom) + (this.sumNum * (1 - this.sumNum / this.sumDenom)) / (this.sumDenom * this.sumDenom))) / (1 + 1.642374415149816 / this.sumDenom);
-                        },
-                        format: formatter,
-                        numInputs: (num != null) && (denom != null) ? 0 : 2
-                    };
-                };
-            };
-        },
-        /**
-         * Creates an aggregator-generating function.
-         * 
-         * @param  {function} wrapped   An aggregator-generating function.
-         * @param  {string} type      The 'comparer' (i.e. 'row', 'col', or 'total') to compare observed values to.
-         * @param  {function} formatter A data formatting function.
-         * @return {function}           An aggregator-generating function which returns the formatted percentage of the values observed to the 'comparer'.
-         */
-        fractionOf: function(wrapped, type, formatter) {
-            if (type == null) {
-                type = 'total';
-            }
-            if (formatter == null) {
-                var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
-                if (typeof console !== 'undefined' && console !== null) {
-                    console.error(e.stack);
-                }
-                throw e;
-            }
-            return function() {
-                var x;
-                x = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-                return function(data, rowKey, colKey) {
-                    return {
-                        selector: {
-                            total: [
-                                [],
-                                []
-                            ],
-                            row: [rowKey, []],
-                            col: [
-                                [], colKey
-                            ]
-                        }[type],
-                        inner: wrapped.apply(null, x)(data, rowKey, colKey),
-                        push: function(record) {
-                            return this.inner.push(record);
-                        },
-                        format: formatter,
-                        value: function() {
-                            return this.inner.value() / data.getAggregator.apply(data, this.selector).inner.value();
-                        },
-                        numInputs: wrapped.apply(null, x)().numInputs
-                    };
-                };
-            };
-        },
-        quantile: function(formatter, q) {
-            if (formatter == null) {
-                formatter = usFmt;
-            }
-            return function(arg) {
-                var attr;
-                attr = arg[0];
-                return function(data, rowKey, colKey) {
-                    return {
-                        vals: [],
-                        push: function(record) {
-                            var x;
-                            x = parseFloat(record[attr]);
-                            if (!isNaN(x)) {
-                                return this.vals.push(x);
-                            }
-                        },
-                        value: function() {
-                            var i;
-                            if (this.vals.length === 0) {
-                                return null;
-                            }
-                            this.vals.sort();
-                            i = (this.vals.length - 1) * q;
-                            return (this.vals[Math.floor(i)] + this.vals[Math.ceil(i)]) / 2.0;
-                        },
-                        format: formatter,
-                        numInputs: attr != null ? 0 : 1
-                    };
-                };
-            };
-        },
-        runningStat: function(formatter, mode, ddof) {
-            if (formatter == null) {
-                formatter = usFmt;
-            }
-            if (mode == null) {
-                mode = "var";
-            }
-            if (ddof == null) {
-                ddof = 1;
-            }
-            return function(arg) {
-                var attr;
-                attr = arg[0];
-                return function(data, rowKey, colKey) {
-                    return {
-                        n: 0.0,
-                        m: 0.0,
-                        s: 0.0,
-                        push: function(record) {
-                            var m_new, x;
-                            x = parseFloat(record[attr]);
-                            if (isNaN(x)) {
-                                return;
-                            }
-                            this.n += 1.0;
-                            if (this.n === 1.0) {
-                                return this.m = x;
-                            } else {
-                                m_new = this.m + (x - this.m) / this.n;
-                                this.s = this.s + (x - this.m) * (x - m_new);
-                                return this.m = m_new;
-                            }
-                        },
-                        value: function() {
-                            if (this.n <= ddof) {
-                                return 0;
-                            }
-                            switch (mode) {
-                                case "var":
-                                    return this.s / (this.n - ddof);
-                                case "stdev":
-                                    return Math.sqrt(this.s / (this.n - ddof));
-                            }
-                        },
-                        format: formatter,
-                        numInputs: attr != null ? 0 : 1
-                    };
-                };
-            };
+            throw e;
         }
-    };
-
-    var $rndrAggregatorsTemplates = new AggregatorTemplates();
+        return function() {
+            return function(data, rowKey, colKey) {
+                return {
+                    count: 0,
+                    push: function() {
+                        return this.count++;
+                    },
+                    value: function() {
+                        return this.count;
+                    },
+                    format: formatter
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function returns the formatted count of the number of unique values observed.
+     * 
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted count of the number of unique values observed.
+     */
+    $rndrAggregatorsTemplates.set('countUnique', function(formatter) {
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
+            }
+            throw e;
+        }
+        return function(arg) {
+            var attr;
+            attr = arg[0];
+            return function(data, rowKey, colKey) {
+                return {
+                    uniq: [],
+                    push: function(record) {
+                        var ref;
+                        if (ref = record[attr], this.uniq.indexOf(ref) < 0) {
+                            return this.uniq.push(record[attr]);
+                        }
+                    },
+                    value: function() {
+                        return this.uniq.length;
+                    },
+                    format: formatter,
+                    numInputs: attr != null ? 0 : 1
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function that returns a list of the unique values observed seperated by the `sep` parameter.
+     * 
+     * @param  {string} sep The string used to seperate the list.
+     * @return {function}     An aggregator-generating function which returns a list of the unique values observed seperated by the `sep` parameter.
+     */
+    $rndrAggregatorsTemplates.set('listUnique', function(sep) {
+        return function(arg) {
+            var attr;
+            attr = arg[0];
+            return function(data, rowKey, colKey) {
+                return {
+                    uniq: [],
+                    push: function(record) {
+                        var ref;
+                        if (ref = record[attr], this.uniq.indexOf(ref) < 0) {
+                            return this.uniq.push(record[attr]);
+                        }
+                    },
+                    value: function() {
+                        return this.uniq.join(sep);
+                    },
+                    format: function(x) {
+                        return x;
+                    },
+                    numInputs: attr != null ? 0 : 1
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function that returns the formatted sum of the values observed.
+     * 
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted sum of the values observed.
+     */
+    $rndrAggregatorsTemplates.set('sum', function(formatter) {
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
+            }
+            throw e;
+        }
+        return function(arg) {
+            var attr;
+            attr = arg[0];
+            return function(data, rowKey, colKey) {
+                return {
+                    sum: 0,
+                    push: function(record) {
+                        if (!isNaN(parseFloat(record[attr]))) {
+                            return this.sum += parseFloat(record[attr]);
+                        }
+                    },
+                    value: function() {
+                        return this.sum;
+                    },
+                    format: formatter,
+                    numInputs: attr != null ? 0 : 1
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function that returns the formatted minimum value observed.
+     * 
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted minimum value observed.
+     */
+    $rndrAggregatorsTemplates.set('min', function(formatter) {
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
+            }
+            throw e;
+        }
+        return function(arg) {
+            var attr;
+            attr = arg[0];
+            return function(data, rowKey, colKey) {
+                return {
+                    val: null,
+                    push: function(record) {
+                        var ref, x;
+                        x = parseFloat(record[attr]);
+                        if (!isNaN(x)) {
+                            return this.val = Math.min(x, (ref = this.val) != null ? ref : x);
+                        }
+                    },
+                    value: function() {
+                        return this.val;
+                    },
+                    format: formatter,
+                    numInputs: attr != null ? 0 : 1
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function that returns the formatted maximum value observed.
+     * 
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted maximum value observed.
+     */
+    $rndrAggregatorsTemplates.set('max', function(formatter) {
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
+            }
+            throw e;
+        }
+        return function(arg) {
+            var attr;
+            attr = arg[0];
+            return function(data, rowKey, colKey) {
+                return {
+                    val: null,
+                    push: function(record) {
+                        var ref, x;
+                        x = parseFloat(record[attr]);
+                        if (!isNaN(x)) {
+                            return this.val = Math.max(x, (ref = this.val) != null ? ref : x);
+                        }
+                    },
+                    value: function() {
+                        return this.val;
+                    },
+                    format: formatter,
+                    numInputs: attr != null ? 0 : 1
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function that returns the formatted average of the values observed.
+     * 
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted average of the values observed.
+     */
+    $rndrAggregatorsTemplates.set('average', function(formatter) {
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
+            }
+            throw e;
+        }
+        return function(arg) {
+            var attr;
+            attr = arg[0];
+            return function(data, rowKey, colKey) {
+                return {
+                    sum: 0,
+                    len: 0,
+                    push: function(record) {
+                        if (!isNaN(parseFloat(record[attr]))) {
+                            this.sum += parseFloat(record[attr]);
+                            return this.len++;
+                        }
+                    },
+                    value: function() {
+                        return this.sum / this.len;
+                    },
+                    format: formatter,
+                    numInputs: attr != null ? 0 : 1
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function that returns the formatted quotient of the values observed.
+     * 
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted quotient of the values observed.
+     */
+    $rndrAggregatorsTemplates.set('sumOverSum', function(formatter) {
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
+            }
+            throw e;
+        }
+        return function(arg) {
+            var denom, num;
+            num = arg[0], denom = arg[1];
+            return function(data, rowKey, colKey) {
+                return {
+                    sumNum: 0,
+                    sumDenom: 0,
+                    push: function(record) {
+                        if (!isNaN(parseFloat(record[num]))) {
+                            this.sumNum += parseFloat(record[num]);
+                        }
+                        if (!isNaN(parseFloat(record[denom]))) {
+                            return this.sumDenom += parseFloat(record[denom]);
+                        }
+                    },
+                    value: function() {
+                        return this.sumNum / this.sumDenom;
+                    },
+                    format: formatter,
+                    numInputs: (num != null) && (denom != null) ? 0 : 2
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function that returns the formatted quotient 'upper' or 'lower' 80 bound of the values observed.
+     * 
+     * @param  {boolean} upper     A boolean to denote whether to calculate 'upper' or 'lower' 80 bound
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted quotient 'upper' or 'lower' 80 bound of the values observed.
+     */
+    $rndrAggregatorsTemplates.set('sumOverSumBound80', function(upper, formatter) {
+        if (upper == null) {
+            upper = true;
+        }
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
+            }
+            throw e;
+        }
+        return function(arg) {
+            var denom, num;
+            num = arg[0], denom = arg[1];
+            return function(data, rowKey, colKey) {
+                return {
+                    sumNum: 0,
+                    sumDenom: 0,
+                    push: function(record) {
+                        if (!isNaN(parseFloat(record[num]))) {
+                            this.sumNum += parseFloat(record[num]);
+                        }
+                        if (!isNaN(parseFloat(record[denom]))) {
+                            return this.sumDenom += parseFloat(record[denom]);
+                        }
+                    },
+                    value: function() {
+                        var sign;
+                        sign = upper ? 1 : -1;
+                        return (0.821187207574908 / this.sumDenom + this.sumNum / this.sumDenom + 1.2815515655446004 * sign * Math.sqrt(0.410593603787454 / (this.sumDenom * this.sumDenom) + (this.sumNum * (1 - this.sumNum / this.sumDenom)) / (this.sumDenom * this.sumDenom))) / (1 + 1.642374415149816 / this.sumDenom);
+                    },
+                    format: formatter,
+                    numInputs: (num != null) && (denom != null) ? 0 : 2
+                };
+            };
+        };
+    });
+    /**
+     * Creates an aggregator-generating function.
+     * 
+     * @param  {function} wrapped   An aggregator-generating function.
+     * @param  {string} type      The 'comparer' (i.e. 'row', 'col', or 'total') to compare observed values to.
+     * @param  {function} formatter A data formatting function.
+     * @return {function}           An aggregator-generating function which returns the formatted percentage of the values observed to the 'comparer'.
+     */
+    $rndrAggregatorsTemplates.set('fractionOf', function(wrapped, type, formatter) {
+        if (type == null) {
+            type = 'total';
+        }
+        if (formatter == null) {
+            var e = new Error('Aggregator Templates: cannot generate an aggregator-generating function because the formatter is null.');
+            if (typeof console !== 'undefined' && console !== null) {
+                console.error(e.stack);
+            }
+            throw e;
+        }
+        return function() {
+            var x;
+            x = 1 <= arguments.length ? slice.call(arguments, 0) : [];
+            return function(data, rowKey, colKey) {
+                return {
+                    selector: {
+                        total: [
+                            [],
+                            []
+                        ],
+                        row: [rowKey, []],
+                        col: [
+                            [], colKey
+                        ]
+                    }[type],
+                    inner: wrapped.apply(null, x)(data, rowKey, colKey),
+                    push: function(record) {
+                        return this.inner.push(record);
+                    },
+                    format: formatter,
+                    value: function() {
+                        return this.inner.value() / data.getAggregator.apply(data, this.selector).inner.value();
+                    },
+                    numInputs: wrapped.apply(null, x)().numInputs
+                };
+            };
+        };
+    });
+    $rndrAggregatorsTemplates.set('quantile', function(formatter, q) {
+        if (formatter == null) {
+            formatter = usFmt;
+        }
+        return function(arg) {
+            var attr;
+            attr = arg[0];
+            return function(data, rowKey, colKey) {
+                return {
+                    vals: [],
+                    push: function(record) {
+                        var x;
+                        x = parseFloat(record[attr]);
+                        if (!isNaN(x)) {
+                            return this.vals.push(x);
+                        }
+                    },
+                    value: function() {
+                        var i;
+                        if (this.vals.length === 0) {
+                            return null;
+                        }
+                        this.vals.sort();
+                        i = (this.vals.length - 1) * q;
+                        return (this.vals[Math.floor(i)] + this.vals[Math.ceil(i)]) / 2.0;
+                    },
+                    format: formatter,
+                    numInputs: attr != null ? 0 : 1
+                };
+            };
+        };
+    });
+    $rndrAggregatorsTemplates.set('runningStat', function(formatter, mode, ddof) {
+        if (formatter == null) {
+            formatter = usFmt;
+        }
+        if (mode == null) {
+            mode = "var";
+        }
+        if (ddof == null) {
+            ddof = 1;
+        }
+        return function(arg) {
+            var attr;
+            attr = arg[0];
+            return function(data, rowKey, colKey) {
+                return {
+                    n: 0.0,
+                    m: 0.0,
+                    s: 0.0,
+                    push: function(record) {
+                        var m_new, x;
+                        x = parseFloat(record[attr]);
+                        if (isNaN(x)) {
+                            return;
+                        }
+                        this.n += 1.0;
+                        if (this.n === 1.0) {
+                            return this.m = x;
+                        } else {
+                            m_new = this.m + (x - this.m) / this.n;
+                            this.s = this.s + (x - this.m) * (x - m_new);
+                            return this.m = m_new;
+                        }
+                    },
+                    value: function() {
+                        if (this.n <= ddof) {
+                            return 0;
+                        }
+                        switch (mode) {
+                            case "var":
+                                return this.s / (this.n - ddof);
+                            case "stdev":
+                                return Math.sqrt(this.s / (this.n - ddof));
+                        }
+                    },
+                    format: formatter,
+                    numInputs: attr != null ? 0 : 1
+                };
+            };
+        };
+    });
 
     return $rndrAggregatorsTemplates;
 }));
@@ -1450,35 +1310,80 @@ define("../node_modules/almond/almond", function(){});
      * attribute-names and return a function that is appropriate and consumable 
      * by a `dataView`.
      */
-    function Aggregators() {}
-    Aggregators.prototype = {
-        constructor: Aggregators,
-        /**
-         * Adds an aggregator generating function by `name` for fast lookup.
-         * 
-         * @param {string} name       The lookup name of the aggregate function.
-         * @param {function} aggregator The function which *generates* a function that defines how data is aggregated.
-         */
-        add: function(name, aggregator) {
-            this[name] = {
-                aggregate: aggregator
-            };
-        },
-        /**
-         * Lists the available `aggregator` functions.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        }
-    };
+    var $rndrAggregators = new Map();
 
-    var $rndrAggregators = new Aggregators();
-    
+    /**
+     * Count - Takes as an argument an array of attribute-names and returns the US integer formatted count of the number of values observed of the given attribute for records which match the cell.
+     */
+    $rndrAggregators.set('Count', $rndrAggregatorsTemplates.get('count')($rndrFormatters.get('US Standard Integer')));
+
+    /**
+     * Count Unique Values - Takes as an argument an array of attribute-names and returns the US integer formatted count of the number of unique values observed.
+     */
+    $rndrAggregators.set('Count Unique Values', $rndrAggregatorsTemplates.get('countUnique')($rndrFormatters.get('US Standard Integer')));
+
+    /**
+     * List Unique Values - Takes as an argument an array of attribute-names and returns a CSV string listing of the unique values observed.
+     */
+    $rndrAggregators.set('List Unique Values', $rndrAggregatorsTemplates.get('listUnique')(', '));
+
+    /**
+     * Sum - Takes as an argument an array of attribute-names and returns the US floating formatted sum of the values observed
+     */
+    $rndrAggregators.set('Sum', $rndrAggregatorsTemplates.get('sum')($rndrFormatters.get('US Standard')));
+
+    /**
+     * Integer Sum - Takes as an argument an array of attribute-names and returns the US integer formatted sum of the values observed.
+     */
+    $rndrAggregators.set('Integer Sum', $rndrAggregatorsTemplates.get('sum')($rndrFormatters.get('US Standard Integer')));
+
+    /**
+     * Average - Takes as an argument an array of attribute-names and returns the US floating formatted average of the values observed.
+     */
+    $rndrAggregators.set('Average', $rndrAggregatorsTemplates.get('average')($rndrFormatters.get('US Standard')));
+
+    /**
+     * Median
+     */
+    $rndrAggregators.set('Median', $rndrAggregatorsTemplates.get('quantile')($rndrFormatters.get('US Standard')), 0.5);
+
+    /**
+     * Sample Variance
+     */
+    $rndrAggregators.set('Sample Variance', $rndrAggregatorsTemplates.get('runningStat')($rndrFormatters.get('US Standard')), 'var');
+
+    /**
+     * Sample Standard Deviation
+     */
+    $rndrAggregators.set('Sample Standard Deviation', $rndrAggregatorsTemplates.get('runningStat')($rndrFormatters.get('US Standard')), 'stdev');
+
+    /**
+     * Minimum - Takes as an argument an array of attribute-names and returns the US floating formatted minimum value of the unique values observed.
+     */
+    $rndrAggregators.set('Minimum', $rndrAggregatorsTemplates.get('min')($rndrFormatters.get('US Standard')));
+
+    /**
+     * Maximum - Takes as an argument an array of attribute-names and returns the US floating formatted maximum value of the unique values observed.
+     */
+    $rndrAggregators.set('Maximum', $rndrAggregatorsTemplates.get('max')($rndrFormatters.get('US Standard')));
+
+    /**
+     * Sum over Sum - Takes as an argument an array of attribute-names and returns the US floating formatted quotient of the values observed.
+     */
+    $rndrAggregators.set('Sum over Sum', $rndrAggregatorsTemplates.get('sumOverSum')($rndrFormatters.get('US Standard')));
+
+    /**
+     * 80% Upper Bound - Takes as an argument an array of attribute-names and returns the US floating formatted quotient "upper" 80% bound of the values observed.
+     */
+    $rndrAggregators.set('80% Upper Bound', $rndrAggregatorsTemplates.get('sumOverSumBound80')(true, $rndrFormatters.get('US Standard')));
+
+    /**
+     * 80% Lower Bound - Takes as an argument an array of attribute-names and returns the US floating formatted quotient "lower" 80% bound of the values observed.
+     */
+    $rndrAggregators.set('80% Lower Bound', $rndrAggregatorsTemplates.get('sumOverSumBound80')(false, $rndrFormatters.get('US Standard')));
+
     return $rndrAggregators;
 }));
-
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define('$rndrRenderers', [], function() {
@@ -1493,43 +1398,12 @@ define("../node_modules/almond/almond", function(){});
     /**
      * A dictionary of renderer functions.
      */
-    function Renderers() {}
-    Renderers.prototype = {
-        constructor: Renderers,
-        /**
-         * Adds a renderer function.
-         * 
-         * @param {string} name     The lookup name of the renderer.
-         * @param {function} renderer A "data visulization constructing" function.
-         * @param {string} dataViewName     The name of the `dataView` used by the `renderer` function.
-         * @param {object} opts     Overrides or extends the options for the `renderer`.
-         * @return {object}       The renderer.
-        */
-        add: function(name, renderer, dataViewName, opts) {
-            this[name] = {
-                render: renderer,
-                opts: opts,
-                dataViewName: dataViewName
-            };
-            return this[name];
-        },
-        /**
-         * Lists the available renderer plugins.
-         * 
-         * @return {Array.<string>} The lookup names.
-         */
-        list: function() {
-            return Object.keys(this);
-        }
-    };
-
-    var $rndrRenderers = new Renderers();
-    return $rndrRenderers;
+    return new Map();
 }));
 
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define('$rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+        define('rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
             return (root.rndr.RenderingEngine = factory(root, $, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
         });
     } else if (typeof module === 'object' && module.exports) {
@@ -1599,20 +1473,21 @@ define("../node_modules/almond/almond", function(){});
         this.setDerivedAttributes(derivedAttrs);
         this.setSorters(sorters);
 
+        var dataView = $rndrDataViews.get($rndrRenderers.get(this.renderer).dataViewName).view;
         if (dv_meta !== undefined && dv_meta !== '' && dv_meta !== null) {
-            this.dataView = new $rndrDataViews[$rndrRenderers[this.renderer].dataViewName].view(data, {
+            this.dataView = new dataView(data, {
                 aggregator: this.aggregator,
                 derivedAttributes: this.derivedAttributes,
                 sorters: this.sorters,
-                formatters: $rndrFormatters,
+                formatters: $rndrFormatters.map,
                 meta: dv_meta
             });
         } else {
-            this.dataView = new $rndrDataViews[$rndrRenderers[this.renderer].dataViewName].view(data, {
+            this.dataView = new dataView(data, {
                 aggregator: this.aggregator,
                 derivedAttributes: this.derivedAttributes,
                 sorters: this.sorters,
-                formatters: $rndrFormatters,
+                formatters: $rndrFormatters.map,
             });
         }
         this.dirty = false;
@@ -1670,7 +1545,7 @@ define("../node_modules/almond/almond", function(){});
             if (attrs !== undefined && attrs !== '' && attrs !== null) {
                 $.each(attrs, function(name) {
                     try {
-                        this.derivedAttributes[name] = $rndrDerivedAttributes[name];
+                        this.derivedAttributes[name] = $rndrDerivedAttributes.map[name];
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {
@@ -1686,7 +1561,7 @@ define("../node_modules/almond/almond", function(){});
             if (sorters !== undefined && sorters !== '' && sorters !== null) {
                 $.each(sorters, function(name) {
                     try {
-                        this.sorters[name] = $rndrSorters[name];
+                        this.sorters[name] = $rndrSorters.map[name];
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {
@@ -1707,7 +1582,7 @@ define("../node_modules/almond/almond", function(){});
                 if (this.aggregator === undefined) {
                     this.aggregator = {
                         name: 'Count',
-                        aggregate: $rndrAggregators['Count'].aggregate,
+                        aggregate: $rndrAggregators.get('Count'),
                         aggInputAttributeName: []
                     }
                 }
@@ -1721,7 +1596,7 @@ define("../node_modules/almond/almond", function(){});
             if (aggregator === undefined || aggregator === '' || aggregator === null) {
                 this.aggregator.name = 'Count';
                 try {
-                    this.aggregator.aggregate = $rndrAggregators['Count'].aggregate;
+                    this.aggregator.aggregate = $rndrAggregators.get('Count');
                 } catch (_error) {
                     var e = _error;
                     if (typeof console !== 'undefined' && console !== null) {
@@ -1732,7 +1607,7 @@ define("../node_modules/almond/almond", function(){});
             } else {
                 this.aggregator.name = aggregator;
                 try {
-                    this.aggregator.aggregate = $rndrAggregators[aggregator].aggregate;
+                    this.aggregator.aggregate = $rndrAggregators.get(aggregator);
                 } catch (_error) {
                     var e = _error;
                     if (typeof console !== 'undefined' && console !== null) {
@@ -1742,7 +1617,7 @@ define("../node_modules/almond/almond", function(){});
                 this.aggregator.aggInputAttributeName = [];
             }
 
-            var numInputs = $rndrAggregators[this.aggregator.name].aggregate([])([]).numInputs;
+            var numInputs = $rndrAggregators.get(this.aggregator.name)([])([]).numInputs;
 
             if (numInputs === undefined) {
                 this.aggregator.aggInputAttributeName = new Array();
@@ -1788,7 +1663,7 @@ define("../node_modules/almond/almond", function(){});
                     aggregator: self.aggregator,
                     derivedAttributes: self.derivedAttributes,
                     sorters: self.sorters,
-                    formatters: $rndrFormatters,
+                    formatters: $rndrFormatters.map,
                     meta: self.dataView.meta
                 };
 
@@ -1796,10 +1671,10 @@ define("../node_modules/almond/almond", function(){});
                     element: self.element,
                     renderers: $rndrRenderers,
                     dataViews: $rndrDataViews,
-                    sorters: $rndrSorters,
+                    sorters: $rndrSorters.map,
                     aggregators: $rndrAggregators,
-                    derivedAttributes: $rndrDerivedAttributes,
-                    formatters: $rndrFormatters,
+                    derivedAttributes: $rndrDerivedAttributes.map,
+                    formatters: $rndrFormatters.map,
                     heightOffset: 0,
                     widthOffset: 0,
                     locales: {
@@ -1815,11 +1690,12 @@ define("../node_modules/almond/almond", function(){});
                 };
 
                 try {
-                    self.dataView = new $rndrDataViews[$rndrRenderers[self.renderer].dataViewName].view(data, $.extend(dataView_opts, $rndrDataViews[$rndrRenderers[self.renderer].dataViewName].opts));
+                    var dataView = $rndrDataViews.get($rndrRenderers.get(self.renderer).dataViewName).view;
+                    self.dataView = new dataView(data, $.extend(dataView_opts, $rndrDataViews.get($rndrRenderers.get(self.renderer).dataViewName).opts));
 
                     try {
                         //render and attach new viz
-                        result = $rndrRenderers[self.renderer].render(self, $.extend(opts, $rndrRenderers[self.renderer].opts));
+                        result = $rndrRenderers.get(self.renderer).render(self, $.extend(opts, $rndrRenderers.get(self.renderer).opts));
                     } catch (_error) {
                         var e = _error;
                         if (typeof console !== 'undefined' && console !== null) {
@@ -1885,167 +1761,22 @@ define("../node_modules/almond/almond", function(){});
 }));
 
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrRenderingEngines', [], function() {
-            return (root.rndr.RenderingEngines = factory(root));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.RenderingEngines = factory(root));
-    } else {
-        root.rndr.RenderingEngines = factory(root);
-    }
+    define('rndr',['$rndrDataViews',
+        '$rndrSorters',
+        '$rndrSortersTemplates',
+        '$rndrDerivedAttributes',
+        '$rndrDeriverTemplates',
+        '$rndrFormattersTemplates',
+        '$rndrFormatters',
+        '$rndrAggregatorsTemplates',
+        '$rndrAggregators',
+        'rndrRenderingEngine'
+    ], function() {
+        return factory(root);
+    });
 }(this, function(root) {
-    'use strict';
-
-    /**
-     * The dictionary of registered {@link RenderingEngine}'s.
-     */
-    function RenderingEngines() {
-        this.init();
-    }
-    RenderingEngines.prototype = {
-        constructor: RenderingEngines,
-        /**
-         * Initialize.
-         */
-        init: function() {
-            this.map = {};
-        },
-        /**
-         * The number of {@link RenderingEngine}'s in this map.
-         * 
-         * @return {number} The number of {@link RenderingEngine}'s in the map.
-         */
-        size: function() {
-            return Object.keys(this.map).length;
-        },
-        /**
-         * Adds a {@link RenderingEngine} to the map.
-         * 
-         * @param {RenderingEngine} dataSource The {@link RenderingEngine} to add.
-         */
-        add: function(renderingEngine) {
-            this.map[renderingEngine.id] = renderingEngine;
-        },
-        /**
-         * Deletes a {@link RenderingEngine} from the map by `id`.
-         * 
-         * @param  {string} id The UUID of the {@link RenderingEngine} to remove from the map.
-         */
-        delete: function(id) {
-            delete this.map[id];
-        }
-    };
-
-    return RenderingEngines;
-}));
-
-(function(root, factory) {
-        define('rndr',['$rndrDataViews',
-            '$rndrSorters',
-            '$rndrDerivedAttributes',
-            '$rndrFormattersTemplates',
-            '$rndrFormatters',
-            '$rndrAggregatorsTemplates',
-            '$rndrAggregators',
-            '$rndrRenderingEngine',
-            '$rndrRenderingEngines'
-        ], function($rndrDataViews,
-            $rndrSorters,
-            $rndrDerivedAttributes,
-            $rndrFormattersTemplates,
-            $rndrFormatters,
-            $rndrAggregatorsTemplates,
-            $rndrAggregators,
-            $rndrRenderingEngine,
-            $rndrRenderingEngines) {
-            return factory(root,
-                $rndrDataViews,
-                $rndrFormattersTemplates,
-                $rndrFormatters,
-                $rndrAggregatorsTemplates,
-                $rndrAggregators,
-                $rndrRenderingEngine,
-                $rndrRenderingEngines);
-        });
-}(this, function(root,
-    $rndrDataViews,
-    $rndrFormattersTemplates,
-    $rndrFormatters,
-    $rndrAggregatorsTemplates,
-    $rndrAggregators,
-    $rndrRenderingEngine,
-    $rndrRenderingEngines) {
-    /**
-     * A function for formatting a number into a standard US formatted number.
-     * 
-     * @return {function} A data formatter function for converting to standard US formatted number.
-     */
-    var usFmt = function() {
-        return $rndrFormattersTemplates.numberFormat();
-    };
-
-    /**
-     * A function for formatting a number into a standard US formatted integer.
-     * 
-     * @return {function} A data formatter function for converting to standard US formatted integer.
-     */
-    var usFmtInt = function() {
-        return $rndrFormattersTemplates.numberFormat({
-            digitsAfterDecimal: 0
-        });
-    };
-
-    /**
-     * A function for formatting a number into a standard US formatted percentage.
-     * 
-     * @return {function} A data formatter function for converting to standard US formatted percentage.
-     */
-    var usFmtPct = function() {
-        return $rndrFormattersTemplates.numberFormat({
-            digitsAfterDecimal: 1,
-            scaler: 100,
-            suffix: '%'
-        });
-    };
-
-    $rndrFormatters.add('US Standard', usFmt());
-    $rndrFormatters.add('US Standard Integer', usFmtInt());
-    $rndrFormatters.add('US Standard Percentage', usFmtPct());
-
-    /**
-     * Configure Aggregators
-     * 
-     * Count - Takes as an argument an array of attribute-names and returns the US integer formatted count of the number of values observed of the given attribute for records which match the cell.
-     * Count Unique Values - Takes as an argument an array of attribute-names and returns the US integer formatted count of the number of unique values observed.
-     * List Unique Values - Takes as an argument an array of attribute-names and returns a CSV string listing of the unique values observed.
-     * Sum - Takes as an argument an array of attribute-names and returns the US floating formatted sum of the values observed.
-     * Integer Sum - Takes as an argument an array of attribute-names and returns the US integer formatted sum of the values observed.
-     * Average - Takes as an argument an array of attribute-names and returns the US floating formatted average of the values observed.
-     * Minimum - Takes as an argument an array of attribute-names and returns the US floating formatted minimum value of the unique values observed.
-     * Maximum - Takes as an argument an array of attribute-names and returns the US floating formatted maximum value of the unique values observed.
-     * Sum over Sum - Takes as an argument an array of attribute-names and returns the US floating formatted quotient of the values observed.
-     * 80% Upper Bound - Takes as an argument an array of attribute-names and returns the US floating formatted quotient "upper" 80% bound of the values observed.
-     * 80% Lower Bound - Takes as an argument an array of attribute-names and returns the US floating formatted quotient "lower" 80% bound of the values observed.
-     */
-    $rndrAggregators.add('Count', $rndrAggregatorsTemplates.count($rndrFormatters['US Standard Integer']));
-    $rndrAggregators.add('Count Unique Values', $rndrAggregatorsTemplates.countUnique($rndrFormatters['US Standard Integer']));
-    $rndrAggregators.add('List Unique Values', $rndrAggregatorsTemplates.listUnique(', '));
-    $rndrAggregators.add('Sum', $rndrAggregatorsTemplates.sum($rndrFormatters['US Standard']));
-    $rndrAggregators.add('Integer Sum', $rndrAggregatorsTemplates.sum($rndrFormatters['US Standard Integer']));
-    $rndrAggregators.add('Average', $rndrAggregatorsTemplates.average($rndrFormatters['US Standard']));
-    $rndrAggregators.add('Median', $rndrAggregatorsTemplates.quantile($rndrFormatters['US Standard']), 0.5);
-    $rndrAggregators.add('Sample Variance', $rndrAggregatorsTemplates.runningStat($rndrFormatters['US Standard']), 'var');
-    $rndrAggregators.add('Sample Standard Deviation', $rndrAggregatorsTemplates.runningStat($rndrFormatters['US Standard']), 'stdev');
-    $rndrAggregators.add('Minimum', $rndrAggregatorsTemplates.min($rndrFormatters['US Standard']));
-    $rndrAggregators.add('Maximum', $rndrAggregatorsTemplates.max($rndrFormatters['US Standard']));
-    $rndrAggregators.add('Sum over Sum', $rndrAggregatorsTemplates.sumOverSum($rndrFormatters['US Standard']));
-    $rndrAggregators.add('80% Upper Bound', $rndrAggregatorsTemplates.sumOverSumBound80(true, $rndrFormatters['US Standard']));
-    $rndrAggregators.add('80% Lower Bound', $rndrAggregatorsTemplates.sumOverSumBound80(false, $rndrFormatters['US Standard']));
-
     return root.rndr;
 }));
-
 	
 	// Define a 'jquery' model to allow rndr to support a user configured jquery version.
 	define('jquery', [], function() {

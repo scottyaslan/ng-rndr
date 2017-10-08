@@ -22,7 +22,7 @@
     }
 }(this, function(rndr) {
     function CloneData(data, opts) {
-        this = data;
+        this.data = data;
 
         //set meta from previous state or initialize
         this.meta = opts.meta || {};
@@ -31,5 +31,8 @@
         constructor: CloneData,
     };
 
-    rndr.plugins.dataViews.add('CloneData', CloneData);
+    rndr.plugins.dataViews.set('CloneData', {
+        view: CloneData,
+        opts: {},
+    });
 }));

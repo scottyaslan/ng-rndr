@@ -110,8 +110,7 @@ module.exports = function(grunt) {
                         '$rndrDataViews': 'plugins/data-views',
                         '$rndrRenderers': 'plugins/renderers',
                         '$rndrPivotData': 'data-views/pivot-data/PivotData',
-                        '$rndrRenderingEngine': 'RenderingEngine',
-                        '$rndrRenderingEngines': 'RenderingEngines'
+                        'rndrRenderingEngine': 'RenderingEngine'
                     },
                     include: 'rndr',
                     wrap: {
@@ -138,8 +137,7 @@ module.exports = function(grunt) {
                         '$rndrDataViews': 'plugins/data-views',
                         '$rndrRenderers': 'plugins/renderers',
                         '$rndrPivotData': 'data-views/pivot-data/PivotData',
-                        '$rndrRenderingEngine': 'RenderingEngine',
-                        '$rndrRenderingEngines': 'RenderingEngines'
+                        'rndrRenderingEngine': 'RenderingEngine'
                     },
                     include: 'rndr',
                     wrap: {
@@ -159,7 +157,6 @@ module.exports = function(grunt) {
                     './dist/ng-rndr.min.js': ['./dist/ng-rndr.js'],
                     './dist/rndr.min.js': ['./dist/rndr.js'],
                     './dist/RenderingEngine.min.js': ['./src/RenderingEngine.js'],
-                    './dist/RenderingEngines.min.js': ['./src/RenderingEngines.js'],
                     './dist/data-views/pivot-data/PivotData.min.js': ['./src/data-views/pivot-data/PivotData.js'],
                     './dist/data-views/clone-data/CloneData.min.js': ['./src/data-views/clone-data/CloneData.js'],
                     './dist/renderers/angular/pivot-data/pivot-data-ui_renderer.min.js': ['./src/renderers/angular/pivot-data/pivot-data-ui-renderer.js'],

@@ -209,44 +209,54 @@
     var c3Renderers = {
         'C3 - Line Chart': makeC3Chart(),
         'C3 - Bar Chart': makeC3Chart({
-                type: 'bar'
-            }),
+            type: 'bar'
+        }),
         'C3 - Stacked Bar Chart': makeC3Chart({
-                type: 'bar',
-                stacked: true
-            }),
+            type: 'bar',
+            stacked: true
+        }),
         'C3 - Area Chart': makeC3Chart({
-                type: 'area',
-                stacked: true
-            }),
+            type: 'area',
+            stacked: true
+        }),
         'C3 - Scatter Chart': makeC3Chart({
-                type: 'scatter'
-            })
+            type: 'scatter'
+        })
     };
 
-    rndr.plugins.renderers.add('C3 - Line Chart',
-        c3Renderers['C3 - Line Chart'],
-        'PivotData', {
+    rndr.plugins.renderers.set('C3 - Line Chart', {
+        render: c3Renderers['C3 - Line Chart'],
+        opts: {
             heightOffset: 0
-        });
-    rndr.plugins.renderers.add('C3 - Bar Chart',
-        c3Renderers['C3 - Bar Chart'],
-        'PivotData', {
+        },
+        dataViewName: 'PivotData'
+    });
+    rndr.plugins.renderers.set('C3 - Bar Chart', {
+        render: c3Renderers['C3 - Bar Chart'],
+        opts: {
             heightOffset: 0
-        });
-    rndr.plugins.renderers.add('C3 - Stacked Bar Chart',
-        c3Renderers['C3 - Stacked Bar Chart'],
-        'PivotData', {
+        },
+        dataViewName: 'PivotData'
+    });
+    rndr.plugins.renderers.set('C3 - Stacked Bar Chart', {
+        render: c3Renderers['C3 - Stacked Bar Chart'],
+        opts: {
             heightOffset: 0
-        });
-    rndr.plugins.renderers.add('C3 - Area Chart',
-        c3Renderers['C3 - Area Chart'],
-        'PivotData', {
+        },
+        dataViewName: 'PivotData'
+    });
+    rndr.plugins.renderers.set('C3 - Area Chart', {
+        render: c3Renderers['C3 - Area Chart'],
+        opts: {
             heightOffset: 0
-        });
-    rndr.plugins.renderers.add('C3 - Scatter Chart',
-        c3Renderers['C3 - Scatter Chart'],
-        'PivotData', {
+        },
+        dataViewName: 'PivotData'
+    });
+    rndr.plugins.renderers.set('C3 - Scatter Chart', {
+        render: c3Renderers['C3 - Scatter Chart'],
+        opts: {
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 }));

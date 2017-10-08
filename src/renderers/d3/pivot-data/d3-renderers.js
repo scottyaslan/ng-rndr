@@ -9,7 +9,7 @@
         factory(root, root.$, root.d3, root.rndr);
     }
 }(this, function(root, $, d3, rndr) {
-    var d3Renderers =  {
+    var d3Renderers = {
         'D3 - Treemap': function(renderingEngine, opts) {
             var addToTree, color, defaults, height, i, len, ref, result, returnObject, rowKey, tree, treemap, value, width;
             defaults = {
@@ -104,7 +104,9 @@
         }
     };
 
-    rndr.plugins.renderers.add('D3 - Treemap',
-        d3Renderers['D3 - Treemap'],
-        'PivotData', {});
+    rndr.plugins.renderers.set('D3 - Treemap', {
+        render: d3Renderers['D3 - Treemap'],
+        opts: {},
+        dataViewName: 'PivotData'
+    });
 }));

@@ -172,7 +172,7 @@
             return result;
         };
     };
-    var gchartRenderers =  {
+    var gchartRenderers = {
         'Google - Line Chart': makeGoogleChart('LineChart'),
         'Google - Bar Chart': makeGoogleChart('ColumnChart'),
         'Google - Stacked Bar Chart': makeGoogleChart('ColumnChart', {
@@ -184,29 +184,39 @@
         'Google - Scatter Chart': makeGoogleChart('ScatterChart')
     };
 
-    rndr.plugins.renderers.add('Google - Line Chart',
-        gchartRenderers['Google - Line Chart'],
-        'PivotData', {
+    rndr.plugins.renderers.set('Google - Line Chart', {
+        render: gchartRenderers['Google - Line Chart'],
+        opts: {
             heightOffset: 0
-        });
-    rndr.plugins.renderers.add('Google - Bar Chart',
-        gchartRenderers['Google - Bar Chart'],
-        'PivotData', {
+        },
+        dataViewName: 'PivotData'
+    });
+    rndr.plugins.renderers.set('Google - Bar Chart', {
+        render: gchartRenderers['Google - Bar Chart'],
+        opts: {
             heightOffset: 0
-        });
-    rndr.plugins.renderers.add('Google - Stacked Bar Chart',
-        gchartRenderers['Google - Stacked Bar Chart'],
-        'PivotData', {
+        },
+        dataViewName: 'PivotData'
+    });
+    rndr.plugins.renderers.set('Google - Stacked Bar Chart', {
+        render: gchartRenderers['Google - Stacked Bar Chart'],
+        opts: {
             heightOffset: 0
-        });
-    rndr.plugins.renderers.add('Google - Area Chart',
-        gchartRenderers['Google - Area Chart'],
-        'PivotData', {
+        },
+        dataViewName: 'PivotData'
+    });
+    rndr.plugins.renderers.set('Google - Area Chart', {
+        render: gchartRenderers['Google - Area Chart'],
+        opts: {
             heightOffset: 0
-        });
-    rndr.plugins.renderers.add('Google - Scatter Chart',
-        gchartRenderers['Google - Scatter Chart'],
-        'PivotData', {
+        },
+        dataViewName: 'PivotData'
+    });
+    rndr.plugins.renderers.set('Google - Scatter Chart', {
+        render: gchartRenderers['Google - Scatter Chart'],
+        opts: {
             heightOffset: 0
-        });
+        },
+        dataViewName: 'PivotData'
+    });
 }));
