@@ -8,7 +8,7 @@ define([], function() {
             init: function() {
                 dataSources.create(dataSourceConfigurations.create("Untitled", angular.toJson({
                     method: 'GET',
-                    url: 'http://nicolas.kruchten.com/pivottable/examples/montreal_2014.csv'
+                    url: 'https://pivottable.js.org/examples/montreal_2014.csv'
                 })), "Untitled");
                 $rootScope.$on('dataSource:acquire:begin', function() {
                     acquisitionController.dataAcquisitionInProgress = true;

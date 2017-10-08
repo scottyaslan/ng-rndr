@@ -3,7 +3,7 @@ module.exports = function(grunt) {
         html2js: {
             options: {
                 base: "./src",
-                module: 'ngRndr-templates',
+                module: 'templates',
                 singleModule: true,
                 useStrict: true,
                 htmlmin: {
@@ -19,7 +19,7 @@ module.exports = function(grunt) {
             },
             main: {
                 src: ['src/explore/**/*.html'],
-                dest: 'dist/ng-rndr-templates.js'
+                dest: 'dist/templates.js'
             }
         },
         requirejs: {

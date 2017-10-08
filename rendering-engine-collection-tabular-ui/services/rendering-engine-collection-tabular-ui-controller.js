@@ -49,13 +49,13 @@ define([], function() {
                         var dataSource = dataSources.map[dataSourceConfigurationId];
                         dataSource.data = $.csv.toArrays(response.data);
                         dataSource.format(dataSources.map[dataSourceConfigurationId]);
-                        wrapRenderingEngine(renderingEnginesCollection.create("DT - Table"), dataSourceConfigurationId);
+                        wrapRenderingEngine(renderingEnginesCollection.create("DataTable - Table"), dataSourceConfigurationId);
                     }, function errorCallback(response) {
                         var tmp;
                         dataSources.delete(dataSourceConfigurationId);
                     });
                 } else {
-                    wrapRenderingEngine(renderingEnginesCollection.create("DT - Table"), dataSourceConfigurationId);
+                    wrapRenderingEngine(renderingEnginesCollection.create("DataTable - Table"), dataSourceConfigurationId);
                 }
             },
             hideDialogAndDraw: function() {

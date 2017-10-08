@@ -4,7 +4,7 @@ define([], function() {
     return function() {
         return {
             restrict: 'E',
-            templateUrl: 'ng-rndr/dat.html',
+            templateUrl: 'rndr/dat.html',
             link: function(scope, element, attrs) {}
         };
     }

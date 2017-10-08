@@ -65,7 +65,7 @@ var RNDR = function() {
         app.use(express.cookieParser('rndr'));
         app.use(express.session({ secret: 'rndr' }));
         app.use(app.router);
-        app.use('/ng-rndr', express.static(path.join(__dirname, './')));
+        app.use('/rndr', express.static(path.join(__dirname, './')));
         // Handle 404
         app.use(function(req, res) {
             res.status(400);
@@ -82,7 +82,7 @@ var RNDR = function() {
         }
     };
     self.routes = function() {
-        self.app.get('/ng-rndr', function(req, res) {
+        self.app.get('/rndr', function(req, res) {
             res.render('index.html');
         });
     };

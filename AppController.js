@@ -1,9 +1,8 @@
-define(['$ngRndrRenderers',
-        '$ngRndrRenderingEngines',
+define(['rndr',
         'downloadjs',
         'goog!visualization,1,packages:[corechart,geochart]'
     ],
-    function($ngRndrRenderers, $ngRndrRenderingEngines, downloadjs) {
+    function(RNDR, downloadjs) {
         'use strict';
 
         return function(dataSources,
@@ -61,7 +60,7 @@ define(['$ngRndrRenderers',
                         // uiControls.openDialog('Data Source');
                     });
                     $rootScope.$on('renderingEngineCollectionTabularUIController:init', function() {
-                        uiControls.init('ng-rndr/rendering-engine-collection-tabular-ui/views/bottomSheetGridTemplate.html', 'ng-rndr/rendering-engine-collection-tabular-ui/views/dialogTemplate.html');
+                        uiControls.init('rndr/rendering-engine-collection-tabular-ui/views/bottomSheetGridTemplate.html', 'rndr/rendering-engine-collection-tabular-ui/views/dialogTemplate.html');
                     });
                     $rootScope.$on('dataSource:acquire:success', function() {
                         uiControls.openLeftSideNav();
@@ -203,7 +202,7 @@ define(['$ngRndrRenderers',
                     var self = this;
                     if (self.mainContentView !== "RenderingEngineCollectionTabularUI") {
                         self.mainContentView = "RenderingEngineCollectionTabularUI";
-                        uiControls.init('ng-rndr/rendering-engine-collection-tabular-ui/views/bottomSheetGridTemplate.html', 'ng-rndr/rendering-engine-collection-tabular-ui/views/dialogTemplate.html');
+                        uiControls.init('rndr/rendering-engine-collection-tabular-ui/views/bottomSheetGridTemplate.html', 'rndr/rendering-engine-collection-tabular-ui/views/dialogTemplate.html');
                     }
                     if (createNew) {
                         //Have to get on the call stack after the rendering-engine-collection-tabular-ui-directive link function is executed
@@ -217,7 +216,7 @@ define(['$ngRndrRenderers',
                     var self = this;
                     if (self.mainContentView !== "Data Source Configuration Wizard") {
                         self.mainContentView = "Data Source Configuration Wizard";
-                        uiControls.init('ng-rndr/acquire/views/bottomSheetGridTemplate.html', 'ng-rndr/acquire/views/dialogTemplate.html');
+                        uiControls.init('rndr/acquire/views/bottomSheetGridTemplate.html', 'rndr/acquire/views/dialogTemplate.html');
                         uiControls.openLeftSideNav();
                         uiControls.openRightSideNav();
                     }
@@ -237,10 +236,85 @@ define(['$ngRndrRenderers',
                 }
             };
 
-            $scope.renderers = $ngRndrRenderers;
+            $scope.renderers = [];
+            RNDR.plugins.renderers.forEach(function(value, key) {
+                $scope.renderers.push(key);
+            });
 
-            //Singleton for tracking all renderingEngine objects
-            $.extend(renderingEnginesCollection, new $ngRndrRenderingEngines());
+            /**
+             * The dictionary of registered {@link RenderingEngine}'s.
+             */
+            function RenderingEngines() {
+                this.init();
+            }
+            RenderingEngines.prototype = {
+                constructor: RenderingEngines,
+                /**
+                 * Initialize.
+                 */
+                init: function() {
+                    this.map = {};
+                },
+
+                create: function(rendererName, title, renderingEngineId, aggregatorName, aggInputAttributeName, dataViewMeta, derivedAttributes, localeName, sorters) {
+                    var self = this;
+                    var renderingEngine = new rndr.RenderingEngine(rendererName, renderingEngineId, aggregatorName, aggInputAttributeName, dataViewMeta, derivedAttributes, localeName, sorters);
+                    renderingEngine.setTitle(title);
+                    self.add(renderingEngine);
+                    //There may be an active rendering engine, if so deactivate
+                    if (self.activeRenderingEngine !== undefined) {
+                        self.map[self.activeRenderingEngine].active = false;
+                    }
+                    self.activeRenderingEngine = renderingEngine.id;
+                    self.map[self.activeRenderingEngine].active = false;
+                    return renderingEngine;
+                },
+
+                setActiveRenderingEngine: function(id) {
+                    var self = this;
+                    self.activeRenderingEngine = id;
+                    angular.forEach(self.map, function(renderingEngine) {
+                        renderingEngine.active = false;
+                        if (renderingEngine.id === id) {
+                            renderingEngine.active = true;
+                        }
+                    });
+                },
+
+                updateAllRenderingEngineTileSizeAndPosition: function($widgets) {
+                    var self = this;
+                    angular.forEach($widgets, function($widget) {
+                        self.map[$widget.id].updateTile($($widget).attr('data-sizex'), $($widget).attr('data-sizey'), $($widget).attr('data-col'), $($widget).attr('data-row'));
+                    });
+                },
+
+                /**
+                 * The number of {@link RenderingEngine}'s in this map.
+                 * 
+                 * @return {number} The number of {@link RenderingEngine}'s in the map.
+                 */
+                size: function() {
+                    return Object.keys(this.map).length;
+                },
+                /**
+                 * Adds a {@link RenderingEngine} to the map.
+                 * 
+                 * @param {RenderingEngine} dataSource The {@link RenderingEngine} to add.
+                 */
+                add: function(renderingEngine) {
+                    this.map[renderingEngine.id] = renderingEngine;
+                },
+                /**
+                 * Deletes a {@link RenderingEngine} from the map by `id`.
+                 * 
+                 * @param  {string} id The UUID of the {@link RenderingEngine} to remove from the map.
+                 */
+                delete: function(id) {
+                    delete this.map[id];
+                }
+            };
+
+            $.extend(renderingEnginesCollection, new RenderingEngines());
             $scope.renderingEnginesCollection = renderingEnginesCollection;
 
             //Singleton for controlling the UI
