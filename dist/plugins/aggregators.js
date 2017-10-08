@@ -1,13 +1,7 @@
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrAggregators', ['$rndrAggregatorsTemplates', '$rndrFormatters'], function($rndrAggregatorsTemplates, $rndrFormatters) {
-            return (root.rndr.plugins.aggregators = factory($rndrAggregatorsTemplates, $rndrFormatters));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.aggregators = factory(require('$rndrAggregatorsTemplates'), require('$rndrFormatters')));
-    } else {
-        root.rndr.plugins.aggregators = factory(root.rndr.templates.aggregators, root.rndr.plugins.formatters);
-    }
+    define('$rndrAggregators', ['$rndrAggregatorsTemplates', '$rndrFormatters'], function($rndrAggregatorsTemplates, $rndrFormatters) {
+        return (root.rndr.plugins.aggregators = factory($rndrAggregatorsTemplates, $rndrFormatters));
+    });
 }(this, function($rndrAggregatorsTemplates, $rndrFormatters) {
     /**
      * A dictionary of functions which *generate* a function that defines how data

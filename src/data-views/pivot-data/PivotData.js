@@ -10,14 +10,14 @@
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'rndr'], function($, rndr) {
-            return factory(root, $, rndr);
+            return factory($, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
         module.exports = factory(require('jquery'), require('rndr'));
     } else {
         factory(root.$, root.rndr);
     }
-}(this, function(root, $, rndr) {
+}(this, function($, rndr) {
     var naturalSort = function(as, bs) {
         var a, a1, b, b1, rd, rx, rz;
         rx = /(\d+)|(\D+)/g;

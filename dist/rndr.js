@@ -450,49 +450,29 @@ var requirejs, require, define;
 define("../node_modules/almond/almond", function(){});
 
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrDataViews', [], function() {
-            return (root.rndr.plugins.dataViews = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.dataViews = factory());
-    } else {
-        root.rndr.plugins.dataViews = factory();
-    }
+    define('$rndrDataViews', [], function() {
+        return (root.rndr.plugins.dataViews = factory());
+    });
 }(this, function() {
     /**
      * A dictionary of data view object factories.
      */
     return new Map();
 }));
-
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrSorters', [], function() {
-            return (root.rndr.plugins.sorters = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.sorters = factory());
-    } else {
-        root.rndr.plugins.sorters = factory();
-    }
+    define('$rndrSorters', [], function() {
+        return (root.rndr.plugins.sorters = factory());
+    });
 }(this, function() {
     /**
      * A dictionary of sorters.
      */
-     return new Map();
+    return new Map();
 }));
-
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrSortersTemplates', [], function() {
-            return (root.rndr.templates.sorters = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.templates.sorters = factory());
-    } else {
-        root.rndr.templates.sorters = factory();
-    }
+    define('$rndrSortersTemplates', [], function() {
+        return (root.rndr.templates.sorters = factory());
+    });
 }(this, function() {
     var naturalSort = function(as, bs) {
         var a, a1, b, b1, rd, rx, rz;
@@ -580,32 +560,19 @@ define("../node_modules/almond/almond", function(){});
     return $rndrSorterTemplates;
 }));
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrDerivedAttributes', [], function() {
-            return (root.rndr.plugins.derivedAttributes = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.derivedAttributes = factory());
-    } else {
-        root.rndr.plugins.derivedAttributes = factory();
-    }
+    define('$rndrDerivedAttributes', [], function() {
+        return (root.rndr.plugins.derivedAttributes = factory());
+    });
 }(this, function() {
     /**
      * A dictionary of data attribute deriving functions.
      */
     return new Map();
 }));
-
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrDeriverTemplates', [], function() {
-            return (root.rndr.templates.derivers = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.templates.derivers = factory());
-    } else {
-        root.rndr.templates.derivers = factory();
-    }
+    define('$rndrDeriverTemplates', [], function() {
+        return (root.rndr.templates.derivers = factory());
+    });
 }(this, function() {
     /**
      * Removes padding from a number.
@@ -701,15 +668,9 @@ define("../node_modules/almond/almond", function(){});
     return $rndrDeriverTemplates;
 }));
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrFormattersTemplates', ['jquery'], function($) {
-            return (root.rndr.templates.formatters = factory($));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.templates.formatters = factory(require('jquery')));
-    } else {
-        root.rndr.templates.formatters = factory(root.$);
-    }
+    define('$rndrFormattersTemplates', ['jquery'], function($) {
+        return (root.rndr.templates.formatters = factory($));
+    });
 }(this, function($) {
     /**
      * Adds thousands and decimal seperators to a number string.
@@ -736,7 +697,7 @@ define("../node_modules/almond/almond", function(){});
      * A dictionary of functions for creating 'number formatting' functions.
      */
     var $rndrFormatterTemplates = new Map();
-    
+
     /**
      * A helper function used to create data formatters.
      * 
@@ -777,20 +738,14 @@ define("../node_modules/almond/almond", function(){});
     return $rndrFormatterTemplates;
 }));
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrFormatters', ['$rndrFormattersTemplates'], function($rndrFormatterTemplates) {
-            return (root.rndr.plugins.formatters = factory($rndrFormatterTemplates));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.formatters = factory(require('$rndrFormatterTemplates')));
-    } else {
-        root.rndr.plugins.formatters = factory(root.rndr.templates.formatters);
-    }
+    define('$rndrFormatters', ['$rndrFormattersTemplates'], function($rndrFormatterTemplates) {
+        return (root.rndr.plugins.formatters = factory($rndrFormatterTemplates));
+    });
 }(this, function($rndrFormatterTemplates) {
     /**
      * A dictionary of data view object factories.
      */
-     var $rndrFormatters = new Map();
+    var $rndrFormatters = new Map();
 
     var usFmt = function() {
         return $rndrFormatterTemplates.get('numberFormat')();
@@ -801,7 +756,7 @@ define("../node_modules/almond/almond", function(){});
             digitsAfterDecimal: 0
         });
     };
-    
+
     var usFmtPct = function() {
         return $rndrFormatterTemplates.get('numberFormat')({
             digitsAfterDecimal: 1,
@@ -827,17 +782,10 @@ define("../node_modules/almond/almond", function(){});
 
     return $rndrFormatters;
 }));
-
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrAggregatorsTemplates', [], function() {
-            return (root.rndr.templates.aggregators = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.templates.aggregators = factory());
-    } else {
-        root.rndr.templates.aggregators = factory();
-    }
+    define('$rndrAggregatorsTemplates', [], function() {
+        return (root.rndr.templates.aggregators = factory());
+    });
 }(this, function() {
     /**
      * A dictionary of functions for creating an aggregator-generating function.
@@ -1294,15 +1242,9 @@ define("../node_modules/almond/almond", function(){});
     return $rndrAggregatorsTemplates;
 }));
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrAggregators', ['$rndrAggregatorsTemplates', '$rndrFormatters'], function($rndrAggregatorsTemplates, $rndrFormatters) {
-            return (root.rndr.plugins.aggregators = factory($rndrAggregatorsTemplates, $rndrFormatters));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.aggregators = factory(require('$rndrAggregatorsTemplates'), require('$rndrFormatters')));
-    } else {
-        root.rndr.plugins.aggregators = factory(root.rndr.templates.aggregators, root.rndr.plugins.formatters);
-    }
+    define('$rndrAggregators', ['$rndrAggregatorsTemplates', '$rndrFormatters'], function($rndrAggregatorsTemplates, $rndrFormatters) {
+        return (root.rndr.plugins.aggregators = factory($rndrAggregatorsTemplates, $rndrFormatters));
+    });
 }(this, function($rndrAggregatorsTemplates, $rndrFormatters) {
     /**
      * A dictionary of functions which *generate* a function that defines how data
@@ -1385,33 +1327,20 @@ define("../node_modules/almond/almond", function(){});
     return $rndrAggregators;
 }));
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrRenderers', [], function() {
-            return (root.rndr.plugins.renderers = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.renderers = factory());
-    } else {
-        root.rndr.plugins.renderers = factory();
-    }
+    define('$rndrRenderers', [], function() {
+        return (root.rndr.plugins.renderers = factory());
+    });
 }(this, function() {
     /**
      * A dictionary of renderer functions.
      */
     return new Map();
 }));
-
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
-            return (root.rndr.RenderingEngine = factory(root, $, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.RenderingEngine = factory(root, require('jquery'), require('$rndrFormatters'), require('$rndrSorters'), require('$rndrDerivedAttributes'), require('$rndrAggregators'), require('$rndrDataViews'), require('$rndrRenderers')));
-    } else {
-        root.rndr.RenderingEngine = factory(root, root.$, root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
-    }
-}(this, function(root, $, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+    define('rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+        return (root.rndr.RenderingEngine = factory($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
+    });
+}(this, function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
     'use strict';
 
     /**
@@ -1743,15 +1672,15 @@ define("../node_modules/almond/almond", function(){});
             //Only need the names of the derived attributes since functions do not serialize
             meta.derivedAttributes = [];
 
-            for(var key in this.derivedAttributes) {
-                 meta.derivedAttributes.push(this.derivedAttributes[key]);
+            for (var key in this.derivedAttributes) {
+                meta.derivedAttributes.push(this.derivedAttributes[key]);
             }
 
             //Only need the names of the sorters since functions do not serialize
             meta.sorters = [];
 
-            for(var key in this.sorters) {
-                 meta.sorters.push(this.sorters[key]);
+            for (var key in this.sorters) {
+                meta.sorters.push(this.sorters[key]);
             }
 
             return meta;
@@ -1759,7 +1688,6 @@ define("../node_modules/almond/almond", function(){});
     };
     return RenderingEngine;
 }));
-
 (function(root, factory) {
     define('rndr',['$rndrDataViews',
         '$rndrSorters',

@@ -1,14 +1,14 @@
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'd3', 'rndr'], function($, d3, rndr) {
-            return factory(root, $, d3, rndr);
+            return factory($, d3, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('d3'), require('rndr'));
+        module.exports = factory(require('jquery'), require('d3'), require('rndr'));
     } else {
-        factory(root, root.$, root.d3, root.rndr);
+        factory(root.$, root.d3, root.rndr);
     }
-}(this, function(root, $, d3, rndr) {
+}(this, function($, d3, rndr) {
     var d3Renderers = {
         'D3 - Treemap': function(renderingEngine, opts) {
             var addToTree, color, defaults, height, i, len, ref, result, returnObject, rowKey, tree, treemap, value, width;

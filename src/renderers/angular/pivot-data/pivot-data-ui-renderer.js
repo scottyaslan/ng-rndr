@@ -1,17 +1,8 @@
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'angular', 'rndr'], function($, c3, rndr) {
-            return factory(root, $, c3, rndr);
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('angular'), require('rndr'));
-    } else {
-        factory(root, root.$, root.angular, root.rndr);
-    }
-}(this, function(root,
-    $,
-    angular,
-    rndr) {
+    define(['jquery', 'angular', 'rndr'], function($, c3, rndr) {
+        return factory($, c3, rndr);
+    });
+}(this, function($, angular, rndr) {
     var pivotDataUiRenderer = {
         'PivotData UI': function(renderingEngine, opts) {
             /**

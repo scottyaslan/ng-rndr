@@ -1,14 +1,8 @@
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
-            return (root.rndr.RenderingEngine = factory(root, $, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.RenderingEngine = factory(root, require('jquery'), require('$rndrFormatters'), require('$rndrSorters'), require('$rndrDerivedAttributes'), require('$rndrAggregators'), require('$rndrDataViews'), require('$rndrRenderers')));
-    } else {
-        root.rndr.RenderingEngine = factory(root, root.$, root.rndr.plugins.formatters, root.rndr.plugins.sorters, root.rndr.plugins.derivedAttributes, root.rndr.plugins.aggregators, root.rndr.plugins.dataViews, root.rndr.plugins.renderers);
-    }
-}(this, function(root, $, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+    define('rndrRenderingEngine', ['jquery', '$rndrFormatters', '$rndrSorters', '$rndrDerivedAttributes', '$rndrAggregators', '$rndrDataViews', '$rndrRenderers'], function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
+        return (root.rndr.RenderingEngine = factory($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers));
+    });
+}(this, function($, $rndrFormatters, $rndrSorters, $rndrDerivedAttributes, $rndrAggregators, $rndrDataViews, $rndrRenderers) {
     'use strict';
 
     /**
@@ -340,15 +334,15 @@
             //Only need the names of the derived attributes since functions do not serialize
             meta.derivedAttributes = [];
 
-            for(var key in this.derivedAttributes) {
-                 meta.derivedAttributes.push(this.derivedAttributes[key]);
+            for (var key in this.derivedAttributes) {
+                meta.derivedAttributes.push(this.derivedAttributes[key]);
             }
 
             //Only need the names of the sorters since functions do not serialize
             meta.sorters = [];
 
-            for(var key in this.sorters) {
-                 meta.sorters.push(this.sorters[key]);
+            for (var key in this.sorters) {
+                meta.sorters.push(this.sorters[key]);
             }
 
             return meta;

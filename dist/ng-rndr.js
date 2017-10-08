@@ -585,9 +585,9 @@ define('renderers/angular/pivot-data/services/pivot-data-ui-dialog-controller-se
 
 (function(root, factory) {
     define('renderers/angular/pivot-data/controllers/pivot-data-ui-controller',['rndr'], function(rndr) {
-        return factory(root, rndr);
+        return factory(rndr);
     });
-}(this, function(root, rndr) {
+}(this, function(rndr) {
     'use strict';
 
     return function(exploreController, dialogControllerService, $scope) {
@@ -601,7 +601,11 @@ define('renderers/angular/pivot-data/services/pivot-data-ui-dialog-controller-se
             }
         };
 
-        $scope.renderers = rndr.plugins.renderers;
+        $scope.renderers = [];
+        rndr.plugins.renderers.forEach(function(value, key) {
+            $scope.renderers.push(key);
+        });
+
         $scope.dialogControllerService = dialogControllerService;
         $scope.exploreController = exploreController;
 
@@ -611,9 +615,9 @@ define('renderers/angular/pivot-data/services/pivot-data-ui-dialog-controller-se
 }));
 (function(root, factory) {
     define('renderers/angular/pivot-data/controllers/pivot-data-ui-dialog-controller',['rndr'], function(rndr) {
-        return factory(root, rndr);
+        return factory(rndr);
     });
-}(this, function(root, rndr) {
+}(this, function(rndr) {
     'use strict';
 
     return function($scope, dialogControllerService, exploreController) {
@@ -635,16 +639,14 @@ define('renderers/angular/pivot-data/services/pivot-data-ui-dialog-controller-se
         pivotDataUIDialogControllerService,
         pivotDataUIController,
         pivotDataUIDialogController) {
-        return factory(root,
-            rndr,
+        return factory(rndr,
             pivotDataUIDirective,
             pivotDataUIExploreController,
             pivotDataUIDialogControllerService,
             pivotDataUIController,
             pivotDataUIDialogController);
     });
-}(this, function(root,
-    rndr,
+}(this, function(rndr,
     pivotDataUIDirective,
     pivotDataUIExploreController,
     pivotDataUIDialogControllerService,

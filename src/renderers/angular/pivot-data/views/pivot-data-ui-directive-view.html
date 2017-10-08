@@ -5,7 +5,7 @@
                 View
             </button>
             <md-menu-content style="z-index:3;">
-                <md-menu-item ng-if="rendererName !== 'PivotData UI'" ng-repeat="rendererName in renderers.list()">
+                <md-menu-item ng-if="rendererName !== 'PivotData UI'" ng-repeat="rendererName in renderers">
                     <md-button ng-click="exploreController.embeddedRenderingEngine.dataView.meta.renderer = rendererName;
                     exploreController.embeddedRenderingEngine.setRenderer(rendererName);
                     exploreController.embeddedRenderingEngine.draw(exploreController.embeddedRenderingEngine.dataView.data);">

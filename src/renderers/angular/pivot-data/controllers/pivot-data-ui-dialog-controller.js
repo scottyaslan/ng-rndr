@@ -1,8 +1,8 @@
 (function(root, factory) {
     define(['rndr'], function(rndr) {
-        return factory(root, rndr);
+        return factory(rndr);
     });
-}(this, function(root, rndr) {
+}(this, function(rndr) {
     'use strict';
 
     return function($scope, dialogControllerService, exploreController) {

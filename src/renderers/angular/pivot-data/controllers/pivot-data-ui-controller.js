@@ -1,8 +1,8 @@
 (function(root, factory) {
     define(['rndr'], function(rndr) {
-        return factory(root, rndr);
+        return factory(rndr);
     });
-}(this, function(root, rndr) {
+}(this, function(rndr) {
     'use strict';
 
     return function(exploreController, dialogControllerService, $scope) {
@@ -16,7 +16,11 @@
             }
         };
 
-        $scope.renderers = rndr.plugins.renderers;
+        $scope.renderers = [];
+        rndr.plugins.renderers.forEach(function(value, key) {
+            $scope.renderers.push(key);
+        });
+
         $scope.dialogControllerService = dialogControllerService;
         $scope.exploreController = exploreController;
 

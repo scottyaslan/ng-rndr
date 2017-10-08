@@ -1,13 +1,7 @@
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrDeriverTemplates', [], function() {
-            return (root.rndr.templates.derivers = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.templates.derivers = factory());
-    } else {
-        root.rndr.templates.derivers = factory();
-    }
+    define('$rndrDeriverTemplates', [], function() {
+        return (root.rndr.templates.derivers = factory());
+    });
 }(this, function() {
     /**
      * Removes padding from a number.

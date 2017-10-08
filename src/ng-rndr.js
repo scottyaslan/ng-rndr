@@ -11,16 +11,14 @@
         pivotDataUIDialogControllerService,
         pivotDataUIController,
         pivotDataUIDialogController) {
-        return factory(root,
-            rndr,
+        return factory(rndr,
             pivotDataUIDirective,
             pivotDataUIExploreController,
             pivotDataUIDialogControllerService,
             pivotDataUIController,
             pivotDataUIDialogController);
     });
-}(this, function(root,
-    rndr,
+}(this, function(rndr,
     pivotDataUIDirective,
     pivotDataUIExploreController,
     pivotDataUIDialogControllerService,

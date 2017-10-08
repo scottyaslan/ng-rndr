@@ -1,13 +1,7 @@
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrFormattersTemplates', ['jquery'], function($) {
-            return (root.rndr.templates.formatters = factory($));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.templates.formatters = factory(require('jquery')));
-    } else {
-        root.rndr.templates.formatters = factory(root.$);
-    }
+    define('$rndrFormattersTemplates', ['jquery'], function($) {
+        return (root.rndr.templates.formatters = factory($));
+    });
 }(this, function($) {
     /**
      * Adds thousands and decimal seperators to a number string.
@@ -34,7 +28,7 @@
      * A dictionary of functions for creating 'number formatting' functions.
      */
     var $rndrFormatterTemplates = new Map();
-    
+
     /**
      * A helper function used to create data formatters.
      * 

@@ -1,13 +1,7 @@
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrSortersTemplates', [], function() {
-            return (root.rndr.templates.sorters = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.templates.sorters = factory());
-    } else {
-        root.rndr.templates.sorters = factory();
-    }
+    define('$rndrSortersTemplates', [], function() {
+        return (root.rndr.templates.sorters = factory());
+    });
 }(this, function() {
     var naturalSort = function(as, bs) {
         var a, a1, b, b1, rd, rx, rz;

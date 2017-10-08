@@ -1,14 +1,14 @@
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'rndr'], function($, rndr) {
-            return factory(root, $, rndr);
+            return factory($, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('rndr'));
+        module.exports = factory(require('jquery'), require('rndr'));
     } else {
-        factory(root, root.$, root.rndr);
+        factory(root.$, root.rndr);
     }
-}(this, function(root, $, rndr) {
+}(this, function($, rndr) {
     var pivottable = function(renderingEngine, opts) {
         var aggregator, c, colAttrs, colKey, colKeys, defaults, i, j, r, result, rowAttrs, rowKey, rowKeys, spanSize, tbody, td, tfoot, th, thead, totalAggregator, tr, txt, val, x;
         defaults = {

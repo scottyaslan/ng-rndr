@@ -1,14 +1,14 @@
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'c3', 'rndr'], function($, c3, rndr) {
-            return factory(root, $, c3, rndr);
+            return factory($, c3, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('c3'), require('rndr'));
+        module.exports = factory(require('jquery'), require('c3'), require('rndr'));
     } else {
-        factory(root, root.$, root.c3, root.rndr);
+        factory(root.$, root.c3, root.rndr);
     }
-}(this, function(root, $, c3, rndr) {
+}(this, function($, c3, rndr) {
     var makeC3Chart = function(chartOpts) {
         if (chartOpts == null) {
             chartOpts = {};

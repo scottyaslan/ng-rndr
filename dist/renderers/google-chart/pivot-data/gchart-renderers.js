@@ -1,14 +1,14 @@
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'rndr'], function($, rndr) {
-            return factory(root, $, rndr);
+            return factory($, rndr);
         });
     } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory(root, require('jquery'), require('rndr'));
+        module.exports = factory(require('jquery'), require('rndr'));
     } else {
-        factory(root, root.$, root.rndr);
+        factory(root.$, root.rndr);
     }
-}(this, function(root, $, rndr) {
+}(this, function($, rndr) {
     var makeGoogleChart = function(chartType, extraOptions) {
         return function(renderingEngine, opts) {
             var agg, base, base1, colKey, colKeys, dataArray, dataTable, defaults, fullAggName, groupByTitle, h, hAxisTitle, headers, i, j, len, len1, numCharsInHAxis, options, ref, result, returnObject, row, rowKey, rowKeys, title, tree2, vAxisTitle, val, wrapper, x, y;

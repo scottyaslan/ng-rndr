@@ -1,18 +1,12 @@
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrFormatters', ['$rndrFormattersTemplates'], function($rndrFormatterTemplates) {
-            return (root.rndr.plugins.formatters = factory($rndrFormatterTemplates));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.plugins.formatters = factory(require('$rndrFormatterTemplates')));
-    } else {
-        root.rndr.plugins.formatters = factory(root.rndr.templates.formatters);
-    }
+    define('$rndrFormatters', ['$rndrFormattersTemplates'], function($rndrFormatterTemplates) {
+        return (root.rndr.plugins.formatters = factory($rndrFormatterTemplates));
+    });
 }(this, function($rndrFormatterTemplates) {
     /**
      * A dictionary of data view object factories.
      */
-     var $rndrFormatters = new Map();
+    var $rndrFormatters = new Map();
 
     var usFmt = function() {
         return $rndrFormatterTemplates.get('numberFormat')();
@@ -23,7 +17,7 @@
             digitsAfterDecimal: 0
         });
     };
-    
+
     var usFmtPct = function() {
         return $rndrFormatterTemplates.get('numberFormat')({
             digitsAfterDecimal: 1,

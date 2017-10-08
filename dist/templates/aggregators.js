@@ -1,13 +1,7 @@
 (function(root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define('$rndrAggregatorsTemplates', [], function() {
-            return (root.rndr.templates.aggregators = factory());
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = (root.rndr.templates.aggregators = factory());
-    } else {
-        root.rndr.templates.aggregators = factory();
-    }
+    define('$rndrAggregatorsTemplates', [], function() {
+        return (root.rndr.templates.aggregators = factory());
+    });
 }(this, function() {
     /**
      * A dictionary of functions for creating an aggregator-generating function.
