@@ -1,8 +1,8 @@
 {
-  "name": "rndr",
-  "version": "0.0.1-RC.8",
+  "name": "rendering-engine",
+  "version": "0.0.1-RC.9",
   "license": "MIT",
-  "description": "rndr is a pluggable and embeddable framework for visualizing data.",
+  "description": "The rendering engine modules are a pluggable and embeddable framework for persisting data visualizations.",
   "author": {
     "name": "Scott Aslan",
     "email": "astechdev@gmail.com"
