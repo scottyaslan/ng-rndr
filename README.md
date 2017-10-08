@@ -31,5 +31,5 @@ Change to your project's root directory and for
 
 ```bash
 # To get the latest stable version, use npm from the command line.
-npm install rndr
+npm install rndr-eng
 ```
